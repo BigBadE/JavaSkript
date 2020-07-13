@@ -1,0 +1,15 @@
+#Intellij
+.idea/
+*.iml
+
+#Gradle + subprojects
+.gradle/
+build/
+api/build/
+api/.gradle/
+bukkit/build/
+bukkit/.gradle/
+compiler/build/
+compiler/.gradle/
+parser/build/
+parser/.gradle/

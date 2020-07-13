@@ -1,0 +1,99 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '6.0.0'
+    id 'io.franzbecker.gradle-lombok' version '4.0.0'
+}
+
+group 'software.bigbade'
+version '1.0-SNAPSHOT'
+
+configurations {
+    resolveImplementation
+    resolveImplementation.extendsFrom(implementation)
+
+    shadowJar.enabled = false
+}
+
+sourceSets {
+    test {
+        compileClasspath += configurations.resolveImplementation
+        compileClasspath += configurations.shadow
+        runtimeClasspath += configurations.resolveImplementation
+        runtimeClasspath += configurations.shadow
+    }
+}
+
+allprojects {
+    group = 'software.bigbade'
+    version = '1.0'
+
+    apply plugin: 'com.github.johnrengelman.shadow'
+    apply plugin: 'io.franzbecker.gradle-lombok'
+    apply plugin: 'java'
+    apply plugin: 'jacoco'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    lombok {
+        version = '1.18.12'
+        sha256 = ''
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
+
+    configurations {
+        resolveImplementation
+        resolveImplementation.extendsFrom(implementation)
+    }
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        jcenter()
+    }
+
+    sourceSets {
+        test {
+            compileClasspath += configurations.resolveImplementation
+            compileClasspath += configurations.shadow
+            runtimeClasspath += configurations.resolveImplementation
+            runtimeClasspath += configurations.shadow
+        }
+    }
+
+    shadowJar {
+        classifier = ''
+
+        exclude 'META-INF/**'
+    }
+
+    dependencies {
+        shadow 'com.google.code.findbugs:jsr305:3.0.2'
+    }
+}
+
+subprojects {
+    test.useTestNG()
+}
+
+task codeCoverageReport(type: JacocoReport) {
+    executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
+
+    subprojects.each {
+        sourceSets it.sourceSets.main
+    }
+
+    reports {
+        xml.enabled true
+        xml.destination file("${buildDir}/reports/jacoco/report.xml")
+        html.enabled false
+        csv.enabled false
+    }
+}
+
+codeCoverageReport.dependsOn {
+    subprojects*.test
+}

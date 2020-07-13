@@ -1,0 +1,7 @@
+dependencies {
+    shadow project(':api')
+    shadow project(':parser')
+
+    implementation 'net.sf.proguard:proguard:4.4'
+    implementation 'com.guardsquare:proguard-core:7.0.0'
+}
