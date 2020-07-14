@@ -1,7 +1,6 @@
 package software.bigbade.javaskript.compiler.instructions;
 
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
 import software.bigbade.javaskript.compiler.utils.SkriptMethodBuilder;
 
 import javax.annotation.Nonnull;
@@ -20,7 +19,7 @@ public class BasicCall<T> {
     @Getter
     private final LocalVariable[] params;
 
-    public BasicCall(@NotNull Class<?> clazz, @Nullable String method, @Nullable Class<T> outputType, @Nonnull LocalVariable... params) {
+    public BasicCall(@Nonnull Class<?> clazz, @Nullable String method, @Nullable Class<T> outputType, @Nonnull LocalVariable... params) {
         this.clazz = clazz;
         this.method = method;
         this.outputType = outputType;

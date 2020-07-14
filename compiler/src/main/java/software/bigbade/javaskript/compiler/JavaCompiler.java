@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import software.bigbade.javaskript.api.SkriptLineConverter;
 import software.bigbade.javaskript.compiler.java.SkriptToJavaConverter;
 import software.bigbade.javaskript.compiler.utils.MD5Checksum;
-import software.bigbade.skriptasm.parser.ScriptParser;
-import software.bigbade.skriptasm.parser.types.SkriptRegisteredTypes;
+import software.bigbade.javaskript.parser.ScriptParser;
+import software.bigbade.javaskript.parser.types.SkriptRegisteredTypes;
 
 import java.io.File;
 
@@ -19,6 +19,8 @@ public class JavaCompiler {
     public void loadScripts() {
         File scriptsDir = new File(getDataFolder(), "scripts");
         File cache = new File(getDataFolder(), "cache");
+        scriptsDir.mkdirs();
+        cache.mkdirs();
         File[] scripts = scriptsDir.listFiles();
         if(scriptsDir.isDirectory() && scripts != null) {
             for (File script : scripts) {

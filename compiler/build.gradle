@@ -3,5 +3,9 @@ dependencies {
     shadow project(':parser')
 
     implementation 'net.sf.proguard:proguard:4.4'
-    implementation 'com.guardsquare:proguard-core:7.0.0'
+    implementation ('com.guardsquare:proguard-core:7.0.0') {
+        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
+        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-common'
+        exclude group: 'org.jetbrains.kotlinx', module: 'kotlinx-metadata-jvm'
+    }
 }

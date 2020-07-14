@@ -13,3 +13,6 @@ compiler/build/
 compiler/.gradle/
 parser/build/
 parser/.gradle/
+
+#Bash scripts
+*.sh

@@ -1,8 +1,8 @@
 package software.bigbade.javaskript.compiler.utils;
 
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.jar.JarOutputStream;
@@ -17,12 +17,12 @@ public class JarDataStream implements DataOutput {
     }
 
     @Override
-    public void write(@NotNull byte[] b) throws IOException {
+    public void write(@Nonnull byte[] b) throws IOException {
         outputStream.write(b);
     }
 
     @Override
-    public void write(@NotNull byte[] b, int off, int len) throws IOException {
+    public void write(@Nonnull byte[] b, int off, int len) throws IOException {
         outputStream.write(b, off, len);
     }
 
@@ -67,17 +67,17 @@ public class JarDataStream implements DataOutput {
     }
 
     @Override
-    public void writeBytes(@NotNull String s) {
+    public void writeBytes(@Nonnull String s) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void writeChars(@NotNull String s) {
+    public void writeChars(@Nonnull String s) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void writeUTF(@NotNull String s) {
+    public void writeUTF(@Nonnull String s) {
         throw new UnsupportedOperationException();
     }
 }

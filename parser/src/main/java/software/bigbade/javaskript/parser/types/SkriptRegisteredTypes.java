@@ -1,4 +1,4 @@
-package software.bigbade.skriptasm.parser.types;
+package software.bigbade.javaskript.parser.types;
 
 import lombok.Getter;
 import software.bigbade.javaskript.api.objects.SkriptMethod;

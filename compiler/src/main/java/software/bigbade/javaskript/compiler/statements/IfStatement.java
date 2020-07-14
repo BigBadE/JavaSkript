@@ -1,5 +1,7 @@
 package software.bigbade.javaskript.compiler.statements;
 
+import lombok.Getter;
+import lombok.Setter;
 import proguard.classfile.editor.CompactCodeAttributeComposer;
 import software.bigbade.javaskript.compiler.instructions.BasicInstruction;
 import software.bigbade.javaskript.compiler.instructions.LoadVariableCall;
@@ -12,13 +14,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IfStatement implements JavaCodeBlock {
+    @Getter
+    @Nullable
+    private final JavaCodeBlock parent;
     private final IfStatementType type;
     private final LocalVariable[] args;
 
-    private final List<JavaCodeBlock> elseIf = new ArrayList<>();
-    private int elseIfIndex = 0;
+    private final List<IfStatement> elseIf = new ArrayList<>();
+    @Setter
     private JavaCodeBlock start;
     @Nullable
+    @Setter
     private JavaCodeBlock end;
 
     @Override
@@ -26,17 +32,20 @@ public class IfStatement implements JavaCodeBlock {
         return start.getLabel();
     }
 
-    public IfStatement(IfStatementType type, LocalVariable... args) {
+    public IfStatement(@Nullable JavaCodeBlock parent, IfStatementType type, LocalVariable... args) {
+        this.parent = parent;
         this.type = type;
         this.args = args;
     }
 
+    public void addElseIf(IfStatement statement) {
+        elseIf.add(statement);
+    }
+
     @Override
     public void addInstruction(BasicInstruction instruction) {
-        if (elseIf.isEmpty()) {
+        if (end == null) {
             start.addInstruction(instruction);
-        } else if (end == null) {
-            elseIf.get(elseIfIndex).addInstruction(instruction);
         } else {
             end.addInstruction(instruction);
         }
@@ -49,7 +58,16 @@ public class IfStatement implements JavaCodeBlock {
             new LoadVariableCall(localVariable).addInstructions(builder, code);
             code.aload(localVariable.getNumber());
         }
-        type.inverse().accept(code, start.getLabel());
+        for(JavaCodeBlock block : elseIf) {
+            block.createLabel(code);
+        }
+        CompactCodeAttributeComposer.Label endLabel;
+        if(end != null) {
+            endLabel = end.createLabel(code);
+        } else {
+            endLabel = code.createLabel();
+        }
+        type.inverse().accept(code, endLabel);
         start.loadInstructions(builder, code);
         for (JavaCodeBlock block : elseIf) {
             block.loadInstructions(builder, code);
@@ -60,7 +78,7 @@ public class IfStatement implements JavaCodeBlock {
     }
 
     @Override
-    public void createLabel(CompactCodeAttributeComposer code) {
-        throw new IllegalStateException("IfStatements do not create labels in advance.");
+    public CompactCodeAttributeComposer.Label createLabel(CompactCodeAttributeComposer code) {
+        return start.createLabel(code);
     }
 }

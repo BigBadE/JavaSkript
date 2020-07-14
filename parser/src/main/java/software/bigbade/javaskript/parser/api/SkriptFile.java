@@ -1,9 +1,9 @@
-package software.bigbade.skriptasm.parser.api;
+package software.bigbade.javaskript.parser.api;
 
 import lombok.Getter;
 import lombok.Setter;
 import software.bigbade.javaskript.api.variables.Variables;
-import software.bigbade.skriptasm.parser.LoadingPhase;
+import software.bigbade.javaskript.parser.LoadingPhase;
 
 public class SkriptFile {
     @Getter

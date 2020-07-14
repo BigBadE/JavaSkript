@@ -4,7 +4,11 @@ import proguard.classfile.editor.CompactCodeAttributeComposer;
 import software.bigbade.javaskript.compiler.instructions.BasicInstruction;
 import software.bigbade.javaskript.compiler.utils.SkriptMethodBuilder;
 
+import javax.annotation.Nullable;
+
 public interface JavaCodeBlock {
+    @Nullable
+    JavaCodeBlock getParent();
 
     CompactCodeAttributeComposer.Label getLabel();
 
@@ -12,5 +16,5 @@ public interface JavaCodeBlock {
 
     void loadInstructions(SkriptMethodBuilder builder, CompactCodeAttributeComposer code);
 
-    void createLabel(CompactCodeAttributeComposer code);
+    CompactCodeAttributeComposer.Label createLabel(CompactCodeAttributeComposer code);
 }

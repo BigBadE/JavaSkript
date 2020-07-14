@@ -1,16 +1,23 @@
 package software.bigbade.javaskript.compiler.java;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import proguard.classfile.editor.CompactCodeAttributeComposer;
 import software.bigbade.javaskript.compiler.instructions.BasicInstruction;
 import software.bigbade.javaskript.compiler.utils.SkriptMethodBuilder;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+@RequiredArgsConstructor
 public class BasicJavaCodeBlock implements JavaCodeBlock {
     @Getter
+    @Nullable
+    private final JavaCodeBlock parent;
+    @Getter
     private CompactCodeAttributeComposer.Label label;
+
     private final List<BasicInstruction> instructions = new ArrayList<>();
 
     public void addInstruction(BasicInstruction instruction) {
@@ -25,10 +32,11 @@ public class BasicJavaCodeBlock implements JavaCodeBlock {
         }
     }
 
-    public void createLabel(CompactCodeAttributeComposer code) {
+    public CompactCodeAttributeComposer.Label createLabel(CompactCodeAttributeComposer code) {
         if(label == null) {
             label = code.createLabel();
             code.label(label);
         }
+        return label;
     }
 }

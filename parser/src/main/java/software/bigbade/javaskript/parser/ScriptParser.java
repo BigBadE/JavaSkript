@@ -1,4 +1,4 @@
-package software.bigbade.skriptasm.parser;
+package software.bigbade.javaskript.parser;
 
 import lombok.RequiredArgsConstructor;
 import software.bigbade.javaskript.api.SkriptLineConverter;
@@ -7,7 +7,7 @@ import software.bigbade.javaskript.api.exception.IllegalScriptException;
 import software.bigbade.javaskript.api.objects.SkriptObject;
 import software.bigbade.javaskript.api.objects.SkriptStructuredObject;
 import software.bigbade.javaskript.api.objects.SkriptMethod;
-import software.bigbade.skriptasm.parser.types.SkriptRegisteredTypes;
+import software.bigbade.javaskript.parser.types.SkriptRegisteredTypes;
 
 import java.io.BufferedReader;
 import java.io.File;

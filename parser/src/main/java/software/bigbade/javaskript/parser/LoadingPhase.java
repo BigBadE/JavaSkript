@@ -1,4 +1,4 @@
-package software.bigbade.skriptasm.parser;
+package software.bigbade.javaskript.parser;
 
 public enum LoadingPhase {
     VARIABLES,

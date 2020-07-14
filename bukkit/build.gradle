@@ -9,6 +9,5 @@ dependencies {
     implementation project(':compiler')
     implementation project(':api')
 
-    shadow 'org.ow2.asm:asm-util:8.0.1'
     shadow 'org.spigotmc:spigot-api:1.15.2-R0.1-SNAPSHOT'
 }
