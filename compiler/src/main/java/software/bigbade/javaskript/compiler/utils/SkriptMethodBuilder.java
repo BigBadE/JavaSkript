@@ -5,15 +5,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import proguard.classfile.editor.ClassBuilder;
 import proguard.classfile.editor.CompactCodeAttributeComposer;
+import software.bigbade.javaskript.api.variables.Type;
 import software.bigbade.javaskript.compiler.instructions.BasicInstruction;
 import software.bigbade.javaskript.api.variables.SkriptType;
 import software.bigbade.javaskript.api.variables.Variables;
-import software.bigbade.javaskript.compiler.instructions.LocalVariable;
+import software.bigbade.javaskript.api.objects.LocalVariable;
 import software.bigbade.javaskript.compiler.java.JavaCodeBlock;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 public class SkriptMethodBuilder implements ClassBuilder.CodeBuilder {
@@ -40,10 +42,10 @@ public class SkriptMethodBuilder implements ClassBuilder.CodeBuilder {
         this.name = name;
         this.returnType = returnType;
         this.parent = parent;
-        thisVariable = new LocalVariable(0, Type.getType(parent));
+        thisVariable = new LocalVariable(0, Type.getType(parent), "this");
         localVariables = 1;
-        for(SkriptType<?> param : variables.getAllVariables()) {
-            params.add(new LocalVariable(localVariables++, param.getTypeClass()));
+        for(Map.Entry<String, SkriptType<?>> param : variables.getAllVariables().entrySet()) {
+            params.add(new LocalVariable(localVariables++, param.getValue().getTypeClass(), param.getKey()));
         }
     }
 

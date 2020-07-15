@@ -69,10 +69,6 @@ allprojects {
         archiveName = 'javaskript-1.0.jar'
 
         exclude 'META-INF/**'
-
-        minimize {
-            exclude('software.bigbade')
-        }
     }
 
     dependencies {

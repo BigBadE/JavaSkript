@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import software.bigbade.javaskript.api.SkriptLineConverter;
 import software.bigbade.javaskript.api.SkriptLogger;
 import software.bigbade.javaskript.api.exception.IllegalScriptException;
+import software.bigbade.javaskript.api.objects.ParsedSkriptMethod;
 import software.bigbade.javaskript.api.objects.SkriptObject;
 import software.bigbade.javaskript.api.objects.SkriptStructuredObject;
 import software.bigbade.javaskript.api.objects.SkriptMethod;
@@ -61,8 +62,9 @@ public class ScriptParser {
         }
 
         for(SkriptMethod method : types.getMethods()) {
-            if(method.parse(line)) {
-                lineConverter.callMethod(method, line);
+            ParsedSkriptMethod parsedMethod = method.parse(line);
+            if(parsedMethod != null) {
+                lineConverter.callMethod(parsedMethod);
                 return;
             }
         }

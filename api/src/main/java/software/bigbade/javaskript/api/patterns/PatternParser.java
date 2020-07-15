@@ -80,7 +80,7 @@ public class PatternParser {
                 break;
             case '%':
                 SkriptType<?> type = structureTypes.get(currentType);
-                variables.addVariable(type);
+                variables.addVariable(currentWord, type);
                 currentType++;
                 break;
             default:

@@ -12,6 +12,6 @@ public class Skript extends JavaPlugin {
         SkriptLogger.setLogger(getLogger());
 
         BukkitCompiler compiler = new BukkitCompiler(getDataFolder(), types);
-        compiler.loadScripts();
+        compiler.loadScripts(JavaPlugin.class);
     }
 }

@@ -1,4 +1,4 @@
-package software.bigbade.javaskript.compiler.utils;
+package software.bigbade.javaskript.api.variables;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;

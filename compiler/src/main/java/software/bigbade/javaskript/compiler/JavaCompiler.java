@@ -16,7 +16,7 @@ public class JavaCompiler {
     private final File dataFolder;
     private final SkriptRegisteredTypes types;
 
-    public void loadScripts() {
+    public void loadScripts(Class<?> mainClass) {
         File scriptsDir = new File(getDataFolder(), "scripts");
         File cache = new File(getDataFolder(), "cache");
         scriptsDir.mkdirs();
@@ -32,7 +32,7 @@ public class JavaCompiler {
                 String checksum = MD5Checksum.getMD5Checksum(script);
                 File outputJar = new File(cache, name + File.pathSeparator + checksum + ".jar");
                 if(!outputJar.exists()) {
-                    SkriptLineConverter converter = new SkriptToJavaConverter(name);
+                    SkriptLineConverter converter = new SkriptToJavaConverter(name, mainClass.getName());
                     ScriptParser parser = new ScriptParser(script, types, converter);
                     parser.parse();
                     converter.writeData(outputJar);

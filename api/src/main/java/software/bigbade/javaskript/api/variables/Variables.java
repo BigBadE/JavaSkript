@@ -2,14 +2,14 @@ package software.bigbade.javaskript.api.variables;
 
 import lombok.Getter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Variables {
     @Getter
-    private final List<SkriptType<?>> allVariables = new ArrayList<>();
+    private final Map<String, SkriptType<?>> allVariables = new HashMap<>();
 
-    public void addVariable(SkriptType<?> variable) {
-        allVariables.add(variable);
+    public void addVariable(String name, SkriptType<?> variable) {
+        allVariables.put(name, variable);
     }
 }

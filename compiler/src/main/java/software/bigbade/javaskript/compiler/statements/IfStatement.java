@@ -6,7 +6,7 @@ import proguard.classfile.editor.CompactCodeAttributeComposer;
 import software.bigbade.javaskript.compiler.instructions.BasicInstruction;
 import software.bigbade.javaskript.compiler.instructions.LoadVariableCall;
 import software.bigbade.javaskript.compiler.utils.SkriptMethodBuilder;
-import software.bigbade.javaskript.compiler.instructions.LocalVariable;
+import software.bigbade.javaskript.api.objects.LocalVariable;
 import software.bigbade.javaskript.compiler.java.JavaCodeBlock;
 
 import javax.annotation.Nullable;

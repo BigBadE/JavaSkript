@@ -7,13 +7,15 @@ import proguard.classfile.ProgramClass;
 import proguard.classfile.VersionConstants;
 import proguard.classfile.editor.ClassBuilder;
 import proguard.classfile.io.ProgramClassWriter;
-import software.bigbade.javaskript.compiler.utils.SkriptMethodBuilder;
-import software.bigbade.javaskript.compiler.utils.Type;
 import software.bigbade.javaskript.api.SkriptLineConverter;
-import software.bigbade.javaskript.api.objects.SkriptMethod;
+import software.bigbade.javaskript.api.objects.LocalVariable;
+import software.bigbade.javaskript.api.objects.ParsedSkriptMethod;
 import software.bigbade.javaskript.api.variables.SkriptType;
+import software.bigbade.javaskript.api.variables.Type;
 import software.bigbade.javaskript.api.variables.Variables;
+import software.bigbade.javaskript.compiler.instructions.CreateObjectCall;
 import software.bigbade.javaskript.compiler.utils.JarDataStream;
+import software.bigbade.javaskript.compiler.utils.SkriptMethodBuilder;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -31,11 +33,11 @@ public class SkriptToJavaConverter implements SkriptLineConverter {
     private ClassBuilder classBuilder;
     private SkriptMethodBuilder methodBuilder;
 
-    public SkriptToJavaConverter(String name) {
+    public SkriptToJavaConverter(String name, @Nullable String superclass) {
         main = new ClassBuilder(VersionConstants.CLASS_VERSION_1_8,
                 AccessConstants.PUBLIC,
                 name,
-                ClassConstants.INTERNAL_NAME_JAVA_LANG_OBJECT);
+                (superclass == null ) ? ClassConstants.INTERNAL_NAME_JAVA_LANG_OBJECT : superclass);
     }
 
     @Override
@@ -84,9 +86,15 @@ public class SkriptToJavaConverter implements SkriptLineConverter {
         }
     }
 
+    /**
+     * Calls a SkriptMethod
+     * @param method Method to call
+     */
     @Override
-    public void callMethod(SkriptMethod method, String line) {
-
+    public void callMethod(ParsedSkriptMethod method) {
+        if(method.getMethod().isConstructor()) {
+            methodBuilder.addInstruction(new CreateObjectCall<>(method.getMethod().getOwner(), method.getName(), method.getVariables().toArray(new LocalVariable[0])));
+        }
     }
 
     @Override

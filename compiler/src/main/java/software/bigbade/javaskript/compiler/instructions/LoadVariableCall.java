@@ -2,8 +2,9 @@ package software.bigbade.javaskript.compiler.instructions;
 
 import lombok.RequiredArgsConstructor;
 import proguard.classfile.editor.CompactCodeAttributeComposer;
+import software.bigbade.javaskript.api.objects.LocalVariable;
 import software.bigbade.javaskript.compiler.utils.SkriptMethodBuilder;
-import software.bigbade.javaskript.compiler.utils.Type;
+import software.bigbade.javaskript.api.variables.Type;
 
 @RequiredArgsConstructor
 public class LoadVariableCall implements BasicInstruction {

@@ -1,6 +1,7 @@
 package software.bigbade.javaskript.compiler.instructions;
 
 import lombok.Getter;
+import software.bigbade.javaskript.api.objects.LocalVariable;
 import software.bigbade.javaskript.compiler.utils.SkriptMethodBuilder;
 
 import javax.annotation.Nonnull;
@@ -30,8 +31,8 @@ public class BasicCall<T> {
     @Nullable
     protected LocalVariable output;
 
-    protected void setOutput(SkriptMethodBuilder builder) {
-        output = new LocalVariable(builder.getLocalVariables(), outputType);
+    protected void setOutput(SkriptMethodBuilder builder, @Nullable String name) {
+        output = new LocalVariable(builder.getLocalVariables(), outputType, name);
         builder.setLocalVariables(builder.getLocalVariables()+1);
     }
 }
