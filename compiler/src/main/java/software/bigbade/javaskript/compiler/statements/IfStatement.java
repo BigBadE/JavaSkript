@@ -15,8 +15,9 @@ import java.util.List;
 
 public class IfStatement implements JavaCodeBlock {
     @Getter
+    @Setter
     @Nullable
-    private final JavaCodeBlock parent;
+    private JavaCodeBlock parent;
     private final IfStatementType type;
     private final LocalVariable[] args;
 

@@ -2,6 +2,7 @@ package software.bigbade.javaskript.compiler.java;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import proguard.classfile.editor.CompactCodeAttributeComposer;
 import software.bigbade.javaskript.compiler.instructions.BasicInstruction;
 import software.bigbade.javaskript.compiler.utils.SkriptMethodBuilder;
@@ -10,11 +11,11 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@RequiredArgsConstructor
 public class BasicJavaCodeBlock implements JavaCodeBlock {
     @Getter
+    @Setter
     @Nullable
-    private final JavaCodeBlock parent;
+    private JavaCodeBlock parent;
     @Getter
     private CompactCodeAttributeComposer.Label label;
 

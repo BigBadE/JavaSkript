@@ -32,8 +32,8 @@ public class JarDataStream implements DataOutput {
     }
 
     @Override
-    public void writeByte(int v) {
-        throw new UnsupportedOperationException();
+    public void writeByte(int v) throws IOException {
+        outputStream.write(ByteUtils.intToBytes(v));
     }
 
     @Override

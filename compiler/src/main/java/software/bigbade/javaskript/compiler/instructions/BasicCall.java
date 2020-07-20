@@ -32,8 +32,7 @@ public class BasicCall<T> {
     protected LocalVariable output;
 
     protected void setOutput(SkriptMethodBuilder builder, @Nullable String name) {
-        output = new LocalVariable(builder.getLocalVariables(), outputType, name);
-        builder.setLocalVariables(builder.getLocalVariables()+1);
+        builder.addLocalVariable(name, outputType);
     }
 }
 

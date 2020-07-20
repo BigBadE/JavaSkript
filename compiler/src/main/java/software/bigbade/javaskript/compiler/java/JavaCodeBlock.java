@@ -10,6 +10,8 @@ public interface JavaCodeBlock {
     @Nullable
     JavaCodeBlock getParent();
 
+    void setParent(@Nullable JavaCodeBlock block);
+
     CompactCodeAttributeComposer.Label getLabel();
 
     void addInstruction(BasicInstruction instruction);

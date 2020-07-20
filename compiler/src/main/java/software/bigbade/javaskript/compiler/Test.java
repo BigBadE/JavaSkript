@@ -1,9 +1,9 @@
 package software.bigbade.javaskript.compiler;
 
 public class Test {
+    private long value = 2019292018486L;
+
     public void test() {
-        for(int i = 0; i < 100; i++) {
-            System.out.println(i);
-        }
+        System.out.println(value);
     }
 }
