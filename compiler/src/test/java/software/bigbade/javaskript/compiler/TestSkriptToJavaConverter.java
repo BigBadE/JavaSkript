@@ -101,7 +101,6 @@ public class TestSkriptToJavaConverter {
         Variables variables = new Variables();
         MethodLineConverter<?> methodConverter = converter.startMethod("<init>", variables, null);
         methodConverter.addJavaBlock(Statements.CODE_BLOCK);
-        methodConverter.loadVariable(methodConverter.getLocalVariable("this"));
         ParsedSkriptMethod method = new ParsedSkriptMethod(new SkriptMethod() {
             @Nullable
             @Override
@@ -134,17 +133,20 @@ public class TestSkriptToJavaConverter {
                 return false;
             }
         }, null);
-        method.addLocalVariable(methodConverter.getStack());
-        methodConverter.callMethod(method);
-        methodConverter.returnVariable(methodConverter.getStack());
+        method.addLocalVariable(new ClassType<>("Main"));
+        methodConverter.loadVariable(methodConverter.getLocalVariable("this"))
+                .callMethod(method)
+                .returnNothing();
         converter.endMethod(methodConverter);
         variables = new Variables();
         variables.addVariable("testNumb", SkriptTypes.INTEGER);
         methodConverter = converter.startMethod("test", variables, SkriptTypes.INTEGER)
                 .addJavaBlock(Statements.CODE_BLOCK);
         LocalVariable<Integer> output = methodConverter.getLocalVariable("testNumb");
-        methodConverter = methodConverter.manipulateVariable(VariableChanges.MULTIPLY, output, methodConverter.createConstant(6));
-        methodConverter.returnVariable(methodConverter.getStack());
+        methodConverter.loadVariable(output);
+        methodConverter.loadConstant(6);
+        methodConverter = methodConverter.manipulateVariable(VariableChanges.MULTIPLY, SkriptTypes.INTEGER, SkriptTypes.INTEGER);
+        methodConverter.returnVariable(SkriptTypes.INTEGER);
         converter.endMethod(methodConverter);
         converter.endClass();
         try (JarOutputStream outputStream = new JarOutputStream(new FileOutputStream(outputFile))) {

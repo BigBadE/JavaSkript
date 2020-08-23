@@ -3,6 +3,7 @@ package software.bigbade.javaskript.compiler.instructions;
 import lombok.AccessLevel;
 import lombok.Getter;
 import software.bigbade.javaskript.api.objects.variable.LocalVariable;
+import software.bigbade.javaskript.api.variables.SkriptType;
 import software.bigbade.javaskript.compiler.variables.StackVariable;
 import software.bigbade.javaskript.api.variables.Type;
 
@@ -18,11 +19,11 @@ public abstract class BasicCall<T> implements BasicInstruction {
     @Getter
     private final String method;
     @Getter
-    private final LocalVariable<?>[] params;
+    private final SkriptType[] params;
     @Nullable
     private final StackVariable<T> output;
 
-    public BasicCall(@Nullable Class<?> clazz, @Nullable String method, @Nullable Type outputType, @Nonnull LocalVariable<?>... params) {
+    public BasicCall(@Nullable Class<?> clazz, @Nullable String method, @Nullable Type outputType, @Nonnull SkriptType... params) {
         this.clazz = clazz;
         this.method = method;
         this.params = params;

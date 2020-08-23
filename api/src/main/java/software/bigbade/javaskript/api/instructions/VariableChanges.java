@@ -5,5 +5,11 @@ public enum VariableChanges {
     SUBTRACT,
     MULTIPLY,
     DIVIDE,
-    NEGATE
+    NEGATE,
+    MODULO,
+    AND,
+    OR,
+    XOR,
+    LEFTSHIFT,
+    RIGHTSHIFT
 }

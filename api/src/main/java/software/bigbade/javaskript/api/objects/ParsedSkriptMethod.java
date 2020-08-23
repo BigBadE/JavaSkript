@@ -2,7 +2,6 @@ package software.bigbade.javaskript.api.objects;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import software.bigbade.javaskript.api.objects.variable.LocalVariable;
 import software.bigbade.javaskript.api.variables.SkriptType;
 
 import javax.annotation.Nullable;
@@ -17,9 +16,9 @@ public class ParsedSkriptMethod {
     @Getter
     private final SkriptType returnType;
     @Getter
-    private final List<LocalVariable<?>> variables = new ArrayList<>();
+    private final List<SkriptType> variables = new ArrayList<>();
 
-    public void addLocalVariable(LocalVariable<?> variable) {
+    public void addLocalVariable(SkriptType variable) {
         variables.add(variable);
     }
 }

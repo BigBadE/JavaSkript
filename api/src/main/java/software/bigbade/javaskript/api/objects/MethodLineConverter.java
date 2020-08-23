@@ -3,6 +3,7 @@ package software.bigbade.javaskript.api.objects;
 import software.bigbade.javaskript.api.instructions.Statements;
 import software.bigbade.javaskript.api.instructions.VariableChanges;
 import software.bigbade.javaskript.api.objects.variable.LocalVariable;
+import software.bigbade.javaskript.api.variables.SkriptType;
 import software.bigbade.javaskript.api.variables.Type;
 
 import javax.annotation.Nullable;
@@ -14,18 +15,15 @@ public interface MethodLineConverter<T> {
 
     String getMethodDescription();
 
-    @Nullable
     <E> MethodLineConverter<E> callMethod(ParsedSkriptMethod method);
 
-    <E> MethodLineConverter<E> manipulateVariable(VariableChanges change, LocalVariable<E> first, LocalVariable<?> second);
+    <E> MethodLineConverter<E> manipulateVariable(VariableChanges change, SkriptType first, @Nullable SkriptType second);
 
-    <E> MethodLineConverter<E> convertVariable(LocalVariable<?> converting, Type type);
-
-    <C> LocalVariable<C> createConstant(C constant);
+    <E> MethodLineConverter<E> convertVariable(SkriptType type, Type convertTo);
 
     <C> void setVariable(LocalVariable<C> variable, C value);
 
-    <C> void returnVariable(LocalVariable<C> variable);
+    void returnVariable(SkriptType type);
 
     void returnNothing();
 
@@ -39,5 +37,5 @@ public interface MethodLineConverter<T> {
 
     <E> MethodLineConverter<E> loadConstant(E constant);
 
-    LocalVariable<T> getStack();
+    LocalVariable<T> popStack();
 }

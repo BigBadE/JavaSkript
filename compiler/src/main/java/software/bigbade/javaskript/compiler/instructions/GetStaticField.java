@@ -14,7 +14,6 @@ public class GetStaticField<T> extends BasicCall<T> implements BasicInstruction 
     @Override
     public void addInstructions(MethodLineConverter<?> builder, MethodVisitor code) {
         assert getClazz() != null;
-        assert getOutput().isPresent();
-        code.visitFieldInsn(Opcodes.GETSTATIC, getClazz().getName(), getMethod(), getOutput().get().getType().getDescriptor());
+        code.visitFieldInsn(Opcodes.GETSTATIC, getClazz().getName(), getMethod(), getOutput().orElseThrow(IllegalStateException::new).getType().getDescriptor());
     }
 }

@@ -26,12 +26,14 @@ import software.bigbade.javaskript.compiler.java.BasicJavaCodeBlock;
 import software.bigbade.javaskript.compiler.java.JavaCodeBlock;
 import software.bigbade.javaskript.compiler.statements.IfStatement;
 import software.bigbade.javaskript.compiler.statements.IfStatementType;
-import software.bigbade.javaskript.compiler.variables.ConstantVariable;
 import software.bigbade.javaskript.compiler.variables.StackVariable;
 import software.bigbade.javaskript.compiler.variables.StoredVariable;
 
 import javax.annotation.Nullable;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
+import java.util.EmptyStackException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +54,7 @@ public class SkriptMethodBuilder<T> implements MethodLineConverter<T> {
 
     private JavaCodeBlock currentBlock = null;
 
-    private StackVariable<?> stack = null;
+    private final Deque<StackVariable<?>> stack = new ArrayDeque<>();
 
     public SkriptMethodBuilder(JavaClassWriter parent, String name, @Nullable SkriptType returnType, Variables variables) {
         this.name = name;
@@ -74,9 +76,10 @@ public class SkriptMethodBuilder<T> implements MethodLineConverter<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public StackVariable<T> getStack() {
+    @Override
+    public StackVariable<T> popStack() {
         //Needed so stack can be swapped along with the generic type
-        return (StackVariable<T>) stack;
+        return (StackVariable<T>) stack.pop();
     }
     public String getMethodDescription() {
         StringBuilder builder = new StringBuilder();
@@ -119,45 +122,39 @@ public class SkriptMethodBuilder<T> implements MethodLineConverter<T> {
      *
      * @param method Method to call
      */
+    @SuppressWarnings("unchecked")
     @Override
     public <E> MethodLineConverter<E> callMethod(ParsedSkriptMethod method) {
-        BiConsumer<MethodLineConverter<?>, MethodVisitor> consumer;
+        BasicInstruction instruction;
         if (method.getMethod().isConstructor()) {
-            consumer = new CreateObjectCall<>(method.getMethod().getOwner(), method.getVariables().toArray(new LocalVariable[0]))::addInstructions;
+            instruction = new CreateObjectCall<>(method.getMethod().getOwner(), method.getVariables().toArray(new SkriptType[0]));
         } else {
-            consumer = new MethodCall<>(method.getMethod().getOwner(), method.getMethod().getName(), method.getReturnType() == null ? null : method.getReturnType().getType(), method.getVariables().toArray(new LocalVariable[0]))::addInstructions;
+            instruction = new MethodCall<>(method.getMethod().getOwner(), method.getMethod().getName(), method.getReturnType() == null ? null : method.getReturnType().getType(), method.getVariables().toArray(new SkriptType[0]));
         }
-        Type type = null;
         if(method.getReturnType() != null) {
-            type = method.getReturnType().getType();
+            return setStack(new StackVariable<>(method.getReturnType().getType(), instruction::addInstructions));
         }
-        return setStack(new StackVariable<>(type, consumer));
+        addInstruction(instruction);
+        return (MethodLineConverter<E>) this;
     }
 
     @SuppressWarnings("unchecked")
     private <E> MethodLineConverter<E> setStack(StackVariable<E> variable) {
-        this.stack = variable;
+        stack.push(variable);
         return (MethodLineConverter<E>) this;
     }
 
     @Override
-    public <E> MethodLineConverter<E> manipulateVariable(VariableChanges change, LocalVariable<E> first, LocalVariable<?> second) {
+    public <E> MethodLineConverter<E> manipulateVariable(VariableChanges change, SkriptType first, @Nullable SkriptType second) {
         MathCall<E> call = new MathCall<>(change, first, second);
-        assert call.getOutput().isPresent();
-        return setStack(call.getOutput().get());
+        return setStack(call.getOutput().orElseThrow(EmptyStackException::new));
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <E> MethodLineConverter<E> convertVariable(LocalVariable<?> variable, Type type) {
-        ConvertVariableCall<?> convert = new ConvertVariableCall<>(variable, type);
-        assert convert.getOutput().isPresent();
-        return (MethodLineConverter<E>) setStack(convert.getOutput().get());
-    }
-
-    @Override
-    public <C> LocalVariable<C> createConstant(C constant) {
-        return new ConstantVariable<>(constant);
+    public <E> MethodLineConverter<E> convertVariable(SkriptType type, Type convertTo) {
+        ConvertVariableCall<?> convert = new ConvertVariableCall<>(type, convertTo);
+        return (MethodLineConverter<E>) setStack(convert.getOutput().orElseThrow(IllegalStateException::new));
     }
 
     @Override
@@ -167,8 +164,8 @@ public class SkriptMethodBuilder<T> implements MethodLineConverter<T> {
     }
 
     @Override
-    public <C> void returnVariable(LocalVariable<C> variable) {
-        addInstruction(new ReturnCall(variable));
+    public void returnVariable(SkriptType type) {
+        addInstruction(new ReturnCall(type));
     }
 
     @Override

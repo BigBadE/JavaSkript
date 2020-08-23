@@ -1,21 +1,24 @@
 package software.bigbade.javaskript.compiler.utils;
 
-import software.bigbade.javaskript.api.objects.variable.LocalVariable;
+import software.bigbade.javaskript.api.variables.SkriptType;
 import software.bigbade.javaskript.api.variables.Type;
 
 public final class TypeUtils {
-    private TypeUtils() {}
+    private TypeUtils() {
+    }
 
-    public static String getMethodDescriptor(LocalVariable[] params, Type outputType) {
+    public static String getMethodDescriptor(SkriptType[] params, Type outputType, boolean ignoreFirst) {
         StringBuilder descriptorBuilder = new StringBuilder();
         descriptorBuilder.append("(");
-        for (LocalVariable param : params) {
-            if(param.getNumber() != 0) {
-                param.getType().getDescriptor(descriptorBuilder);
+        for (SkriptType param : params) {
+            if(ignoreFirst) {
+                ignoreFirst = false;
+                continue;
             }
+            param.getType().getDescriptor(descriptorBuilder);
         }
         descriptorBuilder.append(")");
-        if(outputType == null) {
+        if (outputType == null) {
             descriptorBuilder.append("V");
         } else {
             outputType.getDescriptor(descriptorBuilder);

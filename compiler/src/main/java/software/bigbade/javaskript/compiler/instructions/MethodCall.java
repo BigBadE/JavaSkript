@@ -3,7 +3,7 @@ package software.bigbade.javaskript.compiler.instructions;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import software.bigbade.javaskript.api.objects.MethodLineConverter;
-import software.bigbade.javaskript.api.objects.variable.LocalVariable;
+import software.bigbade.javaskript.api.variables.SkriptType;
 import software.bigbade.javaskript.api.variables.Type;
 import software.bigbade.javaskript.compiler.utils.TypeUtils;
 import software.bigbade.javaskript.compiler.variables.Loadable;
@@ -11,7 +11,7 @@ import software.bigbade.javaskript.compiler.variables.Loadable;
 import javax.annotation.Nullable;
 
 public class MethodCall<T> extends BasicCall<T> implements BasicInstruction {
-    public MethodCall(Class<?> clazz, String method, @Nullable Type outputType, LocalVariable<?>... params) {
+    public MethodCall(Class<?> clazz, String method, @Nullable Type outputType, SkriptType... params) {
         super(clazz, method, outputType, params);
     }
 
@@ -19,14 +19,14 @@ public class MethodCall<T> extends BasicCall<T> implements BasicInstruction {
     public void addInstructions(MethodLineConverter<?> builder, MethodVisitor code) {
         assert getClazz() != null;
         assert getMethod() != null;
-        for(int i = getParams().length; i > 0; i--) {
-            ((Loadable) getParams()[i-1]).loadVariable(builder, code);
+        for(int i = 0; i < getParams().length; i++) {
+            ((Loadable) builder.popStack()).loadVariable(builder, code);
         }
 
         if(getMethod().equals("<init>") || getMethod().equals("super") || getClazz().getName().equals(builder.getClassName())) {
-            code.visitMethodInsn(Opcodes.INVOKESPECIAL, getClazz().getName().replace(".", "/"), getMethod(), TypeUtils.getMethodDescriptor(getParams(), getReturnType()), false);
+            code.visitMethodInsn(Opcodes.INVOKESPECIAL, getClazz().getName().replace(".", "/"), getMethod(), TypeUtils.getMethodDescriptor(getParams(), getReturnType(), true), false);
         } else {
-            code.visitMethodInsn(Opcodes.INVOKEVIRTUAL, getClazz().getName().replace(".", "/"), getMethod(), TypeUtils.getMethodDescriptor(getParams(), getReturnType()), false);
+            code.visitMethodInsn(Opcodes.INVOKEVIRTUAL, getClazz().getName().replace(".", "/"), getMethod(), TypeUtils.getMethodDescriptor(getParams(), getReturnType(), false), false);
         }
     }
 }
