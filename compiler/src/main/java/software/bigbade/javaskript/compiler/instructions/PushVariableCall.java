@@ -1,19 +1,20 @@
 package software.bigbade.javaskript.compiler.instructions;
 
 import lombok.RequiredArgsConstructor;
-import proguard.classfile.editor.CompactCodeAttributeComposer;
-import software.bigbade.javaskript.compiler.utils.SkriptMethodBuilder;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+import software.bigbade.javaskript.api.objects.MethodLineConverter;
 
 @RequiredArgsConstructor
-public class PushVariableCall<T> implements BasicInstruction {
-    private final T value;
+public class PushVariableCall implements BasicInstruction {
+    private final Object value;
 
     @Override
-    public void addInstructions(SkriptMethodBuilder builder, CompactCodeAttributeComposer code) {
+    public void addInstructions(MethodLineConverter<?> builder, MethodVisitor code) {
         if (value == null) {
-            code.aconst_null();
+            code.visitInsn(Opcodes.ACONST_NULL);
         } else {
-            code.ldc(value);
+            code.visitLdcInsn(value);
         }
     }
 }

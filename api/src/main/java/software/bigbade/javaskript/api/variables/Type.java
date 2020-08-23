@@ -3,7 +3,7 @@ package software.bigbade.javaskript.api.variables;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
-public class Type {
+public final class Type {
     public static final Type VOID_TYPE = new Type(0, null, 1443168256, 1);
     public static final Type BOOLEAN_TYPE = new Type(1, null, 1509950721, 1);
     public static final Type CHAR_TYPE = new Type(2, null, 1124075009, 1);
@@ -279,10 +279,23 @@ public class Type {
         return this.buf == null ? this.off & 255 : 1;
     }
 
-    public int getOpcode(int var1) {
-        return var1 != 46 && var1 != 79 ? var1 + (this.buf == null ? (this.off & 16711680) >> 16 : 4) : var1 + (this.buf == null ? (this.off & '\uff00') >> 8 : 4);
+    public int getOpcode(int opcode) {
+        if(opcode != 46 && opcode != 79) {
+            if(buf == null) {
+                return opcode + ((off & 16711680) >> 16);
+            } else {
+                return opcode + 4;
+            }
+        } else {
+            if(buf == null) {
+                return opcode + ((off & '\uff00') >> 8);
+            } else {
+                return opcode + 4;
+            }
+        }
     }
 
+    @Override
     public boolean equals(Object object) {
         if (this == object) {
             return true;

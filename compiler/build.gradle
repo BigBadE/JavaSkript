@@ -8,9 +8,8 @@ dependencies {
     shadow project(':api')
     shadow project(':parser')
 
-    implementation ('com.guardsquare:proguard-core:7.0.0') {
-        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
-        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-common'
-        exclude group: 'org.jetbrains.kotlinx', module: 'kotlinx-metadata-jvm'
-    }
+    implementation 'org.ow2.asm:asm:9.0-beta'
+    implementation 'org.ow2.asm:asm-util:9.0-beta'
+    implementation 'org.ow2.asm:asm-commons:9.0-beta'
+    testImplementation 'org.ow2.asm:asm-analysis:9.0-beta'
 }

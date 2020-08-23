@@ -1,22 +1,23 @@
 package software.bigbade.javaskript.compiler.statements;
 
 import lombok.RequiredArgsConstructor;
-import proguard.classfile.editor.CompactCodeAttributeComposer;
+import org.objectweb.asm.Label;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
-import java.util.function.BiConsumer;
 
 @RequiredArgsConstructor
 public enum IfStatementType {
-    EQUALS(CompactCodeAttributeComposer::ifeq),
-    UNEQUAL(CompactCodeAttributeComposer::ifne),
-    GREATER_THAN(CompactCodeAttributeComposer::ifgt),
-    GREATER_THAN_OR_EQUAL(CompactCodeAttributeComposer::ifge),
-    LESS_THAN(CompactCodeAttributeComposer::iflt),
-    LESS_THAN_OR_EQUAL(CompactCodeAttributeComposer::ifle),
-    NULL(CompactCodeAttributeComposer::ifnull),
-    NON_NULL(CompactCodeAttributeComposer::ifnonnull);
+    EQUALS(Opcodes.IFEQ),
+    UNEQUAL(Opcodes.IFNE),
+    GREATER_THAN(Opcodes.IFGT),
+    GREATER_THAN_OR_EQUAL(Opcodes.IFGE),
+    LESS_THAN(Opcodes.IFLT),
+    LESS_THAN_OR_EQUAL(Opcodes.IFLE),
+    NULL(Opcodes.IFNULL),
+    NON_NULL(Opcodes.IFNONNULL);
 
-    private final BiConsumer<CompactCodeAttributeComposer, CompactCodeAttributeComposer.Label> function;
+    private final int opcode;
 
     public IfStatementType inverse() {
         switch(this) {
@@ -40,7 +41,7 @@ public enum IfStatementType {
         throw new IllegalArgumentException("IfStatement has no inverse");
     }
 
-    public void accept(CompactCodeAttributeComposer code, CompactCodeAttributeComposer.Label label) {
-        function.accept(code, label);
+    public void accept(MethodVisitor code, Label label) {
+        code.visitJumpInsn(opcode, label);
     }
 }

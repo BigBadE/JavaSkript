@@ -1,9 +1,9 @@
 package software.bigbade.javaskript.compiler.java;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import proguard.classfile.editor.CompactCodeAttributeComposer;
+import org.objectweb.asm.Label;
+import org.objectweb.asm.MethodVisitor;
 import software.bigbade.javaskript.compiler.instructions.BasicInstruction;
 import software.bigbade.javaskript.compiler.utils.SkriptMethodBuilder;
 
@@ -16,8 +16,9 @@ public class BasicJavaCodeBlock implements JavaCodeBlock {
     @Setter
     @Nullable
     private JavaCodeBlock parent;
+
     @Getter
-    private CompactCodeAttributeComposer.Label label;
+    private Label label;
 
     private final List<BasicInstruction> instructions = new ArrayList<>();
 
@@ -26,17 +27,17 @@ public class BasicJavaCodeBlock implements JavaCodeBlock {
     }
 
     @Override
-    public void loadInstructions(SkriptMethodBuilder builder, CompactCodeAttributeComposer code) {
+    public void loadInstructions(SkriptMethodBuilder<?> builder, MethodVisitor code) {
         createLabel(code);
         for(BasicInstruction instruction : instructions) {
             instruction.addInstructions(builder, code);
         }
     }
 
-    public CompactCodeAttributeComposer.Label createLabel(CompactCodeAttributeComposer code) {
+    public Label createLabel(MethodVisitor code) {
         if(label == null) {
-            label = code.createLabel();
-            code.label(label);
+            label = new Label();
+            code.visitLabel(label);
         }
         return label;
     }

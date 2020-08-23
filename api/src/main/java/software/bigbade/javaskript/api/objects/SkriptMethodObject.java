@@ -1,36 +1,38 @@
 package software.bigbade.javaskript.api.objects;
 
+import lombok.Getter;
 import software.bigbade.javaskript.api.patterns.PatternParser;
-import software.bigbade.javaskript.api.variables.Variables;
-import software.bigbade.javaskript.api.SkriptLineConverter;
 import software.bigbade.javaskript.api.variables.SkriptType;
+import software.bigbade.javaskript.api.variables.Variables;
 
 import java.util.List;
 
-public class SkriptMethodObject implements SkriptStructuredObject {
+public abstract class SkriptMethodObject implements SkriptStructuredObject {
     //Types passed to the method itself
-    public final List<SkriptType<?>> inputVariables;
+    @Getter
+    public final List<SkriptType> inputVariables;
     //Parses
     private final PatternParser patternParser;
 
-    private final SkriptType<?> returnType;
+    @Getter
+    private final SkriptType returnType;
 
+    @Getter
     private Variables variables;
 
-    public SkriptMethodObject(String pattern, List<SkriptType<?>> structureVariables, List<SkriptType<?>> inputVariables, SkriptType<?> returnType) {
+    public SkriptMethodObject(String pattern, List<SkriptType> inputVariables, SkriptType returnType) {
         this.inputVariables = inputVariables;
         this.returnType = returnType;
-        this.patternParser = new PatternParser(pattern, structureVariables);
+        this.patternParser = new PatternParser(pattern);
     }
 
-    public boolean parse(String line) {
+    public ParsedSkriptObject parse(String line) {
         variables = patternParser.parse(line);
-        return variables != null;
+        if(variables == null) {
+            return null;
+        }
+        return getParsedObject();
     }
 
-    @Override
-    public void register(SkriptLineConverter lineConverter, String line) {
-        line = line.trim();
-        lineConverter.startMethod(line.substring(0, line.length()-1), variables, returnType);
-    }
+    abstract ParsedSkriptObject getParsedObject();
 }

@@ -1,6 +1,7 @@
 package software.bigbade.javaskript.compiler.java;
 
-import proguard.classfile.editor.CompactCodeAttributeComposer;
+import org.objectweb.asm.Label;
+import org.objectweb.asm.MethodVisitor;
 import software.bigbade.javaskript.compiler.instructions.BasicInstruction;
 import software.bigbade.javaskript.compiler.utils.SkriptMethodBuilder;
 
@@ -12,11 +13,11 @@ public interface JavaCodeBlock {
 
     void setParent(@Nullable JavaCodeBlock block);
 
-    CompactCodeAttributeComposer.Label getLabel();
+    Label getLabel();
 
     void addInstruction(BasicInstruction instruction);
 
-    void loadInstructions(SkriptMethodBuilder builder, CompactCodeAttributeComposer code);
+    void loadInstructions(SkriptMethodBuilder<?> builder, MethodVisitor visitor);
 
-    CompactCodeAttributeComposer.Label createLabel(CompactCodeAttributeComposer code);
+    Label createLabel(MethodVisitor visitor);
 }

@@ -5,20 +5,22 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import software.bigbade.javaskript.api.objects.MethodLineConverter;
 import software.bigbade.javaskript.api.objects.variable.LocalVariable;
+import software.bigbade.javaskript.compiler.variables.StackVariable;
 
 import javax.annotation.Nullable;
 
 @RequiredArgsConstructor
-public class SetVariableCall implements BasicInstruction {
+public class ReturnCall implements BasicInstruction {
     @Nullable
-    private final LocalVariable<?> variable;
+    private final LocalVariable<?> value;
 
     @Override
     public void addInstructions(MethodLineConverter<?> builder, MethodVisitor code) {
-        if(variable == null) {
+        ((StackVariable<?>) builder.getStack()).loadVariable(builder, code);
+        if(value == null || value.getType() == null) {
             code.visitInsn(Opcodes.RETURN);
         } else {
-            code.visitVarInsn(variable.getType().getOpcode(Opcodes.ISTORE), variable.getNumber());
+            code.visitInsn(value.getType().getOpcode(Opcodes.IRETURN));
         }
     }
 }

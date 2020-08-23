@@ -1,25 +1,24 @@
 package software.bigbade.javaskript.compiler.instructions;
 
-import proguard.classfile.editor.CompactCodeAttributeComposer;
-import software.bigbade.javaskript.api.objects.LocalVariable;
-import software.bigbade.javaskript.compiler.utils.SkriptMethodBuilder;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+import software.bigbade.javaskript.api.objects.MethodLineConverter;
+import software.bigbade.javaskript.api.objects.variable.LocalVariable;
+import software.bigbade.javaskript.api.variables.Type;
 import software.bigbade.javaskript.compiler.utils.TypeUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class StaticMethodCall<T> extends BasicCall<T> implements BasicInstruction {
-    @Nullable
-    private final String name;
 
-    public StaticMethodCall(@Nonnull Class<?> clazz, @Nonnull String method, @Nullable Class<T> outputType, @Nullable String name, @Nonnull LocalVariable... params) {
-        super(clazz, method, outputType, params);
-        this.name = name;
+    public StaticMethodCall(@Nonnull Class<?> clazz, @Nonnull String method, @Nullable Class<T> outputType, @Nonnull LocalVariable... params) {
+        super(clazz, method, (outputType == null ? null : Type.getType(outputType)), params);
     }
 
     @Override
-    public void addInstructions(SkriptMethodBuilder builder, CompactCodeAttributeComposer code) {
-        code.invokestatic(getClazz().getName(), getMethod(), TypeUtils.getMethodDescriptor(getParams(), getOutputType()));
-        setOutput(builder, name);
+    public void addInstructions(MethodLineConverter<?> builder, MethodVisitor code) {
+        assert getClazz() != null;
+        code.visitMethodInsn(Opcodes.INVOKESTATIC, getClazz().getName(), getMethod(), TypeUtils.getMethodDescriptor(getParams(), getReturnType()), false);
     }
 }

@@ -51,7 +51,6 @@ allprojects {
 
     repositories {
         mavenCentral()
-        mavenLocal()
         jcenter()
     }
 
@@ -66,17 +65,16 @@ allprojects {
 
     shadowJar {
         classifier = ''
-        archiveName = 'javaskript-1.0.jar'
 
         exclude 'META-INF/**'
     }
 
     dependencies {
         shadow 'com.google.code.findbugs:jsr305:3.0.2'
-    }
-}
 
-subprojects {
+        testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
+    }
+
     test.useTestNG()
 }
 

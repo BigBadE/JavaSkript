@@ -2,12 +2,13 @@ package software.bigbade.javaskript.compiler.statements;
 
 import lombok.Getter;
 import lombok.Setter;
-import proguard.classfile.editor.CompactCodeAttributeComposer;
+import org.objectweb.asm.Label;
+import org.objectweb.asm.MethodVisitor;
+import software.bigbade.javaskript.api.objects.variable.LocalVariable;
 import software.bigbade.javaskript.compiler.instructions.BasicInstruction;
 import software.bigbade.javaskript.compiler.instructions.LoadVariableCall;
-import software.bigbade.javaskript.compiler.utils.SkriptMethodBuilder;
-import software.bigbade.javaskript.api.objects.LocalVariable;
 import software.bigbade.javaskript.compiler.java.JavaCodeBlock;
+import software.bigbade.javaskript.compiler.utils.SkriptMethodBuilder;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -18,8 +19,9 @@ public class IfStatement implements JavaCodeBlock {
     @Setter
     @Nullable
     private JavaCodeBlock parent;
+
     private final IfStatementType type;
-    private final LocalVariable[] args;
+    private final LocalVariable<?>[] args;
 
     private final List<IfStatement> elseIf = new ArrayList<>();
     @Setter
@@ -29,12 +31,11 @@ public class IfStatement implements JavaCodeBlock {
     private JavaCodeBlock end;
 
     @Override
-    public CompactCodeAttributeComposer.Label getLabel() {
+    public Label getLabel() {
         return start.getLabel();
     }
 
-    public IfStatement(@Nullable JavaCodeBlock parent, IfStatementType type, LocalVariable... args) {
-        this.parent = parent;
+    public IfStatement(IfStatementType type, LocalVariable<?>... args) {
         this.type = type;
         this.args = args;
     }
@@ -53,33 +54,32 @@ public class IfStatement implements JavaCodeBlock {
     }
 
     @Override
-    public void loadInstructions(SkriptMethodBuilder builder, CompactCodeAttributeComposer code) {
-        start.createLabel(code);
-        for(LocalVariable localVariable : args) {
-            new LoadVariableCall(localVariable).addInstructions(builder, code);
-            code.aload(localVariable.getNumber());
+    public void loadInstructions(SkriptMethodBuilder<?> builder, MethodVisitor visitor) {
+        start.createLabel(visitor);
+        for(LocalVariable<?> localVariable : args) {
+            new LoadVariableCall(localVariable).addInstructions(builder, visitor);
         }
         for(JavaCodeBlock block : elseIf) {
-            block.createLabel(code);
+            block.createLabel(visitor);
         }
-        CompactCodeAttributeComposer.Label endLabel;
+        Label endLabel;
         if(end != null) {
-            endLabel = end.createLabel(code);
+            endLabel = end.createLabel(visitor);
         } else {
-            endLabel = code.createLabel();
+            endLabel = new Label();
         }
-        type.inverse().accept(code, endLabel);
-        start.loadInstructions(builder, code);
+        type.inverse().accept(visitor, endLabel);
+        start.loadInstructions(builder, visitor);
         for (JavaCodeBlock block : elseIf) {
-            block.loadInstructions(builder, code);
+            block.loadInstructions(builder, visitor);
         }
         if (end != null) {
-            end.loadInstructions(builder, code);
+            end.loadInstructions(builder, visitor);
         }
     }
 
     @Override
-    public CompactCodeAttributeComposer.Label createLabel(CompactCodeAttributeComposer code) {
+    public Label createLabel(MethodVisitor code) {
         return start.createLabel(code);
     }
 }

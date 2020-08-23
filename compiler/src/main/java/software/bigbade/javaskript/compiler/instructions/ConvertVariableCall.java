@@ -1,68 +1,66 @@
 package software.bigbade.javaskript.compiler.instructions;
 
-import lombok.RequiredArgsConstructor;
-import proguard.classfile.editor.CompactCodeAttributeComposer;
-import software.bigbade.javaskript.api.objects.LocalVariable;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+import software.bigbade.javaskript.api.objects.MethodLineConverter;
+import software.bigbade.javaskript.api.objects.variable.LocalVariable;
 import software.bigbade.javaskript.api.variables.Type;
-import software.bigbade.javaskript.compiler.utils.SkriptMethodBuilder;
+import software.bigbade.javaskript.compiler.utils.UnboxUtils;
+import software.bigbade.javaskript.compiler.variables.Loadable;
 
-@RequiredArgsConstructor
-public class ConvertVariableCall<T> implements BasicInstruction {
-    private final LocalVariable variable;
-    private final Class<T> convertTo;
+import java.util.Arrays;
+import java.util.List;
+
+public class ConvertVariableCall<T> extends BasicCall<T> {
+    private final LocalVariable<?> variable;
+
+    private final List<Type> types = Arrays.asList(Type.INT_TYPE, Type.LONG_TYPE, Type.FLOAT_TYPE, Type.DOUBLE_TYPE);
+
+    public ConvertVariableCall(LocalVariable<?> variable, Type convertTo) {
+        super(null, null, convertTo, variable);
+        this.variable = variable;
+    }
 
     @Override
-    public void addInstructions(SkriptMethodBuilder builder, CompactCodeAttributeComposer code) {
-        new LoadVariableCall(variable).addInstructions(builder, code);
-        if(variable.getType().equals(Type.LONG_TYPE)) {
-            if(convertTo.equals(Float.TYPE)) {
-                code.l2f();
-            } else if(convertTo.equals(Integer.TYPE)) {
-                code.l2i();
-            } else if(convertTo.equals(Double.TYPE)) {
-                code.l2d();
-            } else {
-                code.checkcast(variable.getNumber());
-            }
-        } else if(variable.getType().equals(Type.FLOAT_TYPE)) {
-            if(convertTo.equals(Long.TYPE)) {
-                code.f2l();
-            } else if(convertTo.equals(Integer.TYPE)) {
-                code.f2i();
-            } else if(convertTo.equals(Double.TYPE)) {
-                code.f2d();
-            } else {
-                code.checkcast(variable.getNumber());
-            }
-        } else if(variable.getType().equals(Type.INT_TYPE)) {
-            if(convertTo.equals(Long.TYPE)) {
-                code.i2l();
-            } else if(convertTo.equals(Float.TYPE)) {
-                code.i2f();
-            } else if(convertTo.equals(Double.TYPE)) {
-                code.i2d();
-            } else if(convertTo.equals(Byte.TYPE)) {
-                code.i2b();
-            } else if(convertTo.equals(Character.TYPE)) {
-                code.i2c();
-            } else if(convertTo.equals(Short.TYPE)) {
-                code.i2s();
-            } else {
-                code.checkcast(variable.getNumber());
-            }
-        } else if(variable.getType().equals(Type.DOUBLE_TYPE)) {
-            if(convertTo.equals(Long.TYPE)) {
-                code.d2l();
-            } else if(convertTo.equals(Integer.TYPE)) {
-                code.d2i();
-            } else if(convertTo.equals(Float.TYPE)) {
-                code.d2f();
-            } else {
-                code.checkcast(variable.getNumber());
-            }
+    public void addInstructions(MethodLineConverter<?> builder, MethodVisitor code) {
+        ((Loadable) variable).loadVariable(builder, code);
+        int opcode;
+        //Bytes, chars and shorts can only come from ints, convert other types to ints first.
+        assert getReturnType() != null;
+        if(getReturnType().equals(Type.BYTE_TYPE)) {
+            confirmInt(builder, code);
+            opcode = Opcodes.I2B;
+        } else if(getReturnType().equals(Type.CHAR_TYPE)) {
+            confirmInt(builder, code);
+            opcode = Opcodes.I2C;
+        } else if(getReturnType().equals(Type.SHORT_TYPE)) {
+            confirmInt(builder, code);
+            opcode = Opcodes.I2S;
+            //Boxed types, such as java.lang.Integer, should be unboxed instead of checkcast'd.
+        } else if(UnboxUtils.isBoxed(variable.getType())) {
+            UnboxUtils.unbox(variable, code);
+            return;
+            //Unboxed types, being boxed, should use the box method instead of checkcast.
+        } else if(UnboxUtils.isBoxed(getReturnType())) {
+            UnboxUtils.box(variable, code);
+            return;
         } else {
-            code.checkcast(variable.getNumber());
+            int firstIndex = types.indexOf(variable.getType());
+            int secondIndex = types.indexOf(getReturnType());
+            if (firstIndex >= 0 && secondIndex >= 0) {
+                opcode = 133 + (firstIndex * 3 + ((firstIndex < secondIndex) ? secondIndex - 1 : secondIndex));
+            } else {
+                code.visitLdcInsn(getReturnType().getInternalName());
+                code.visitVarInsn(Opcodes.CHECKCAST, variable.getNumber());
+                return;
+            }
         }
-        new SetVariableCall(variable).addInstructions(builder, code);
+        code.visitInsn(opcode);
+    }
+
+    private void confirmInt(MethodLineConverter<?> builder, MethodVisitor code) {
+        if(!variable.getType().equals(Type.INT_TYPE)) {
+            new ConvertVariableCall<>(variable, Type.INT_TYPE).addInstructions(builder, code);
+        }
     }
 }

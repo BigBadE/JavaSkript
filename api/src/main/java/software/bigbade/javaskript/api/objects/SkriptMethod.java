@@ -17,7 +17,7 @@ public interface SkriptMethod {
 
     Class<?> getOwner();
 
-    String getMethod();
+    String getName();
 
     boolean isConstructor();
 

@@ -1,23 +1,20 @@
 package software.bigbade.javaskript.compiler.instructions;
 
-import proguard.classfile.editor.CompactCodeAttributeComposer;
-import software.bigbade.javaskript.compiler.utils.SkriptMethodBuilder;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+import software.bigbade.javaskript.api.objects.MethodLineConverter;
 import software.bigbade.javaskript.api.variables.Type;
 
-import javax.annotation.Nullable;
-
 public class GetStaticField<T> extends BasicCall<T> implements BasicInstruction {
-    @Nullable
-    private final String name;
 
-    public GetStaticField(Class<?> clazz, String field, Class<T> output, String name) {
-        super(clazz, field, output);
-        this.name = name;
+    public GetStaticField(Class<?> clazz, String field, Class<T> output) {
+        super(clazz, field, Type.getType(output));
     }
 
     @Override
-    public void addInstructions(SkriptMethodBuilder builder, CompactCodeAttributeComposer code) {
-        code.getstatic(getClazz().getName(), getMethod(), Type.getDescriptor(getOutputType()));
-        setOutput(builder, name);
+    public void addInstructions(MethodLineConverter<?> builder, MethodVisitor code) {
+        assert getClazz() != null;
+        assert getOutput().isPresent();
+        code.visitFieldInsn(Opcodes.GETSTATIC, getClazz().getName(), getMethod(), getOutput().get().getType().getDescriptor());
     }
 }

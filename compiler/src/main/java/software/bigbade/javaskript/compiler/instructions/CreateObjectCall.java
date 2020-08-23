@@ -1,29 +1,25 @@
 package software.bigbade.javaskript.compiler.instructions;
 
-import proguard.classfile.editor.CompactCodeAttributeComposer;
-import software.bigbade.javaskript.api.objects.LocalVariable;
-import software.bigbade.javaskript.compiler.utils.SkriptMethodBuilder;
-import software.bigbade.javaskript.compiler.utils.TypeUtils;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+import software.bigbade.javaskript.api.objects.MethodLineConverter;
+import software.bigbade.javaskript.api.objects.variable.LocalVariable;
+import software.bigbade.javaskript.api.variables.Type;
+import software.bigbade.javaskript.compiler.variables.Loadable;
 
-import javax.annotation.Nullable;
-
-public class CreateObjectCall<T> extends BasicCall<T> implements BasicInstruction {
-    @Nullable
-    private final String name;
-
-    public CreateObjectCall(Class<T> clazz, @Nullable String name, LocalVariable... params) {
-        super(clazz, null, clazz, params);
-        this.name = name;
+public class CreateObjectCall<T> extends BasicCall<T> {
+    public CreateObjectCall(Class<T> clazz, LocalVariable<?>... params) {
+        super(clazz, "<init>", Type.getType(clazz), params);
     }
 
     @Override
-    public void addInstructions(SkriptMethodBuilder builder, CompactCodeAttributeComposer code) {
-        code.new_(getClazz().getName());
-        code.dup();
-        for(LocalVariable variable : getParams()) {
-            new LoadVariableCall(variable).addInstructions(builder, code);
+    public void addInstructions(MethodLineConverter<?> builder, MethodVisitor code) {
+        assert getClazz() != null;
+        code.visitTypeInsn(Opcodes.NEW, getClazz().getName());
+        code.visitInsn(Opcodes.DUP);
+        for(LocalVariable<?> variable : getParams()) {
+            ((Loadable) variable).loadVariable(builder, code);
         }
-        code.invokespecial(getClazz().getName(), "<init>", TypeUtils.getMethodDescriptor(getParams(), null));
-        setOutput(builder, name);
+        new MethodCall<>(getClazz(), "<init>", getReturnType(), getParams()).addInstructions(builder, code);
     }
 }

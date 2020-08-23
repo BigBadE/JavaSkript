@@ -1,2 +1,25 @@
-package software.bigbade.javaskript.api.patterns;public class VariablePattern {
+package software.bigbade.javaskript.api.patterns;
+
+import lombok.Getter;
+import software.bigbade.javaskript.api.variables.SkriptType;
+import software.bigbade.javaskript.api.variables.SkriptTypes;
+
+public class VariablePattern implements PatternType {
+    @Getter
+    private SkriptType type;
+
+    @Override
+    public void parseString(String input) {
+        type = SkriptTypes.getSkriptType(input);
+    }
+
+    @Override
+    public boolean matches(String input) {
+        return true;
+    }
+
+    @Override
+    public int getTotalSize() {
+        return -1;
+    }
 }
