@@ -1,13 +1,14 @@
 package software.bigbade.javaskript.api.patterns;
 
-import software.bigbade.javaskript.api.variables.Variables;
+import software.bigbade.javaskript.api.IScriptParser;
+import software.bigbade.javaskript.api.exception.IllegalScriptException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
 public class PatternParser {
-    private static final Pattern SPLIT_PATTERN = Pattern.compile(" ");
+    public static final Pattern SPLIT_PATTERN = Pattern.compile(" ");
 
     private final List<PatternType> patterns = new ArrayList<>();
 
@@ -41,25 +42,34 @@ public class PatternParser {
         }
     }
 
-    public Variables parse(String line) {
+    public boolean parse(IScriptParser parser, String line) {
         String currentWord = line;
-        Variables variables = new Variables();
-        for (PatternType type : patterns) {
-            String word;
-            if (type.getTotalSize() == -1) {
-                word = currentWord.substring(0, currentWord.indexOf(' '));
-            } else {
-                word = currentWord.substring(0, type.getTotalSize());
-            }
-            if (type.matches(word)) {
-                if (type.getType() != null) {
-                    variables.addVariable(word, type.getType());
+        int i = 0;
+        List<String> foundVariables = new ArrayList<>();
+        while (i < patterns.size()) {
+            PatternType type = patterns.get(i);
+            if(type instanceof VariablePattern) {
+                StringBuilder found = new StringBuilder();
+                while ((i == patterns.size()-1) ? !currentWord.isEmpty() : !patterns.get(i++).matches(currentWord)) {
+                    String word = currentWord.substring(0, currentWord.indexOf(' '));
+                    found.append(word);
+                    currentWord = currentWord.substring(word.length());
                 }
-                currentWord = currentWord.substring(word.length());
-            } else if (!(type instanceof OptionalPattern)) {
-                return null;
+                foundVariables.add(found.toString());
+            }
+            int size = (type.getTotalSize() == -1) ? currentWord.indexOf(' ') : type.getTotalSize();
+            if(type.matches(currentWord.substring(0, size))) {
+                currentWord = currentWord.substring(size);
+            } else {
+                return false;
+            }
+            i++;
+        }
+        for(String variable : foundVariables) {
+            if(!parser.parseMethod(variable, false)) {
+                throw new IllegalScriptException("Unknown expression: " + variable);
             }
         }
-        return variables;
+        return true;
     }
 }

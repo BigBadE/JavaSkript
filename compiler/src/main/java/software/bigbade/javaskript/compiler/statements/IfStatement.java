@@ -4,9 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
-import software.bigbade.javaskript.api.objects.variable.LocalVariable;
 import software.bigbade.javaskript.compiler.instructions.BasicInstruction;
-import software.bigbade.javaskript.compiler.instructions.LoadVariableCall;
 import software.bigbade.javaskript.compiler.java.JavaCodeBlock;
 import software.bigbade.javaskript.compiler.utils.SkriptMethodBuilder;
 
@@ -21,7 +19,6 @@ public class IfStatement implements JavaCodeBlock {
     private JavaCodeBlock parent;
 
     private final IfStatementType type;
-    private final LocalVariable<?>[] args;
 
     private final List<IfStatement> elseIf = new ArrayList<>();
     @Setter
@@ -35,9 +32,8 @@ public class IfStatement implements JavaCodeBlock {
         return start.getLabel();
     }
 
-    public IfStatement(IfStatementType type, LocalVariable<?>... args) {
+    public IfStatement(IfStatementType type) {
         this.type = type;
-        this.args = args;
     }
 
     public void addElseIf(IfStatement statement) {
@@ -56,8 +52,8 @@ public class IfStatement implements JavaCodeBlock {
     @Override
     public void loadInstructions(SkriptMethodBuilder<?> builder, MethodVisitor visitor) {
         start.createLabel(visitor);
-        for(LocalVariable<?> localVariable : args) {
-            new LoadVariableCall(localVariable).addInstructions(builder, visitor);
+        for(int i = 0; i < type.getArgs(); i++) {
+            builder.popStack().loadVariable(builder, visitor);
         }
         for(JavaCodeBlock block : elseIf) {
             block.createLabel(visitor);

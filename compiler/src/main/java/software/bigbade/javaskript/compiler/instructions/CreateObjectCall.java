@@ -7,7 +7,7 @@ import software.bigbade.javaskript.api.variables.SkriptType;
 import software.bigbade.javaskript.api.variables.Type;
 
 public class CreateObjectCall<T> extends BasicCall<T> {
-    public CreateObjectCall(Class<T> clazz, SkriptType... params) {
+    public CreateObjectCall(Class<T> clazz, SkriptType<?>... params) {
         super(clazz, "<init>", Type.getType(clazz), params);
     }
 

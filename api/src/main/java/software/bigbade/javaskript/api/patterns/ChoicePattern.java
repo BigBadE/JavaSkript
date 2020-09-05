@@ -17,7 +17,7 @@ public class ChoicePattern implements PatternType {
 
     @Nullable
     @Override
-    public SkriptType getType() {
+    public SkriptType<?> getType() {
         return null;
     }
 

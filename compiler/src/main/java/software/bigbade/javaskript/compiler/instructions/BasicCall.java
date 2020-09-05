@@ -2,10 +2,9 @@ package software.bigbade.javaskript.compiler.instructions;
 
 import lombok.AccessLevel;
 import lombok.Getter;
-import software.bigbade.javaskript.api.objects.variable.LocalVariable;
 import software.bigbade.javaskript.api.variables.SkriptType;
-import software.bigbade.javaskript.compiler.variables.StackVariable;
 import software.bigbade.javaskript.api.variables.Type;
+import software.bigbade.javaskript.compiler.variables.StackVariable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

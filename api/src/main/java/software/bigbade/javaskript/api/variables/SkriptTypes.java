@@ -1,29 +1,45 @@
 package software.bigbade.javaskript.api.variables;
 
-import lombok.Getter;
+import lombok.SneakyThrows;
 
-import javax.annotation.Nullable;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public final class SkriptTypes {
     private SkriptTypes() {}
 
-    public static void registerSkriptType(SkriptType type) {
+    public static void registerSkriptType(SkriptType<?> type) {
         SKRIPT_TYPES.add(type);
     }
 
-    @Nullable
-    public static SkriptType getSkriptType(String type) {
-        for(SkriptType skriptType : SKRIPT_TYPES) {
-            if(skriptType.getName().equals(type)) {
-                return skriptType;
-            }
-        }
-        return null;
+    public static void registerSkriptTypes(SkriptType<?>... types) {
+        SKRIPT_TYPES.addAll(Arrays.asList(types));
     }
 
-    public static final SkriptType VOID = new PrimitiveType() {
+    @SuppressWarnings("unchecked")
+    public static <T> Optional<SkriptType<T>> getSkriptType(String type) {
+        for(SkriptType<?> skriptType : SKRIPT_TYPES) {
+            if(skriptType.getName().equals(type)) {
+                return Optional.of((SkriptType<T>) skriptType);
+            }
+        }
+        return Optional.empty();
+    }
+
+    public static final SkriptType<Void> VOID = new GenericType<Void>() {
+        @Override
+        public boolean isSerializable() {
+            return false;
+        }
+
+        @Override
+        public boolean isSet() {
+            return false;
+        }
+
         @Override
         public boolean isType(String input) {
             return false;
@@ -36,11 +52,11 @@ public final class SkriptTypes {
 
         @Override
         public String getName() {
-            return null;
+            return "void";
         }
     };
 
-    public static final SkriptType STRING = new GenericType<String>() {
+    public static final SkriptType<String> STRING = new GenericType<String>() {
         @Override
         public String deserialize(String input) {
             return input;
@@ -73,16 +89,18 @@ public final class SkriptTypes {
 
         @Override
         public String getName() {
-            return String.class.getName();
+            return "string";
         }
     };
 
-    public static final SkriptType INTEGER = new PrimitiveType() {
-        public int deserialize(String input) {
-            return Integer.parseInt(input);
+    public static final SkriptType<Integer> INTEGER = new GenericType<Integer>() {
+        @Override
+        public Integer deserialize(String input) {
+            return getObject(input);
         }
 
-        public String serialize(int input) {
+        @Override
+        public String serialize(Integer input) {
             return input + "";
         }
 
@@ -96,11 +114,13 @@ public final class SkriptTypes {
             return true;
         }
 
+        @Override
         public Type getType() {
             return Type.INT_TYPE;
         }
 
-        public int getType(String input) {
+        @Override
+        public Integer getObject(String input) {
             return Integer.parseInt(input);
         }
 
@@ -120,6 +140,56 @@ public final class SkriptTypes {
         }
     };
 
-    @Getter
-    private static final List<SkriptType> SKRIPT_TYPES = Arrays.asList(VOID, STRING, INTEGER);
+    public static final SkriptType<Boolean> BOOLEAN = new GenericType<Boolean>() {
+        @Override
+        public Boolean deserialize(String input) {
+            return getObject(input);
+        }
+
+        @Override
+        public String serialize(Boolean input) {
+            return input + "";
+        }
+
+        @Override
+        public boolean isSerializable() {
+            return true;
+        }
+
+        @Override
+        public boolean isSet() {
+            return true;
+        }
+
+        @Override
+        public Type getType() {
+            return Type.BOOLEAN_TYPE;
+        }
+
+        @Override
+        public Boolean getObject(String input) {
+            return Boolean.parseBoolean(input);
+        }
+
+        @Override
+        public boolean isType(String input) {
+            return input.equalsIgnoreCase("true") || input.equalsIgnoreCase("false");
+        }
+
+        @Override
+        public String getName() {
+            return "boolean";
+        }
+    };
+
+    @SneakyThrows
+    private static List<SkriptType<?>> getFields() {
+        List<SkriptType<?>> fields = new ArrayList<>();
+        for(Field field : SkriptTypes.class.getFields()) {
+            fields.add((SkriptType<?>) field.get(null));
+        }
+        return fields;
+    }
+
+    private static final List<SkriptType<?>> SKRIPT_TYPES = getFields();
 }

@@ -11,13 +11,14 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.util.CheckClassAdapter;
+import software.bigbade.javaskript.api.IScriptParser;
 import software.bigbade.javaskript.api.instructions.Statements;
 import software.bigbade.javaskript.api.instructions.VariableChanges;
 import software.bigbade.javaskript.api.objects.MethodLineConverter;
 import software.bigbade.javaskript.api.objects.ParsedSkriptMethod;
 import software.bigbade.javaskript.api.objects.SkriptMethod;
 import software.bigbade.javaskript.api.objects.variable.LocalVariable;
-import software.bigbade.javaskript.api.variables.ClassType;
+import software.bigbade.javaskript.api.variables.SkriptType;
 import software.bigbade.javaskript.api.variables.SkriptTypes;
 import software.bigbade.javaskript.api.variables.Variables;
 import software.bigbade.javaskript.compiler.java.BasicJavaClass;
@@ -104,38 +105,21 @@ public class TestSkriptToJavaConverter {
         ParsedSkriptMethod method = new ParsedSkriptMethod(new SkriptMethod() {
             @Nullable
             @Override
-            public ParsedSkriptMethod parse(String line) {
+            public ParsedSkriptMethod parse(IScriptParser parser, String line) {
                 throw new IllegalStateException("Already parsed!");
             }
 
             @Override
-            public Variables getVariables() {
-                return new Variables();
+            public SkriptType<?>[] getVariables() {
+                return new SkriptType[0];
             }
 
-            @Override
-            public Class<?> getOwner() {
-                return Object.class;
-            }
-
-            @Override
-            public String getName() {
-                return "<init>";
-            }
-
-            @Override
-            public boolean isConstructor() {
-                return false;
-            }
-
-            @Override
-            public boolean isStatic() {
-                return false;
+            public int runMethod(int input) {
+                return input*6;
             }
         }, null);
-        method.addLocalVariable(new ClassType<>("Main"));
         methodConverter.loadVariable(methodConverter.getLocalVariable("this"))
-                .callMethod(method)
+                .callSkriptMethod(method)
                 .returnNothing();
         converter.endMethod(methodConverter);
         variables = new Variables();
@@ -146,7 +130,7 @@ public class TestSkriptToJavaConverter {
         methodConverter.loadVariable(output);
         methodConverter.loadConstant(6);
         methodConverter = methodConverter.manipulateVariable(VariableChanges.MULTIPLY, SkriptTypes.INTEGER, SkriptTypes.INTEGER);
-        methodConverter.returnVariable(SkriptTypes.INTEGER);
+        methodConverter.returnVariable();
         converter.endMethod(methodConverter);
         converter.endClass();
         try (JarOutputStream outputStream = new JarOutputStream(new FileOutputStream(outputFile))) {

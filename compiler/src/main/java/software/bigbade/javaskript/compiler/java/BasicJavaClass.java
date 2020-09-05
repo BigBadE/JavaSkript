@@ -45,7 +45,7 @@ public class BasicJavaClass implements SkriptLineConverter {
         classBuilder.visitEnd();
     }
 
-    public MethodLineConverter<Void> startMethod(String name, Variables variables, @Nullable SkriptType returnType) {
+    public MethodLineConverter<Void> startMethod(String name, Variables variables, @Nullable SkriptType<?> returnType) {
         variables.addVariable("this", new ClassType<>(classBuilder.getName()));
         return new SkriptMethodBuilder<>(classBuilder, name, returnType, variables);
     }
@@ -54,7 +54,7 @@ public class BasicJavaClass implements SkriptLineConverter {
         ((SkriptMethodBuilder<?>) converter).compose(classBuilder.visitMethod(Opcodes.ACC_PUBLIC, converter.getName(), converter.getMethodDescription(), null, null));
     }
 
-    public void registerVariable(String name, SkriptType variable) {
+    public void registerVariable(String name, SkriptType<?> variable) {
         classBuilder.visitField(Opcodes.ACC_PUBLIC, name, variable.getType().getDescriptor(), null, null);
     }
 

@@ -10,11 +10,11 @@ public interface SkriptLineConverter extends WriteableJavaClass {
 
     void endClass();
 
-    MethodLineConverter<Void> startMethod(String name, Variables variables, @Nullable SkriptType returnType);
+    MethodLineConverter<Void> startMethod(String name, Variables variables, @Nullable SkriptType<?> returnType);
 
     void endMethod(MethodLineConverter<?> converter);
 
-    void registerVariable(String name, SkriptType variable);
+    void registerVariable(String name, SkriptType<?> variable);
 
     <C> LocalVariable<C> getLocalVariable(String name);
 }

@@ -1,5 +1,6 @@
 package software.bigbade.javaskript.compiler.statements;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -8,16 +9,18 @@ import org.objectweb.asm.Opcodes;
 
 @RequiredArgsConstructor
 public enum IfStatementType {
-    EQUALS(Opcodes.IFEQ),
-    UNEQUAL(Opcodes.IFNE),
-    GREATER_THAN(Opcodes.IFGT),
-    GREATER_THAN_OR_EQUAL(Opcodes.IFGE),
-    LESS_THAN(Opcodes.IFLT),
-    LESS_THAN_OR_EQUAL(Opcodes.IFLE),
-    NULL(Opcodes.IFNULL),
-    NON_NULL(Opcodes.IFNONNULL);
+    EQUALS(Opcodes.IFEQ, 1),
+    UNEQUAL(Opcodes.IFNE, 1),
+    GREATER_THAN(Opcodes.IFGT, 2),
+    GREATER_THAN_OR_EQUAL(Opcodes.IFGE, 2),
+    LESS_THAN(Opcodes.IFLT, 2),
+    LESS_THAN_OR_EQUAL(Opcodes.IFLE, 2),
+    NULL(Opcodes.IFNULL, 1),
+    NON_NULL(Opcodes.IFNONNULL, 1);
 
     private final int opcode;
+    @Getter
+    private final int args;
 
     public IfStatementType inverse() {
         switch(this) {

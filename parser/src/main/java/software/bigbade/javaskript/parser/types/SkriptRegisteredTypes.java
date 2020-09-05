@@ -4,19 +4,22 @@ import lombok.Getter;
 import software.bigbade.javaskript.api.objects.SkriptMethod;
 import software.bigbade.javaskript.api.objects.SkriptStructuredObject;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-@Getter
-public class SkriptRegisteredTypes {
-    private final List<SkriptStructuredObject> structuredObjects = new ArrayList<>();
-    private final List<SkriptMethod> methods = new ArrayList<>();
+public final class SkriptRegisteredTypes {
+    @Getter
+    private static final Set<SkriptStructuredObject> structuredObjects = new HashSet<>();
+    @Getter
+    private static final Set<SkriptMethod> methods = new HashSet<>();
 
-    public void registerStructuredObject(SkriptStructuredObject object) {
+    private SkriptRegisteredTypes() {}
+
+    public static void registerStructuredObject(SkriptStructuredObject object) {
         structuredObjects.add(object);
     }
 
-    public void registerMethod(SkriptMethod method) {
+    public static void registerMethod(SkriptMethod method) {
         methods.add(method);
     }
 }

@@ -9,9 +9,10 @@ public abstract class ParsedSkriptObject {
     @Getter
     @Setter
     private ParsedSkriptObject parent;
-    private final SkriptStructuredObject structuredObject;
     @Getter
-    private final SkriptLineConverter converter;
+    private final MethodLineConverter<?> converter;
+
+    public abstract boolean shouldParseMethods();
 
     public abstract void parseLine(String line);
 

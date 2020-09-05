@@ -13,17 +13,17 @@ public class ClassType<T> extends GenericType<T> {
     }
 
     @Override
-    T deserialize(String input) {
+    public T deserialize(String input) {
         return null;
     }
 
     @Override
-    String serialize(T input) {
+    public String serialize(T input) {
         return null;
     }
 
     @Override
-    T getObject(String input) {
+    public T getObject(String input) {
         return null;
     }
 

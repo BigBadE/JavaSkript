@@ -15,15 +15,25 @@ public interface MethodLineConverter<T> {
 
     String getMethodDescription();
 
-    <E> MethodLineConverter<E> callMethod(ParsedSkriptMethod method);
+    <E> MethodLineConverter<E> callSkriptMethod(ParsedSkriptMethod method);
 
-    <E> MethodLineConverter<E> manipulateVariable(VariableChanges change, SkriptType first, @Nullable SkriptType second);
+    <E> MethodLineConverter<E> callJavaMethod(Class<?> clazz, String method, @Nullable SkriptType<E> returnType, boolean staticMethod, SkriptType<?>... args);
 
-    <E> MethodLineConverter<E> convertVariable(SkriptType type, Type convertTo);
+    <E> MethodLineConverter<E> newInstance(Class<?> clazz, SkriptType<?>... args);
 
-    <C> void setVariable(LocalVariable<C> variable, C value);
+    <E> MethodLineConverter<E> manipulateVariable(VariableChanges change, SkriptType<E> first, @Nullable SkriptType<?> second);
 
-    void returnVariable(SkriptType type);
+    <E> MethodLineConverter<E> convertVariable(SkriptType<?> type, Type convertTo);
+
+    MethodLineConverter<Boolean> isInstanceOf(Type type);
+
+    <C> void setVariable(LocalVariable<C> variable);
+
+    <C> void setArrayVariable(LocalVariable<C> variable, int index);
+
+    <E> MethodLineConverter<E> dropTopStack();
+
+    void returnVariable();
 
     void returnNothing();
 
@@ -35,7 +45,11 @@ public interface MethodLineConverter<T> {
 
     <E> MethodLineConverter<E> loadVariable(LocalVariable<E> variable);
 
+    <E> MethodLineConverter<E> loadArrayVariable(LocalVariable<E[]> variable, int index);
+
     <E> MethodLineConverter<E> loadConstant(E constant);
+
+    void endJavaBlock();
 
     LocalVariable<T> popStack();
 }

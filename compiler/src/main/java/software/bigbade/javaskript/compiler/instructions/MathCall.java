@@ -11,7 +11,7 @@ import software.bigbade.javaskript.compiler.variables.StackVariable;
 public class MathCall<T> extends BasicCall<T> {
     private final VariableChanges operation;
 
-    public MathCall(VariableChanges operation, SkriptType first, SkriptType second) {
+    public MathCall(VariableChanges operation, SkriptType<T> first, SkriptType<?> second) {
         super(null, null, first.getType(), first, second);
         this.operation = operation;
     }

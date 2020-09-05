@@ -10,8 +10,6 @@ version '1.0-SNAPSHOT'
 configurations {
     resolveImplementation
     resolveImplementation.extendsFrom(implementation)
-
-    shadowJar.enabled = false
 }
 
 sourceSets {

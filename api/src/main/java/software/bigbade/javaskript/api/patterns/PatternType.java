@@ -8,7 +8,7 @@ public interface PatternType {
     void parseString(String input);
 
     @Nullable
-    SkriptType getType();
+    SkriptType<?> getType();
 
     boolean matches(String input);
 

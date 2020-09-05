@@ -11,7 +11,7 @@ import software.bigbade.javaskript.compiler.variables.Loadable;
 import javax.annotation.Nullable;
 
 public class MethodCall<T> extends BasicCall<T> implements BasicInstruction {
-    public MethodCall(Class<?> clazz, String method, @Nullable Type outputType, SkriptType... params) {
+    public MethodCall(Class<?> clazz, String method, @Nullable Type outputType, SkriptType<?>... params) {
         super(clazz, method, outputType, params);
     }
 

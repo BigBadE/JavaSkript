@@ -14,7 +14,7 @@ public class DefaultPattern implements PatternType {
 
     @Nullable
     @Override
-    public SkriptType getType() {
+    public SkriptType<?> getType() {
         return null;
     }
 

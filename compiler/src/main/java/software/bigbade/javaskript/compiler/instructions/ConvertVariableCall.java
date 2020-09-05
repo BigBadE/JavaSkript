@@ -15,7 +15,7 @@ import java.util.List;
 public class ConvertVariableCall<T> extends BasicCall<T> {
     private final List<Type> types = Arrays.asList(Type.INT_TYPE, Type.LONG_TYPE, Type.FLOAT_TYPE, Type.DOUBLE_TYPE);
 
-    public ConvertVariableCall(SkriptType type, Type convertTo) {
+    public ConvertVariableCall(SkriptType<?> type, Type convertTo) {
         super(null, null, convertTo, type);
     }
 

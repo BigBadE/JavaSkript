@@ -1,16 +1,18 @@
 package software.bigbade.javaskript.api.patterns;
 
 import lombok.Getter;
+import software.bigbade.javaskript.api.exception.IllegalScriptException;
+import software.bigbade.javaskript.api.variables.ClassType;
 import software.bigbade.javaskript.api.variables.SkriptType;
 import software.bigbade.javaskript.api.variables.SkriptTypes;
 
 public class VariablePattern implements PatternType {
     @Getter
-    private SkriptType type;
+    private SkriptType<?> type;
 
     @Override
     public void parseString(String input) {
-        type = SkriptTypes.getSkriptType(input);
+        type = SkriptTypes.getSkriptType(input).orElse(new ClassType<>(input));
     }
 
     @Override

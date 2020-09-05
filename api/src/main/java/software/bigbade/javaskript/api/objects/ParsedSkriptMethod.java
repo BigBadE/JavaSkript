@@ -5,8 +5,6 @@ import lombok.RequiredArgsConstructor;
 import software.bigbade.javaskript.api.variables.SkriptType;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
 @RequiredArgsConstructor
 public class ParsedSkriptMethod {
@@ -14,11 +12,5 @@ public class ParsedSkriptMethod {
     private final SkriptMethod method;
     @Nullable
     @Getter
-    private final SkriptType returnType;
-    @Getter
-    private final List<SkriptType> variables = new ArrayList<>();
-
-    public void addLocalVariable(SkriptType variable) {
-        variables.add(variable);
-    }
+    private final SkriptType<?> returnType;
 }

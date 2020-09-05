@@ -11,12 +11,11 @@ import javax.annotation.Nullable;
 
 @RequiredArgsConstructor
 public class ReturnCall implements BasicInstruction {
-    @Nullable
-    private final SkriptType type;
+    private final boolean returnsNothing;
 
     @Override
     public void addInstructions(MethodLineConverter<?> builder, MethodVisitor code) {
-        if (type == null) {
+        if (returnsNothing) {
             code.visitInsn(Opcodes.RETURN);
             return;
         }

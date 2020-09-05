@@ -13,8 +13,8 @@ import javax.annotation.Nullable;
 
 public class StaticMethodCall<T> extends BasicCall<T> implements BasicInstruction {
 
-    public StaticMethodCall(@Nonnull Class<?> clazz, @Nonnull String method, @Nullable Class<T> outputType, @Nonnull SkriptType... params) {
-        super(clazz, method, (outputType == null ? null : Type.getType(outputType)), params);
+    public StaticMethodCall(@Nonnull Class<?> clazz, @Nonnull String method, @Nullable Type outputType, @Nonnull SkriptType<?>... params) {
+        super(clazz, method, outputType, params);
     }
 
     @Override
