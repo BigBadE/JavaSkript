@@ -17,9 +17,9 @@ public interface MethodLineConverter<T> {
 
     <E> MethodLineConverter<E> callSkriptMethod(ParsedSkriptMethod method);
 
-    <E> MethodLineConverter<E> callJavaMethod(Class<?> clazz, String method, @Nullable SkriptType<E> returnType, boolean staticMethod, SkriptType<?>... args);
+    <E> MethodLineConverter<E> callJavaMethod(String clazz, String method, @Nullable SkriptType<E> returnType, boolean staticMethod, SkriptType<?>... args);
 
-    <E> MethodLineConverter<E> newInstance(Class<?> clazz, SkriptType<?>... args);
+    <E> MethodLineConverter<E> newInstance(String clazz, SkriptType<?>... args);
 
     <E> MethodLineConverter<E> manipulateVariable(VariableChanges change, SkriptType<E> first, @Nullable SkriptType<?> second);
 

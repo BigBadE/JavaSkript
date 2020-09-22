@@ -8,13 +8,13 @@ import software.bigbade.javaskript.api.variables.Type;
 
 public class CreateObjectCall<T> extends BasicCall<T> {
     public CreateObjectCall(Class<T> clazz, SkriptType<?>... params) {
-        super(clazz, "<init>", Type.getType(clazz), params);
+        super(clazz.getName(), "<init>", Type.getType(clazz), params);
     }
 
     @Override
     public void addInstructions(MethodLineConverter<?> builder, MethodVisitor code) {
         assert getClazz() != null;
-        code.visitTypeInsn(Opcodes.NEW, getClazz().getName());
+        code.visitTypeInsn(Opcodes.NEW, getClazz());
         code.visitInsn(Opcodes.DUP);
         new MethodCall<>(getClazz(), "<init>", getReturnType(), getParams()).addInstructions(builder, code);
     }

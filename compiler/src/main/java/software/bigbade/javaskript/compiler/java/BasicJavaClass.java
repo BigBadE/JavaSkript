@@ -1,5 +1,6 @@
 package software.bigbade.javaskript.compiler.java;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
@@ -19,6 +20,7 @@ import java.util.jar.JarOutputStream;
 
 @RequiredArgsConstructor
 public class BasicJavaClass implements SkriptLineConverter {
+    @Getter
     private JavaClassWriter classBuilder;
 
     public BasicJavaClass(String name, String[] interfaces, @Nullable String superclass) {

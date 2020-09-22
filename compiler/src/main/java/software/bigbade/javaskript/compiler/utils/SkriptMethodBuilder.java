@@ -3,6 +3,8 @@ package software.bigbade.javaskript.compiler.utils;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.LocalVariablesSorter;
@@ -34,6 +36,7 @@ import software.bigbade.javaskript.compiler.variables.StackVariable;
 import software.bigbade.javaskript.compiler.variables.StoredVariable;
 
 import javax.annotation.Nullable;
+import java.lang.reflect.Method;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -41,18 +44,21 @@ import java.util.EmptyStackException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class SkriptMethodBuilder<T> implements MethodLineConverter<T> {
+    private static final String REQUIRED_METHOD_NAME = "runMethod";
+
     @Getter
     private final String name;
     @Nullable
     private final SkriptType<?> returnType;
 
+    private final List<JavaCodeBlock> codeBlocks = new ArrayList<>();
     private final JavaClassWriter parent;
 
     private final Map<String, LocalVariable<?>> methodVariables = new HashMap<>();
-    private final List<JavaCodeBlock> codeBlocks = new ArrayList<>();
     private final Deque<StackVariable<?>> stack = new ArrayDeque<>();
     private final Variables variables;
 
@@ -77,8 +83,16 @@ public class SkriptMethodBuilder<T> implements MethodLineConverter<T> {
     }
 
     @SneakyThrows
-    private void copyClass(MethodVisitor code, String clazz) {
-        //TODO copy class to "Utils" class
+    private static void copyClass(Method method) {
+        new ClassReader(method.getDeclaringClass().getName()).accept(new ClassVisitor(Opcodes.ASM9) {
+            @Override
+            public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
+                if(method.getName().equals(name)) {
+                    return new MethodRemapper(method);
+                }
+                return super.visitMethod(access, name, descriptor, signature, exceptions);
+            }
+        }, ClassReader.SKIP_FRAMES);
     }
 
     public String getClassName() {
@@ -134,21 +148,40 @@ public class SkriptMethodBuilder<T> implements MethodLineConverter<T> {
     @Override
     public <E> MethodLineConverter<E> callSkriptMethod(ParsedSkriptMethod method) {
         if (method.getReturnType() != null) {
-            return setStack(new StackVariable<>(method.getReturnType().getType(), (builder, code) -> copyClass(code, method.getMethod().getClass().getName())));
+            return setStack(new StackVariable<>(method.getReturnType().getType(), (builder, code) -> {
+                copyClass(getRunMethod(method.getMethod().getClass()).orElseThrow(() ->
+                        new IllegalStateException("Class " + method.getMethod().getClass() + " has no runMethod method!")));
+                new MethodCall<>("Utils", REQUIRED_METHOD_NAME, null,
+                        method.getMethod().getVariables()).addInstructions(builder, code);
+            }));
         } else {
-            addInstruction(new MethodCall<>(method.getMethod().getClass(), "runMethod", null, method.getMethod().getVariables()));
+            addInstruction(((builder, code) -> {
+                copyClass(getRunMethod(method.getMethod().getClass()).orElseThrow(() ->
+                        new IllegalStateException("Class " + method.getMethod().getClass() + " has no runMethod method!")));
+                addInstruction(new MethodCall<>("Utils", REQUIRED_METHOD_NAME, null,
+                        method.getMethod().getVariables()));
+            }));
         }
         return setStack(null);
     }
 
+    private static Optional<Method> getRunMethod(Class<?> clazz) {
+        for(Method method : clazz.getMethods()) {
+            if(method.getName().equals(REQUIRED_METHOD_NAME)) {
+                return Optional.of(method);
+            }
+        }
+        return Optional.empty();
+    }
+
     @Override
-    public <E> MethodLineConverter<E> newInstance(Class<?> clazz, SkriptType<?>... args) {
+    public <E> MethodLineConverter<E> newInstance(String clazz, SkriptType<?>... args) {
         Type type = Type.getType(clazz);
         return setStack(new StackVariable<>(type, new MethodCall<>(clazz, "<init>", type, args)::addInstructions));
     }
 
     @Override
-    public <E> MethodLineConverter<E> callJavaMethod(Class<?> clazz, String method, @Nullable SkriptType<E> returnType, boolean staticMethod, SkriptType<?>... args) {
+    public <E> MethodLineConverter<E> callJavaMethod(String clazz, String method, @Nullable SkriptType<E> returnType, boolean staticMethod, SkriptType<?>... args) {
         BasicInstruction instruction;
         if (staticMethod) {
             instruction = new StaticMethodCall<>(clazz, method, returnType == null ? null : returnType.getType(), args);

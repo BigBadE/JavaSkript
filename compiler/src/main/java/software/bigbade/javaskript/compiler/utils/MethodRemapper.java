@@ -4,27 +4,32 @@ import lombok.SneakyThrows;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-import software.bigbade.javaskript.api.objects.MethodLineConverter;
 import software.bigbade.javaskript.api.variables.Type;
+import software.bigbade.javaskript.compiler.java.BasicJavaClass;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashSet;
 import java.util.Set;
 
 public class MethodRemapper extends MethodVisitor {
-    private final MethodLineConverter<?> builder;
+    private static final ClassVisitor classVisitor = ((BasicJavaClass) UtilsClass.getUtilsMethodBuilder())
+            .getClassBuilder();
+    private static final Set<Method> alreadyRemapped = new HashSet<>();
     private final Set<String> writtenFields = new HashSet<>();
-    private final ClassVisitor classVisitor;
-    private final String newClass;
     private final String original;
 
-    public MethodRemapper(MethodLineConverter<?> builder, ClassVisitor classVisitor, MethodVisitor code, String original) {
-        super(Opcodes.ASM9, code);
-        this.newClass = "LUtils";
-        this.classVisitor = classVisitor;
-        this.original = original;
-        this.builder = builder;
+    public MethodRemapper(Method originalMethod) {
+        super(Opcodes.ASM9, classVisitor.visitMethod(Opcodes.ACC_PUBLIC + Opcodes.ACC_STATIC,
+                originalMethod.getName(), Type.getMethodDescriptor(originalMethod), null,
+                getExceptionsFromClasses(originalMethod.getExceptionTypes())));
+        this.original = originalMethod.getDeclaringClass().getName().replace(".", "/");
+        alreadyRemapped.add(originalMethod);
+    }
+
+    public static boolean hasRemapped(Method method) {
+        return alreadyRemapped.contains(method);
     }
 
     @SneakyThrows
@@ -40,6 +45,7 @@ public class MethodRemapper extends MethodVisitor {
                 opcodes += Opcodes.ACC_FINAL;
             }
             if(Modifier.isStatic(field.getModifiers()) && Modifier.isPublic(field.getModifiers())) {
+
                 classVisitor.visitField(opcodes, name, descriptor, null, field.get(null));
                 writtenFields.add(name);
             } else {
@@ -49,15 +55,27 @@ public class MethodRemapper extends MethodVisitor {
         super.visitFieldInsn(opcode, owner, name, descriptor);
     }
 
+    @SneakyThrows
     @Override
     public void visitMethodInsn(int opcode, String owner, String name, String descriptor, boolean isInterface) {
         if(opcode == Opcodes.INVOKESPECIAL || opcode == Opcodes.INVOKEVIRTUAL) {
             throw new IllegalStateException("Addon calls non-static method");
         }
         if(owner.equals(Type.getType(original).getInternalName())) {
-            new MethodRemapper(builder, classVisitor, super.mv, original);
-            owner = newClass;
+            Method found = Class.forName(owner.replace("/", ".")).getDeclaredMethod(name, Type.getClassesForDescriptor(descriptor));
+            if(!hasRemapped(found)) {
+                new MethodRemapper(found);
+            }
+            owner = "Utils";
         }
         super.visitMethodInsn(opcode, owner, name, descriptor, isInterface);
+    }
+
+    private static String[] getExceptionsFromClasses(Class<?>[] classes) {
+        String[] found = new String[classes.length];
+        for(int i = 0; i < classes.length; i++) {
+            found[i] = Type.getType(classes[i]).getInternalName();
+        }
+        return found;
     }
 }

@@ -1,7 +1,6 @@
 package software.bigbade.javaskript.api.patterns;
 
 import software.bigbade.javaskript.api.IScriptParser;
-import software.bigbade.javaskript.api.exception.IllegalScriptException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +66,9 @@ public class PatternParser {
         }
         for(String variable : foundVariables) {
             if(!parser.parseMethod(variable, false)) {
-                throw new IllegalScriptException("Unknown expression: " + variable);
+                parser.getLineConverter()
+                        .orElseThrow(() -> new IllegalStateException("Parsing pattern without a line converter!"))
+                        .loadConstant(variable);
             }
         }
         return true;

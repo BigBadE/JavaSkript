@@ -37,7 +37,7 @@ import java.util.jar.JarInputStream;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
 
-public class TestSkriptToJavaConverter {
+class TestSkriptToJavaConverter {
     @TempDir
     public static File temporaryFolder;
 

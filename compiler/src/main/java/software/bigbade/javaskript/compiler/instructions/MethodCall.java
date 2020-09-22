@@ -11,7 +11,7 @@ import software.bigbade.javaskript.compiler.variables.Loadable;
 import javax.annotation.Nullable;
 
 public class MethodCall<T> extends BasicCall<T> implements BasicInstruction {
-    public MethodCall(Class<?> clazz, String method, @Nullable Type outputType, SkriptType<?>... params) {
+    public MethodCall(String clazz, String method, @Nullable Type outputType, SkriptType<?>... params) {
         super(clazz, method, outputType, params);
     }
 
@@ -23,10 +23,10 @@ public class MethodCall<T> extends BasicCall<T> implements BasicInstruction {
             ((Loadable) builder.popStack()).loadVariable(builder, code);
         }
 
-        if(getMethod().equals("<init>") || getMethod().equals("super") || getClazz().getName().equals(builder.getClassName())) {
-            code.visitMethodInsn(Opcodes.INVOKESPECIAL, getClazz().getName().replace(".", "/"), getMethod(), TypeUtils.getMethodDescriptor(getParams(), getReturnType(), true), false);
+        if(getMethod().equals("<init>") || getMethod().equals("super") || getClazz().equals(builder.getClassName())) {
+            code.visitMethodInsn(Opcodes.INVOKESPECIAL, getClazz().replace(".", "/"), getMethod(), TypeUtils.getMethodDescriptor(getParams(), getReturnType(), true), false);
         } else {
-            code.visitMethodInsn(Opcodes.INVOKEVIRTUAL, getClazz().getName().replace(".", "/"), getMethod(), TypeUtils.getMethodDescriptor(getParams(), getReturnType(), false), false);
+            code.visitMethodInsn(Opcodes.INVOKEVIRTUAL, getClazz().replace(".", "/"), getMethod(), TypeUtils.getMethodDescriptor(getParams(), getReturnType(), false), false);
         }
     }
 }

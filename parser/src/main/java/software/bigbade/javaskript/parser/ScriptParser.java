@@ -5,12 +5,15 @@ import software.bigbade.javaskript.api.IScriptParser;
 import software.bigbade.javaskript.api.SkriptLogger;
 import software.bigbade.javaskript.api.exception.IllegalScriptException;
 import software.bigbade.javaskript.api.factory.LineConverterFactory;
+import software.bigbade.javaskript.api.objects.MethodLineConverter;
 import software.bigbade.javaskript.api.objects.ParsedSkriptMethod;
 import software.bigbade.javaskript.api.objects.ParsedSkriptObject;
 import software.bigbade.javaskript.api.objects.SkriptLineConverter;
 import software.bigbade.javaskript.api.objects.SkriptMethod;
 import software.bigbade.javaskript.api.objects.SkriptStructuredObject;
+import software.bigbade.javaskript.api.patterns.PatternParser;
 import software.bigbade.javaskript.parser.types.SkriptRegisteredTypes;
+import software.bigbade.javaskript.parser.utils.VariableUtils;
 
 import javax.annotation.Nullable;
 import java.io.BufferedReader;
@@ -21,6 +24,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 
 @RequiredArgsConstructor
@@ -84,14 +88,42 @@ public class ScriptParser implements IScriptParser {
         }
 
         if(line.startsWith("set ")) {
+            String[] split = PatternParser.SPLIT_PATTERN.split(line);
+            int index = 1;
+            String word;
+            StringBuilder variableBuilder = new StringBuilder();
+            while(!(word = split[index++]).equals("to")) {
+                variableBuilder.append(word);
+            }
+            StringBuilder valueBuilder = new StringBuilder();
+            while (index++ < split.length) {
+                valueBuilder.append(split[index]);
+            }
+            String value = valueBuilder.toString();
+            if(!parseMethod(value, false)) {
+                try {
+                    if(value.charAt(0) != '\"') {
+                        skriptObject.getConverter().loadConstant(Integer.parseInt(value));
+                    } else {
+                        skriptObject.getConverter().loadConstant(value.substring(1, value.length()-1));
+                    }
+                } catch (NumberFormatException ignored) {
+                    throw new IllegalScriptException("Unknown number: " + value + " (did you forget quotation marks?)");
+                }
+            }
+            VariableUtils.setVariable(this, variableBuilder.toString());
 
+            skriptObject.getConverter()
+                    .setVariable(skriptObject.getConverter().getLocalVariable(variableBuilder.toString()));
+            return;
         }
 
         if(parseMethod(line, true)) {
             return;
         }
 
-        throw new IllegalScriptException("Unknown expression at line " + lineNumber + ":\n" + line + "\n(Make sure you have the correct version/addons installed)");
+        throw new IllegalScriptException("Unknown expression at line " + lineNumber + ":\n" + line +
+                "\n(Make sure you have the correct version/addons installed)");
     }
 
     @Override
@@ -109,6 +141,14 @@ public class ScriptParser implements IScriptParser {
             }
         }
         return false;
+    }
+
+    @Override
+    public Optional<MethodLineConverter<?>> getLineConverter() {
+        if(skriptObject == null) {
+            return Optional.empty();
+        }
+        return Optional.of(skriptObject.getConverter());
     }
 
     private void checkSpaces(String line, int lineNumber) {

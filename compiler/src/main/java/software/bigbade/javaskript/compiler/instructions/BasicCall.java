@@ -13,16 +13,16 @@ import java.util.Optional;
 public abstract class BasicCall<T> implements BasicInstruction {
     @Getter(AccessLevel.PROTECTED)
     @Nullable
-    private final Class<?> clazz;
+    private final String clazz;
     @Nullable
     @Getter
     private final String method;
     @Getter
-    private final SkriptType[] params;
+    private final SkriptType<?>[] params;
     @Nullable
     private final StackVariable<T> output;
 
-    public BasicCall(@Nullable Class<?> clazz, @Nullable String method, @Nullable Type outputType, @Nonnull SkriptType... params) {
+    public BasicCall(@Nullable String clazz, @Nullable String method, @Nullable Type outputType, @Nonnull SkriptType<?>... params) {
         this.clazz = clazz;
         this.method = method;
         this.params = params;

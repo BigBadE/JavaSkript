@@ -1,7 +1,11 @@
 package software.bigbade.javaskript.api.variables;
 
+import lombok.SneakyThrows;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class Type {
     public static final Type VOID_TYPE = new Type(0, null, 1443168256, 1);
@@ -111,6 +115,64 @@ public final class Type {
             default:
                 return new Type(11, var0, var1, var0.length - var1);
         }
+    }
+
+    @SneakyThrows
+    public static Class<?>[] getClassesForDescriptor(String descriptor) {
+        int index = 0;
+        List<Class<?>> classes = new ArrayList<>();
+        while(index < descriptor.length()) {
+            char current = descriptor.charAt(index);
+            switch (current) {
+                case 'B':
+                    classes.add(Byte.TYPE);
+                    break;
+                case 'C':
+                    classes.add(Character.TYPE);
+                    break;
+                case 'D':
+                    classes.add(Double.TYPE);
+                    break;
+                case 'F':
+                    classes.add(Float.TYPE);
+                    break;
+                case 'I':
+                    classes.add(Integer.TYPE);
+                    break;
+                case 'J':
+                    classes.add(Long.TYPE);
+                    break;
+                case 'L':
+                    char found;
+                    StringBuilder builder = new StringBuilder();
+                    while((found = descriptor.charAt(++index)) != ';') {
+                        if(found == '/') {
+                            found = '.';
+                        }
+                        builder.append(found);
+                    }
+                    classes.add(Class.forName(builder.toString()));
+                    continue;
+                case 'S':
+                    classes.add(Short.TYPE);
+                    break;
+                case 'Z':
+                    classes.add(Boolean.TYPE);
+                    break;
+                case '[':
+                    char foundChar;
+                    StringBuilder arrayBuilder = new StringBuilder();
+                    while((foundChar = descriptor.charAt(++index)) != ';') {
+                        arrayBuilder.append(foundChar);
+                    }
+                    classes.add(Class.forName(arrayBuilder.toString()));
+                    continue;
+                default:
+                    throw new IllegalStateException("Descriptor has illegal character " + current);
+            }
+            index++;
+        }
+        return classes.toArray(new Class<?>[0]);
     }
 
     public static String getMethodDescriptor(Type type, Type... types) {

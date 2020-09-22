@@ -43,7 +43,6 @@ public class MathCall<T> extends BasicCall<T> {
                 code.visitInsn(getParams()[0].getType().getOpcode(Opcodes.IDIV));
                 break;
             case MODULO:
-                code.visitInsn(getParams()[0].getType().getOpcode(Opcodes.IDIV));
                 code.visitInsn(getParams()[0].getType().getOpcode(Opcodes.IREM));
                 break;
             case NEGATE:
