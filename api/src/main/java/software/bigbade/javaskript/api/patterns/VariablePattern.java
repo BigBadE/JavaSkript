@@ -1,7 +1,6 @@
 package software.bigbade.javaskript.api.patterns;
 
 import lombok.Getter;
-import software.bigbade.javaskript.api.exception.IllegalScriptException;
 import software.bigbade.javaskript.api.variables.ClassType;
 import software.bigbade.javaskript.api.variables.SkriptType;
 import software.bigbade.javaskript.api.variables.SkriptTypes;

@@ -89,17 +89,17 @@ public class ScriptParser implements IScriptParser {
 
         if(line.startsWith("set ")) {
             String[] split = PatternParser.SPLIT_PATTERN.split(line);
-            int index = 1;
+            int index = -1;
             String word;
             StringBuilder variableBuilder = new StringBuilder();
-            while(!(word = split[index++]).equals("to")) {
+            while(!(word = split[++index]).equals("to")) {
                 variableBuilder.append(word);
             }
             StringBuilder valueBuilder = new StringBuilder();
-            while (index++ < split.length) {
-                valueBuilder.append(split[index]);
+            while (index++ < split.length-1) {
+                valueBuilder.append(split[index]).append(" ");
             }
-            String value = valueBuilder.toString();
+            String value = valueBuilder.substring(0, valueBuilder.length()-1);
             if(!parseMethod(value, false)) {
                 try {
                     if(value.charAt(0) != '\"') {
