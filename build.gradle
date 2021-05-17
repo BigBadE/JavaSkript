@@ -1,96 +1,78 @@
 plugins {
     id 'java'
-    id 'com.github.johnrengelman.shadow' version '6.0.0'
-    id 'io.franzbecker.gradle-lombok' version '4.0.0'
-}
-
-group 'software.bigbade'
-version '1.0-SNAPSHOT'
-
-configurations {
-    resolveImplementation
-    resolveImplementation.extendsFrom(implementation)
-}
-
-sourceSets {
-    test {
-        compileClasspath += configurations.resolveImplementation
-        compileClasspath += configurations.shadow
-        runtimeClasspath += configurations.resolveImplementation
-        runtimeClasspath += configurations.shadow
-    }
+    id 'idea'
+    id 'io.freefair.lombok' version '5.3.0'
 }
 
 allprojects {
-    group = 'software.bigbade'
-    version = '1.0'
+    group 'com.bigbade'
+    version '1.0-SNAPSHOT'
 
-    apply plugin: 'com.github.johnrengelman.shadow'
-    apply plugin: 'io.franzbecker.gradle-lombok'
+    repositories {
+        mavenCentral()
+    }
+}
+
+subprojects {
+    apply plugin: 'idea'
     apply plugin: 'java'
-    apply plugin: 'jacoco'
+    apply plugin: 'io.freefair.lombok'
 
+    targetCompatibility = 1.16
     sourceCompatibility = 1.8
-    targetCompatibility = 1.8
 
     lombok {
-        version = '1.18.12'
-        sha256 = ''
+        version = '1.18.20'
     }
 
-    tasks.withType(JavaCompile) {
-        options.encoding = 'UTF-8'
+    generateLombokConfig.enabled = false
+
+    dependencies {
+        //SLF4J
+        implementation 'org.slf4j:slf4j-api:1.8.0-beta4'
+
+        //Annotations
+        compileOnly 'com.google.code.findbugs:jsr305:3.+'
+
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    }
+
+    test {
+        useJUnitPlatform()
     }
 
     configurations {
         resolveImplementation
+        resolveImplementation.extendsFrom(compileOnly)
         resolveImplementation.extendsFrom(implementation)
-    }
-
-    repositories {
-        mavenCentral()
-        jcenter()
+        resolveImplementation.extendsFrom(testImplementation)
     }
 
     sourceSets {
-        test {
-            compileClasspath += configurations.resolveImplementation
-            compileClasspath += configurations.shadow
-            runtimeClasspath += configurations.resolveImplementation
-            runtimeClasspath += configurations.shadow
+        integrationTest {
+            java {
+                compileClasspath += main.output + test.output + configurations.resolveImplementation
+                runtimeClasspath += main.output + test.output + configurations.resolveImplementation
+                srcDir file('src/integrationTest/java')
+            }
+            resources.srcDir file('src/integrationTest/resources')
         }
     }
 
-    shadowJar {
-        classifier = ''
-
-        exclude 'META-INF/**'
+    task integrationTest(type: Test) {
+        testClassesDirs = sourceSets.integrationTest.output.classesDirs
+        classpath = sourceSets.integrationTest.runtimeClasspath
+        outputs.upToDateWhen { false }
     }
 
-    dependencies {
-        shadow 'com.google.code.findbugs:jsr305:3.0.2'
-
-        testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
+    idea {
+        module {
+            sourceDirs -= file('src/integrationTest/java')
+            testSourceDirs += file('src/integrationTest/java')
+        }
     }
 
-    test.useTestNG()
-}
-
-task codeCoverageReport(type: JacocoReport) {
-    executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
-
-    subprojects.each {
-        sourceSets it.sourceSets.main
-    }
-
-    reports {
-        xml.enabled true
-        xml.destination file("${buildDir}/reports/jacoco/report.xml")
-        html.enabled false
-        csv.enabled false
-    }
-}
-
-codeCoverageReport.dependsOn {
-    subprojects*.test
+    check.dependsOn integrationTest
+    integrationTest.mustRunAfter test
 }

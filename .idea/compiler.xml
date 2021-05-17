@@ -3,20 +3,30 @@
   <component name="CompilerConfiguration">
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
+      <profile name="Gradle Imported" enabled="true">
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.20/18bcea7d5df4d49227b4a0743a536208ce4825bb/lombok-1.18.20.jar" />
+        </processorPath>
+        <module name="JavaSkript.translator.integrationTest" />
+        <module name="JavaSkript.api.test" />
+        <module name="JavaSkript.translator.main" />
+        <module name="JavaSkript.parser.integrationTest" />
+        <module name="JavaSkript.translator.test" />
+        <module name="JavaSkript.api.main" />
+        <module name="JavaSkript.api.integrationTest" />
+        <module name="JavaSkript.parser.main" />
+        <module name="JavaSkript.parser.test" />
+      </profile>
+      <profile name="Gradle Imported" enabled="true">
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.16/6dc192c7f93ec1853f70d59d8a6dcf94eb42866/lombok-1.18.16.jar" />
+        </processorPath>
+        <module name="JavaSkript.test" />
+        <module name="JavaSkript.main" />
+      </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="1.6">
-      <module name="JavaSkript.api" target="16" />
-      <module name="JavaSkript.api.integrationTest" target="16" />
-      <module name="JavaSkript.api.main" target="16" />
-      <module name="JavaSkript.api.test" target="16" />
-      <module name="JavaSkript.parser" target="16" />
-      <module name="JavaSkript.parser.integrationTest" target="16" />
-      <module name="JavaSkript.parser.main" target="16" />
-      <module name="JavaSkript.parser.test" target="16" />
-      <module name="JavaSkript.translator" target="16" />
-      <module name="JavaSkript.translator.integrationTest" target="16" />
-      <module name="JavaSkript.translator.main" target="16" />
-      <module name="JavaSkript.translator.test" target="16" />
-    </bytecodeTargetLevel>
+    <bytecodeTargetLevel target="1.8" />
   </component>
 </project>

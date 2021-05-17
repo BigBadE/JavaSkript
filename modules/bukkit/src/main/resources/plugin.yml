@@ -1,5 +1,0 @@
-name: JavaSkript
-description: Converts Skript code to Java ByteCode
-author: Big_Bad_E
-version: 1.0
-main: software.bigbade.javaskript.bukkit.Skript

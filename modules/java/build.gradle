@@ -1,4 +1,0 @@
-dependencies {
-    implementation project(':parser')
-    implementation project(':api')
-}
