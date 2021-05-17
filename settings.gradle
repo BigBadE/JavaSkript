@@ -1,0 +1,5 @@
+rootProject.name = 'JavaSkript'
+include 'api'
+include 'parser'
+include 'translator'
+
