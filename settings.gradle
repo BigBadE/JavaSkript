@@ -1,0 +1,12 @@
+rootProject.name = 'JavaSkript'
+
+include(':api')
+project(':api').projectDir = file('api')
+include(':parser')
+project(':parser').projectDir = file('parser')
+include(':compiler')
+project(':compiler').projectDir = file('compiler')
+include(':bukkit')
+project(':bukkit').projectDir = file('modules/bukkit')
+include(':java')
+project(':java').projectDir = file('modules/java')
