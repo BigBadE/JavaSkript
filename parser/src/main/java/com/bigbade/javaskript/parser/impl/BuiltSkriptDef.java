@@ -13,11 +13,10 @@ public class BuiltSkriptDef<T> implements ISkriptDef {
     @Getter
     private final Map<String, ?> keyValues;
 
-    @Nullable
-    private final T data;
+    private final int patternData;
 
     @Override
-    public Optional<T> getData() {
-        return Optional.ofNullable(data);
+    public int getPatternData() {
+        return patternData;
     }
 }

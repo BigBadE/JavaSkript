@@ -4,6 +4,7 @@ import com.bigbade.javaskript.api.skript.pattern.IPatternPart;
 import com.bigbade.javaskript.api.skript.pattern.ISkriptPattern;
 import com.bigbade.javaskript.api.skript.pattern.ParseResult;
 import com.bigbade.javaskript.parser.util.SkriptClassType;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,34 +15,40 @@ public class CompiledPattern implements ISkriptPattern {
 
     private final List<IPatternPart> parts = new ArrayList<>();
 
-    public CompiledPattern(String pattern) {
-        parts.addAll(parsePattern(pattern.trim(), 0, '\t'));
+    @Getter
+    private final int patternData;
+
+    private int index = 0;
+
+    public CompiledPattern(String pattern, int patternData) {
+        this.patternData = patternData;
+        parts.addAll(parsePattern(pattern.trim(), true, 0, '\t'));
     }
 
-    private List<IPatternPart> parsePattern(String pattern, int start, char exit) {
+    private List<IPatternPart> parsePattern(String pattern, boolean useIndex, int start, char exit) {
         List<IPatternPart> foundParts = new ArrayList<>();
         char current;
         StringBuilder builder = new StringBuilder();
-        for (int i = start; (current = pattern.charAt(i)) != exit; i++) {
+        int currentIndex = useIndex ? index : start;
+        while(currentIndex < pattern.length() && (current = pattern.charAt(currentIndex)) != exit) {
             switch (current) {
-                case '[':
-                    foundParts.add(new OptionalPattern(parsePattern(pattern, i, ']')));
-                    break;
-                case '(':
+                case '[' -> foundParts.add(new OptionalPattern(parsePattern(pattern, true, currentIndex, ']')));
+                case '(' -> {
                     List<IPatternPart> choicePart = new ArrayList<>();
-                    i += parseChoice(pattern, i, choicePart);
+                    currentIndex += parseChoice(pattern, currentIndex, choicePart);
                     foundParts.add(new ChoicePattern(choicePart));
-                    break;
-                case '%':
-                    String found = pattern.substring(i);
-                    i += found.length();
+                }
+                case '%' -> {
+                    String found = pattern.substring(currentIndex);
                     found = found.substring(0, found.indexOf('%'));
+                    currentIndex += found.length();
                     foundParts.add(new VariablePattern(SkriptClassType.getSkriptType(found)));
-                    break;
-                default:
-                    builder.append(current);
+                }
+                default -> builder.append(current);
             }
+            currentIndex++;
         }
+
         foundParts.add(new LiteralPattern(builder.toString()));
         return foundParts;
     }
@@ -55,12 +62,12 @@ public class CompiledPattern implements ISkriptPattern {
                     depth++;
                 } else if (choice.charAt(j) == ')' && depth-- == 0) {
                     skipping += j;
-                    choicePart.addAll(parsePattern(choice.substring(0, j).trim(), 0, '\t'));
+                    choicePart.addAll(parsePattern(choice.substring(0, j).trim(), false, 0, '\t'));
                     break;
                 }
             }
             skipping += choice.length() + 1;
-            choicePart.addAll(parsePattern(choice.trim(), 0, '\t'));
+            choicePart.addAll(parsePattern(choice.trim(), false, 0, '\t'));
         }
         return skipping - 1;
     }

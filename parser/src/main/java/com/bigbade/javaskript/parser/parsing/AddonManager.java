@@ -1,5 +1,6 @@
-package com.bigbade.javaskript.parser.register;
+package com.bigbade.javaskript.parser.parsing;
 
+import com.bigbade.javaskript.api.skript.addon.IAddonManager;
 import com.bigbade.javaskript.api.skript.addon.ISkriptFunctionDef;
 import com.bigbade.javaskript.api.skript.addon.ISkriptLiteralAddon;
 import com.bigbade.javaskript.api.skript.addon.ISkriptSerializerAddon;
@@ -8,10 +9,11 @@ import com.bigbade.javaskript.api.skript.addon.SkriptPattern;
 import com.bigbade.javaskript.api.skript.code.ISkriptEffect;
 import com.bigbade.javaskript.api.skript.code.ISkriptExpression;
 import com.bigbade.javaskript.api.skript.code.ISkriptInstruction;
+import com.bigbade.javaskript.api.skript.pattern.ISkriptPattern;
 import com.bigbade.javaskript.parser.api.SkriptAddonEffect;
 import com.bigbade.javaskript.parser.api.SkriptAddonExpression;
 import com.bigbade.javaskript.parser.api.SkriptAddonInstruction;
-import com.bigbade.javaskript.parser.api.SkriptFunctionDef;
+import com.bigbade.javaskript.parser.pattern.CompiledPattern;
 import lombok.Getter;
 
 import java.lang.reflect.Method;
@@ -24,9 +26,9 @@ import java.util.List;
 import java.util.Set;
 
 @SuppressWarnings("unused")
-public final class AddonManager {
+public final class AddonManager implements IAddonManager {
     @Getter
-    private final List<ISkriptFunctionDef> addonDefs = new ArrayList<>();
+    private final List<ISkriptFunctionDef<?>> addonDefs = new ArrayList<>();
     @Getter
     private final List<ISkriptExpression> addonExpressions = new ArrayList<>();
     @Getter
@@ -34,17 +36,23 @@ public final class AddonManager {
     @Getter
     private final List<ISkriptInstruction> addonInstructions = new ArrayList<>();
     @Getter
-    private final List<ISkriptSerializerAddon> addonSerializers = new ArrayList<>();
+    private final List<ISkriptSerializerAddon<?>> addonSerializers = new ArrayList<>();
     @Getter
     private final List<ISkriptStringAddon<?>> stringAddons = new ArrayList<>();
     @Getter
     private final List<ISkriptLiteralAddon<?>> literalAddons = new ArrayList<>();
 
-    private final Set<Class<? extends ISkriptFunctionDef>> overridingDefs = new HashSet<>();
+    private final Set<Class<? extends ISkriptFunctionDef<?>>> overridingDefs = new HashSet<>();
     private final Set<Class<?>> overridingInstructions = new HashSet<>();
-    private final Set<Class<? extends ISkriptSerializerAddon>> overridingSerializers = new HashSet<>();
+    private final Set<Class<? extends ISkriptSerializerAddon<?>>> overridingSerializers = new HashSet<>();
     private final Set<Class<? extends ISkriptStringAddon<?>>> overridingStringAddons = new HashSet<>();
     private final Set<Class<? extends ISkriptLiteralAddon<?>>> overridingLiteralAddons = new HashSet<>();
+
+    private final TranslatorFactory translatorFactory = new TranslatorFactory();
+
+    protected AddonManager() {
+
+    }
 
     /**
      * Gets the methods annotated with SkriptPattern
@@ -117,12 +125,11 @@ public final class AddonManager {
     }
 
     /**
-     * Registers an addon definition.
+     * Registers an addon instruction. Addon instructions REQUIRE a SkriptPattern.
      *
      * @param instruction Instruction to register
      * @param overriding Instructions to override
-     * @see SkriptAddonExpression
-     * @see SkriptAddonEffect
+     * @see SkriptPattern
      */
     public void registerInstruction(Class<?> instruction, Class<?>... overriding) {
         if(overridingInstructions.contains(instruction)) {
@@ -164,24 +171,32 @@ public final class AddonManager {
     }
 
     /**
-     * Registers an addon definition.
+     * Registers an addon definition. Addon definitions REQUIRE a SkriptPattern
      *
      * @param addonDef   Addon definition to register
      * @param overriding Function defs to override
-     * @see SkriptFunctionDef
+     * @see ISkriptFunctionDef
+     * @see SkriptPattern
      */
     @SafeVarargs
-    public final void registerMethodDef(ISkriptFunctionDef addonDef, Class<ISkriptFunctionDef>... overriding) {
+    public final void registerMethodDef(ISkriptFunctionDef<?> addonDef, Class<ISkriptFunctionDef<?>>... overriding) {
         if(overridingDefs.contains(addonDef.getClass())) {
             return;
         }
+        SkriptPattern[] skriptPatterns = addonDef.getClass().getAnnotationsByType(SkriptPattern.class);
+
+        List<ISkriptPattern> patterns = new ArrayList<>();
+        for (SkriptPattern pattern : skriptPatterns) {
+            patterns.add(new CompiledPattern(pattern.pattern(), pattern.patternData()));
+        }
+        addonDef.init(patterns, translatorFactory);
         addonDefs.add(addonDef);
 
         if(overriding.length == 0) return;
 
-        for(Iterator<ISkriptFunctionDef> iterator = addonDefs.iterator(); iterator.hasNext();) {
-            ISkriptFunctionDef functionDef = iterator.next();
-            for(Class<ISkriptFunctionDef> clazz : overriding) {
+        for(Iterator<ISkriptFunctionDef<?>> iterator = addonDefs.iterator(); iterator.hasNext();) {
+            ISkriptFunctionDef<?> functionDef = iterator.next();
+            for(Class<ISkriptFunctionDef<?>> clazz : overriding) {
                 if(functionDef.getClass().equals(clazz)) {
                     iterator.remove();
                 }

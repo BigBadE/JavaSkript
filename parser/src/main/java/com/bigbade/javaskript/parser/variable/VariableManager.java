@@ -4,7 +4,7 @@ import com.bigbade.javaskript.api.java.util.IClassType;
 import com.bigbade.javaskript.api.skript.defs.ISkriptDef;
 import com.bigbade.javaskript.api.skript.variables.ISkriptVariableDef;
 import com.bigbade.javaskript.parser.exceptions.SkriptParseException;
-import com.bigbade.javaskript.api.java.util.JavaClassType;
+import com.bigbade.javaskript.parser.util.JavaClassType;
 
 import java.util.Collections;
 import java.util.HashMap;

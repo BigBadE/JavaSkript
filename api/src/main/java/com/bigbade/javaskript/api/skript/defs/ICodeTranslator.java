@@ -1,5 +1,5 @@
 package com.bigbade.javaskript.api.skript.defs;
 
 @SuppressWarnings("unused")
-public interface ICodeValue extends IValueTranslator<ICodeDef> {
+public interface ICodeTranslator extends IValueTranslator<ICodeDef> {
 }

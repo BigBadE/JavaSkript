@@ -21,7 +21,7 @@ public interface ISkriptInstruction {
     /**
      * The patterns of the instruction.
      */
-    Map<ISkriptPattern, Integer> getPatterns();
+    List<ISkriptPattern> getPatterns();
 
     /**
      * Method of the instruction

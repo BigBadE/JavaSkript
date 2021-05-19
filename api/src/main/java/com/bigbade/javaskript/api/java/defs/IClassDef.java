@@ -3,7 +3,6 @@ package com.bigbade.javaskript.api.java.defs;
 import com.bigbade.javaskript.api.java.util.Modifiers;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Defines a class. Classes contain members, which all extend IClassMember
@@ -36,4 +35,13 @@ public interface IClassDef {
      * @return Members of that type contained by the class
      */
     <T extends IClassMember> List<T> getClassMember(ClassMembers memberType);
+
+    /**
+     * Gets or creates a class member with the name, what the name actually is depends on the class member.
+     * @param memberType Member type
+     * @param name Member name
+     * @param <T> Class type associated with that member type
+     * @return Class member with that name
+     */
+    <T extends IClassMember> T getClassMember(ClassMembers memberType, String name);
 }

@@ -16,11 +16,11 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 @RequiredArgsConstructor
-public class SkriptParsingDef<T> implements IParsingDef {
+public class SkriptParsingDef implements IParsingDef {
     private static final Pattern KEY_PATTERN = Pattern.compile(":");
 
-    private final ISkriptFunctionDef functionDef;
-    private final T data;
+    private final ISkriptFunctionDef<?> functionDef;
+    private final int patternData;
 
     @Getter
     private final List<IParsedInstruction> arguments;
@@ -31,9 +31,9 @@ public class SkriptParsingDef<T> implements IParsingDef {
     private String key = null;
     private int depth;
 
-    public SkriptParsingDef(ISkriptFunctionDef functionDef, List<IParsedInstruction> arguments, T data) {
+    public SkriptParsingDef(ISkriptFunctionDef<?> functionDef, List<IParsedInstruction> arguments, int patternData) {
         this.functionDef = functionDef;
-        this.data = data;
+        this.patternData = patternData;
         this.arguments = arguments;
         currentTranslator = functionDef.getStartingTranslator();
     }
@@ -56,11 +56,11 @@ public class SkriptParsingDef<T> implements IParsingDef {
         }
         depth = foundDepth;
         key = keyValue[0].trim();
-        if(functionDef.getYamlValues() == null) {
+        if(functionDef.getTranslators() == null) {
             throw new IllegalStateException("Function " + functionDef.getClass().getSimpleName()
                     + " has no value translators!");
         }
-        IValueTranslator<?> translator = functionDef.getYamlValues().getOrDefault(key, null);
+        IValueTranslator<?> translator = functionDef.getTranslators().getOrDefault(key, null);
         if (translator == null) {
             throw new SkriptParseException(lineNumber, line, "No key with the name " + key + " found");
         }
@@ -74,6 +74,6 @@ public class SkriptParsingDef<T> implements IParsingDef {
     }
 
     public ISkriptDef buildSkriptDef() {
-        return new BuiltSkriptDef<>(keyValues, data);
+        return new BuiltSkriptDef<>(keyValues, patternData);
     }
 }

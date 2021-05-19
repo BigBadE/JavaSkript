@@ -1,7 +1,6 @@
 package com.bigbade.javaskript.api.skript.defs;
 
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * Definitions are the top-level elements.
@@ -18,5 +17,5 @@ public interface ISkriptDef {
      * Gets the data associated with the pattern.
      * @return Associated data
      */
-    Optional<?> getData();
+    int getPatternData();
 }

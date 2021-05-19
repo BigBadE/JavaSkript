@@ -1,23 +1,26 @@
 package com.bigbade.javaskript.api.skript.addon;
 
 import com.bigbade.javaskript.api.java.defs.IPackageDef;
+import com.bigbade.javaskript.api.skript.code.ITranslatorFactory;
 import com.bigbade.javaskript.api.skript.defs.IValueTranslator;
 import com.bigbade.javaskript.api.skript.pattern.ISkriptPattern;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Map;
 
 /**
  * A definition inside the Skript, such as event listeners.
+ * @param <T> Type of the starting translator (or void if none)
  */
 @SuppressWarnings("unused")
-public interface ISkriptFunctionDef {
+public interface ISkriptFunctionDef<T> {
     /**
      * YAML-style key/value pairs, with code being an exception. Empty for none, null key for no key.
      * @return Yaml values of the def
      */
     @Nullable
-    Map<String, IValueTranslator<Object>> getYamlValues();
+    Map<String, IValueTranslator<?>> getTranslators();
 
     /**
      * Allows functions to have a single translator and no keys. If this has a non-null
@@ -25,20 +28,22 @@ public interface ISkriptFunctionDef {
      * @return Starting translator, or null if there are multiple translators
      */
     @Nullable
-    IValueTranslator<Object> getStartingTranslator();
+    IValueTranslator<?> getStartingTranslator();
 
     /**
-     * The patterns of the definition.
-     * @return Definition patterns and pattern data
+     * Gets the patterns of the def
+     * @return Def's patterns
      */
-    Map<ISkriptPattern, Object> getPatterns();
+    List<ISkriptPattern> getPatterns();
 
     /**
-     * What class this def should be put into, packages should be prepended and separated with a ".".
-     * @return Name of target class, can be in packages
+     * Initializes the def with a TranslatorFactory, to give access to code parsing
+     * @param patterns Patterns fetched from the SkriptPattern annotation
+     * @param factory Translator factory
+     * @see ITranslatorFactory
+     * @see SkriptPattern
      */
-    @Nullable
-    String getTargetClass();
+    void init(List<ISkriptPattern> patterns, ITranslatorFactory factory);
 
     /**
      * Access to the rest of the project, for registering the def. For example, if you want the code to run
@@ -48,5 +53,13 @@ public interface ISkriptFunctionDef {
      * @param patternData Pattern data associated with the passed pattern
      * @param mainPackage Main package
      */
-    void translate(Map<String, ?> yamlValues, Object patternData, IPackageDef mainPackage);
+    void operate(Map<String, ?> yamlValues, int patternData, IPackageDef mainPackage);
+
+    /**
+     * The same as the above method, but with a single translator instead of a map.
+     * @param startingValue Starting value
+     * @param patternData Pattern data associated with the passed pattern
+     * @param mainPackage Main package
+     */
+    void operate(T startingValue, int patternData, IPackageDef mainPackage);
 }

@@ -40,6 +40,7 @@ public class SkriptParser {
         skriptFile = new SkriptFile(name);
     }
 
+    @SuppressWarnings("unused")
     public SkriptFile parseSkript(File file) {
         try {
             return parseSkript(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
@@ -80,11 +81,10 @@ public class SkriptParser {
         throw new SkriptParseException(lineNumber, line, "Statement is outside of a function!");
     }
 
-    @SuppressWarnings("unchecked")
-    private <T> Optional<SkriptParsingDef<T>> parseFunction(String line, int lineNumber) {
-        for(ISkriptFunctionDef addonDef : lineParser.getAddonManager().getAddonDefs()) {
-            for(Map.Entry<ISkriptPattern, Object> entry : addonDef.getPatterns().entrySet()) {
-                ParseResult result = entry.getKey().matchesInitial(line);
+    private Optional<SkriptParsingDef> parseFunction(String line, int lineNumber) {
+        for(ISkriptFunctionDef<?> addonDef : lineParser.getAddonManager().getAddonDefs()) {
+            for(ISkriptPattern pattern : addonDef.getPatterns()) {
+                ParseResult result = pattern.matchesInitial(line);
                 if (result.getResult() != ParseResult.Result.PASSED) {
                     continue;
                 }
@@ -95,7 +95,7 @@ public class SkriptParser {
                     variables.add(variableInstruction);
                 }
                 if (testVariables(result, variables)) {
-                    return Optional.of(new SkriptParsingDef<>(addonDef, variables, (T) entry.getValue()));
+                    return Optional.of(new SkriptParsingDef(addonDef, variables, pattern.getPatternData()));
                 }
             }
         }

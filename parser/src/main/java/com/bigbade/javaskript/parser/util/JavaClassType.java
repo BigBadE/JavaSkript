@@ -1,5 +1,6 @@
-package com.bigbade.javaskript.api.java.util;
+package com.bigbade.javaskript.parser.util;
 
+import com.bigbade.javaskript.api.java.util.IClassType;
 import lombok.RequiredArgsConstructor;
 
 import javax.annotation.Nullable;

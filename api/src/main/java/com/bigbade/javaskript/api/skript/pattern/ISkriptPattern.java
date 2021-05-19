@@ -11,4 +11,10 @@ public interface ISkriptPattern {
      * @return ParseResult with the appropriate data
      */
     ParseResult matchesInitial(String line);
+
+    /**
+     * Gets the pattern data of the pattern
+     * @return Pattern data
+     */
+    int getPatternData();
 }

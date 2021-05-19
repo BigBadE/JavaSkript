@@ -20,6 +20,20 @@ public interface IJavaFile {
     List<IClassDef> getClasses();
 
     /**
+     * Gets or creates a class with the given name
+     * @param name Name of the class
+     * @return Class with that name
+     */
+    IClassDef getClassForName(String name);
+
+    /**
+     * Checks if a class exists
+     * @param name Name of the class
+     * @return If the class exists
+     */
+    boolean classExists(String name);
+
+    /**
      * Gets all the classes imported by this class.
      * @return Imports of the file
      */

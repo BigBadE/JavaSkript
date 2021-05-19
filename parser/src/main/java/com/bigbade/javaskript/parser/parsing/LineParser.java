@@ -7,7 +7,6 @@ import com.bigbade.javaskript.api.skript.pattern.ParseResult;
 import com.bigbade.javaskript.parser.SkriptParser;
 import com.bigbade.javaskript.parser.exceptions.SkriptParseException;
 import com.bigbade.javaskript.parser.impl.SkriptParsedInstruction;
-import com.bigbade.javaskript.parser.register.AddonManager;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -31,8 +30,8 @@ public final class LineParser {
     public <T extends ISkriptInstruction> IParsedInstruction getInstruction(List<T> instructions,
                                                                             String line, int lineNumber) {
         for (T instruction : instructions) {
-            for (Map.Entry<ISkriptPattern, Integer> entry : instruction.getPatterns().entrySet()) {
-                ParseResult parseResult = entry.getKey().matchesInitial(line);
+            for (ISkriptPattern pattern : instruction.getPatterns()) {
+                ParseResult parseResult = pattern.matchesInitial(line);
                 if (parseResult.getResult() != ParseResult.Result.PASSED) {
                     continue;
                 }
@@ -43,7 +42,7 @@ public final class LineParser {
                     variables.add(variableInstruction);
                 }
                 if (SkriptParser.testVariables(parseResult, variables)) {
-                    return new SkriptParsedInstruction(instruction, variables, entry.getValue());
+                    return new SkriptParsedInstruction(instruction, variables, pattern.getPatternData());
                 }
             }
         }

@@ -5,38 +5,35 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f1c47736-1d43-4511-9970-b585734a3d61" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/addon/ISkriptLiteralAddon.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/addon/ISkriptSerializerAddon.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/addon/ISkriptStringAddon.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/addon/SkriptPattern.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/modules/java/build.gradle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/modules/java/src/main/java/com/bigbade/javaskript/java/package-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/addon/IAddonManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/addon/MultiTranslatorDef.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/addon/SingleTranslatorDef.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/code/ITranslatorFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/java/src/main/java/com/bigbade/javaskript/java/defs/ScriptLoadDef.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/parsing/CodeTranslator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/parsing/TranslatorFactory.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/java/defs/IClassDef.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/java/defs/IClassDef.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/java/defs/IJavaFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/java/defs/IJavaFile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/java/util/JavaClassType.java" beforeDir="false" afterPath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/util/JavaClassType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/addon/ISkriptFunctionDef.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/addon/ISkriptFunctionDef.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/addon/ISkriptSerializerAddon.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/addon/ISkriptSerializerAddon.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/code/ISkriptEffect.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/code/ISkriptEffect.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/code/ISkriptInstruction.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/code/ISkriptInstruction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/pattern/ParseResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/pattern/ParseResult.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/parser/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/parser/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/defs/ICodeValue.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/defs/ICodeTranslator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/defs/ISkriptDef.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/defs/ISkriptDef.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/pattern/ISkriptPattern.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/pattern/ISkriptPattern.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/SkriptParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/SkriptParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/api/SkriptAddonEffect.java" beforeDir="false" afterPath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/api/SkriptAddonEffect.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/api/SkriptAddonExpression.java" beforeDir="false" afterPath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/api/SkriptAddonExpression.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/api/SkriptAddonInstruction.java" beforeDir="false" afterPath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/api/SkriptAddonInstruction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/api/SkriptDefMethod.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/api/SkriptFunctionDef.java" beforeDir="false" afterPath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/api/SkriptFunctionDef.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/api/SkriptStatementMethod.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/builtin/ConcatStringExpression.java" beforeDir="false" afterPath="$PROJECT_DIR$/modules/java/src/main/java/com/bigbade/javaskript/java/expressions/ConcatStringExpression.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/builtin/ParseLiteralExpression.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/builtin/ParseVariableExpression.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/impl/SkriptParsedInstruction.java" beforeDir="false" afterPath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/impl/SkriptParsedInstruction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/api/SkriptFunctionDef.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/impl/BuiltSkriptDef.java" beforeDir="false" afterPath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/impl/BuiltSkriptDef.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/impl/SkriptParsingDef.java" beforeDir="false" afterPath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/impl/SkriptParsingDef.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/parsing/LineParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/parsing/LineParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/pattern/OptionalPattern.java" beforeDir="false" afterPath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/pattern/OptionalPattern.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/pattern/SkriptPattern.java" beforeDir="false" afterPath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/pattern/CompiledPattern.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/register/AddonManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/register/AddonManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/util/JavaClassType.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/java/util/JavaClassType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/pattern/CompiledPattern.java" beforeDir="false" afterPath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/pattern/CompiledPattern.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/register/AddonManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/parsing/AddonManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/variable/VariableManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/variable/VariableManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/translator/src/main/java/com/bigbade/javaskript/translator/impl/JavaFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/translator/src/main/java/com/bigbade/javaskript/translator/impl/JavaFile.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,8 +91,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Enum" />
-        <option value="Class" />
         <option value="AnnotationType" />
+        <option value="Class" />
         <option value="Interface" />
       </list>
     </option>
@@ -143,13 +140,15 @@
     </key>
   </component>
   <component name="RunManager" selected="JavaScript Debug.index.html">
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
           <option name="containerStateName" value="" />
         </value>
       </option>
-      <option name="TEST_OBJECT" value="class" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -207,7 +206,8 @@
       <workItem from="1620998884499" duration="590000" />
       <workItem from="1621260372333" duration="349000" />
       <workItem from="1621347348852" duration="7695000" />
-      <workItem from="1621371794078" duration="11135000" />
+      <workItem from="1621371794078" duration="13567000" />
+      <workItem from="1621432796651" duration="5589000" />
     </task>
     <servers />
   </component>
