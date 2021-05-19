@@ -12,5 +12,5 @@ import java.util.List;
 public class SkriptParsedInstruction implements IParsedInstruction {
     private final ISkriptInstruction instruction;
     private final List<IParsedInstruction> parsedArguments;
-    private final Object patternData;
+    private final Integer patternData;
 }

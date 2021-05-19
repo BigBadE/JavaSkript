@@ -46,7 +46,9 @@ Index:
     1. [&#10006; Generics (JS)](#generics)
 1. [&#10006; Built-in Functions](#built-in-functions)
     1. [&#10006; Configuration](#configuration)
-
+1. [&#10006; Special expressions](#special-expressions)
+    1. [&#10006; Arithmetic](#precedence)
+    1. [&#10006; Arithmetic](#arithmetic)
 ## Terms
 
 ### User and developer
@@ -157,7 +159,9 @@ Method 1: Special Characters
 
 ### Numbers
 
-Numbers will be, by default, 64 bit in floating-point context (Java's doubles)
+Numbers will be, by default, 64 bit in floating-point context (Java's doubles).
+The reasoning behind this choice is to support vanilla scripts as much as possible, and almost completely
+remove overflows as a possible problem.
 
 (JS) Other types of numbers can be used by adding the appropriate type symbol(s) after it. All number types are signed
 and two's compliment
@@ -221,3 +225,30 @@ config:
 on skript load:
     broadcast {@key}
 ```
+
+## Special Expressions
+
+## Precedence
+Some expressions have higher precedence then others, meaning they are run
+before other expressions with lower precedence if both expressions don't have a literal on either side in the pattern. 
+
+## Arithmetic
+Arithmetic follows precedence, and allows the following operations:
+
+Operation|Sign|Priority|Example|Example Output
+---------|----|--------|-------|------
+Multiplication|*|1|1 \* 2|2
+Modulo|%|1|5 % 4|1
+Floating-point division|/|1|1 / 2|0,5
+Integer division|//|1|1 // 2|0 (0.5 round towards 0)
+Addition|+|2|1 + 2|3
+Subtraction|-|2|1 - 2|-1
+Bitwise arithmetic right shift|\>>|3|-8 >> 2|-2
+Bitwise logical right shift|\>>>|3|-8 (1000) >>> 2 |1073741822 (00111111111111111111111111111110)
+Bitwise left shift|<<|3|1 (0001) << 2|4 (0100)
+Bitwise AND|&|4|1 (0001) & 2 (0010)|0
+Bitwise logical AND|&&|4|1 (0001) & 2 (0010)|0
+Bitwise XOR|^|5|1 (0001) ^ 5 (0101)|4
+Bitwise OR|&#x7c;|6|1 (0001) &#x7c; 2 (0011)|3
+Bitwise logical OR|&#x7c;&#x7c;|6|1 (0001) &#x7c;&#x7c; 2 (0011)|3
+Bitwise Complement|~|7|~1 (0001) |-2 (1110)

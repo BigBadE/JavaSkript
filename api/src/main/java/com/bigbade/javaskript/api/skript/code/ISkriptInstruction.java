@@ -3,6 +3,7 @@ package com.bigbade.javaskript.api.skript.code;
 import com.bigbade.javaskript.api.java.util.IClassType;
 import com.bigbade.javaskript.api.skript.pattern.ISkriptPattern;
 
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
@@ -20,5 +21,10 @@ public interface ISkriptInstruction {
     /**
      * The patterns of the instruction.
      */
-    Map<ISkriptPattern, Object> getPatterns();
+    Map<ISkriptPattern, Integer> getPatterns();
+
+    /**
+     * Method of the instruction
+     */
+    Method getMethod();
 }

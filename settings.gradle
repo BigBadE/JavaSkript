@@ -2,4 +2,5 @@ rootProject.name = 'JavaSkript'
 include 'api'
 include 'parser'
 include 'translator'
-
+include 'java'
+project(':java').projectDir = new File('modules/java')

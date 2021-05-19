@@ -6,17 +6,15 @@ import com.bigbade.javaskript.api.skript.pattern.ParseResult;
 import com.bigbade.javaskript.parser.util.SkriptClassType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class SkriptPattern implements ISkriptPattern {
-    public static final Pattern WORD_PATTERN = Pattern.compile(" ");
+public class CompiledPattern implements ISkriptPattern {
     public static final Pattern SPLITTER_PATTERN = Pattern.compile("\\|");
 
     private final List<IPatternPart> parts = new ArrayList<>();
 
-    public SkriptPattern(String pattern) {
+    public CompiledPattern(String pattern) {
         parts.addAll(parsePattern(pattern.trim(), 0, '\t'));
     }
 
@@ -69,6 +67,51 @@ public class SkriptPattern implements ISkriptPattern {
 
     @Override
     public ParseResult matchesInitial(String line) {
-        return OptionalPattern.matchesInitial(line, parts);
+        return matchesInitial(line, parts);
+    }
+
+    public static ParseResult matchesInitial(String matching, List<IPatternPart> parts) {
+        int index = 0;
+        int looped = 0;
+        int variableStart = -1;
+        ParseResult.ParseResultBuilder builder = new ParseResult.ParseResultBuilder();
+        for (IPatternPart patternPart : parts) {
+            looped++;
+            if (patternPart instanceof VariablePattern) {
+                variableStart = index;
+                continue;
+            }
+            int start = index;
+            StringBuilder joined = new StringBuilder();
+            boolean exiting = false;
+            while (!exiting) {
+                if(index == matching.length()) {
+                    return builder.build(ParseResult.Result.UNDETERMINED);
+                }
+                joined.append(matching.charAt(index++));
+                ParseResult result = patternPart.parseWord(joined.toString());
+                switch (result.getResult()) {
+                    case IGNORED:
+                        index = start;
+                        exiting = true;
+                        break;
+                    case PASSED:
+                        if(variableStart != -1) {
+                            builder.addParts(result.getFoundParts());
+                            builder.addVariable(variableStart, index);
+                            variableStart = -1;
+                        }
+                        exiting = true;
+                        break;
+                    case FAILED:
+                        index = start + 1;
+                        exiting = true;
+                        break;
+                    default:
+                }
+            }
+        }
+        return looped == parts.size() ? builder.build(ParseResult.Result.PASSED)
+                : builder.build(ParseResult.Result.FAILED);
     }
 }

@@ -10,12 +10,15 @@
         </processorPath>
         <module name="JavaSkript.translator.integrationTest" />
         <module name="JavaSkript.api.test" />
+        <module name="JavaSkript.java.main" />
         <module name="JavaSkript.translator.main" />
         <module name="JavaSkript.parser.integrationTest" />
         <module name="JavaSkript.translator.test" />
+        <module name="JavaSkript.java.integrationTest" />
         <module name="JavaSkript.api.main" />
         <module name="JavaSkript.api.integrationTest" />
         <module name="JavaSkript.parser.main" />
+        <module name="JavaSkript.java.test" />
         <module name="JavaSkript.parser.test" />
       </profile>
       <profile name="Gradle Imported" enabled="true">

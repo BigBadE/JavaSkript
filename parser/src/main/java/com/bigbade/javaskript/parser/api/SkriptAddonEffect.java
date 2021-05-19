@@ -1,9 +1,12 @@
 package com.bigbade.javaskript.parser.api;
 
+import com.bigbade.javaskript.api.skript.addon.SkriptPattern;
 import com.bigbade.javaskript.api.skript.code.ISkriptEffect;
 
+import java.lang.reflect.Method;
+
 public class SkriptAddonEffect extends SkriptAddonInstruction implements ISkriptEffect {
-    public SkriptAddonEffect(String[] patterns, Object[] patternData) {
-        super(patterns, patternData);
+    public SkriptAddonEffect(Method target, SkriptPattern[] patterns) {
+        super(target, patterns);
     }
 }

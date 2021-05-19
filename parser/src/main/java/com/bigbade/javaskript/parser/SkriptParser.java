@@ -12,7 +12,6 @@ import com.bigbade.javaskript.parser.exceptions.SkriptParseException;
 import com.bigbade.javaskript.parser.impl.SkriptParsingDef;
 import com.bigbade.javaskript.parser.parsing.LineParser;
 import com.bigbade.javaskript.parser.pattern.VariablePattern;
-import com.bigbade.javaskript.parser.register.AddonManager;
 import com.bigbade.javaskript.parser.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +31,7 @@ import java.util.Optional;
 
 public class SkriptParser {
     private static final Logger LOGGER = LoggerFactory.getLogger(SkriptParser.class);
+    private final LineParser lineParser = new LineParser();
     private final SkriptFile skriptFile;
 
     private IParsingDef definition = null;
@@ -82,7 +82,7 @@ public class SkriptParser {
 
     @SuppressWarnings("unchecked")
     private <T> Optional<SkriptParsingDef<T>> parseFunction(String line, int lineNumber) {
-        for(ISkriptFunctionDef addonDef : AddonManager.getAddonDefs()) {
+        for(ISkriptFunctionDef addonDef : lineParser.getAddonManager().getAddonDefs()) {
             for(Map.Entry<ISkriptPattern, Object> entry : addonDef.getPatterns().entrySet()) {
                 ParseResult result = entry.getKey().matchesInitial(line);
                 if (result.getResult() != ParseResult.Result.PASSED) {
@@ -90,11 +90,11 @@ public class SkriptParser {
                 }
                 List<IParsedInstruction> variables = new ArrayList<>();
                 for (Map.Entry<Integer, Integer> variableEntry : result.getVariables().entrySet()) {
-                    IParsedInstruction variableInstruction = LineParser.parseVariable(
+                    IParsedInstruction variableInstruction = lineParser.parseVariable(
                             line.substring(variableEntry.getKey(), variableEntry.getValue()), lineNumber);
                     variables.add(variableInstruction);
                 }
-                if (!testVariables(result, variables)) {
+                if (testVariables(result, variables)) {
                     return Optional.of(new SkriptParsingDef<>(addonDef, variables, (T) entry.getValue()));
                 }
             }
@@ -108,9 +108,9 @@ public class SkriptParser {
             if (!(part instanceof VariablePattern) || variableIndex == variables.size()
                     || !((VariablePattern) part).getType().equals(((ISkriptExpression) variables
                     .get(variableIndex++).getInstruction()).getReturnType())) {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 }

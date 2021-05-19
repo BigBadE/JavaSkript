@@ -2,7 +2,6 @@ package com.bigbade.javaskript.api.skript.pattern;
 
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.Collections;
