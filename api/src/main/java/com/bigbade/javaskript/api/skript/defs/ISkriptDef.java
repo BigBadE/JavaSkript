@@ -8,7 +8,8 @@ import java.util.Map;
  */
 public interface ISkriptDef {
     /**
-     * Returns a built key/value map.
+     * Returns a built key/value map. NULL is used as the key for
+     * a single-translator def.
      * @return Key/value map
      */
     Map<String, ?> getKeyValues();

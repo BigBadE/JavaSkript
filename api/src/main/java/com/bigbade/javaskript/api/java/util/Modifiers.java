@@ -28,7 +28,7 @@ public class Modifiers {
     private final int mask;
 
     @RequiredArgsConstructor
-    enum ModifierTypes {
+    public enum ModifierTypes {
         PUBLIC(0x000001, 0x000006),
         PRIVATE(0x000002, 0x000005),
         PROTECTED(0x000004, 0x000003),

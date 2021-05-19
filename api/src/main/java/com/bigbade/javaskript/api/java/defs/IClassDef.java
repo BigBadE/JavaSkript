@@ -34,7 +34,7 @@ public interface IClassDef {
      * @param <T> Member type
      * @return Members of that type contained by the class
      */
-    <T extends IClassMember> List<T> getClassMember(ClassMembers memberType);
+    <T extends IClassMember> List<T> getMembersOfType(ClassMembers memberType);
 
     /**
      * Gets or creates a class member with the name, what the name actually is depends on the class member.

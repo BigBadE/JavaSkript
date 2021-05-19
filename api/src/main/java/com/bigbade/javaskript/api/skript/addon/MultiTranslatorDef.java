@@ -1,17 +1,21 @@
 package com.bigbade.javaskript.api.skript.addon;
 
 import com.bigbade.javaskript.api.java.defs.IPackageDef;
+import com.bigbade.javaskript.api.java.variables.IVariableDef;
 import com.bigbade.javaskript.api.skript.code.ITranslatorFactory;
 import com.bigbade.javaskript.api.skript.defs.IValueTranslator;
 import com.bigbade.javaskript.api.skript.pattern.ISkriptPattern;
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Getter
 public abstract class MultiTranslatorDef implements ISkriptFunctionDef<Void> {
+    private final List<IVariableDef> variables = new ArrayList<>();
+
     private Map<String, IValueTranslator<?>> translators = new HashMap<>();
     private List<ISkriptPattern> patterns;
 
@@ -29,6 +33,10 @@ public abstract class MultiTranslatorDef implements ISkriptFunctionDef<Void> {
             translators = new HashMap<>();
         }
         translators.put(key, translator);
+    }
+
+    protected void addVariable(IVariableDef variableDef) {
+        variables.add(variableDef);
     }
 
     @Override

@@ -33,6 +33,13 @@ public interface IMethodDef {
     Modifiers getModifiers();
 
     /**
+     * Sets the modifiers of the constructor. Allows public, protected, private, abstract, static, final,
+     * synchronized, native, and strict.
+     * @param modifiers Modifiers of the constructor
+     */
+    void setModifiers(Modifiers modifiers);
+
+    /**
      * Sets the code of the method.
      * @param code Code block to add to the method
      */
@@ -63,6 +70,14 @@ public interface IMethodDef {
      * @throws IllegalArgumentException if the parameter has illegal modifiers
      */
     void addParameter(IVariableDef variable);
+
+    /**
+     * Adds parameters to the method. Parameter modifiers are more strict the variable modifiers!
+     * Only allows the final modifier.
+     * @param variables Variables to add to the method
+     * @throws IllegalArgumentException if the parameter has illegal modifiers
+     */
+    void addParameters(List<IVariableDef> variables);
 
     /**
      * Gets all parameters of the method.

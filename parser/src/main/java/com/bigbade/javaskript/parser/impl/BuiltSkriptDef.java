@@ -4,12 +4,10 @@ import com.bigbade.javaskript.api.skript.defs.ISkriptDef;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import javax.annotation.Nullable;
 import java.util.Map;
-import java.util.Optional;
 
 @RequiredArgsConstructor
-public class BuiltSkriptDef<T> implements ISkriptDef {
+public class BuiltSkriptDef implements ISkriptDef {
     @Getter
     private final Map<String, ?> keyValues;
 

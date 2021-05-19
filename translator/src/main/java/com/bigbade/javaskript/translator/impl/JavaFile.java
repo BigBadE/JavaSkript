@@ -26,12 +26,7 @@ public class JavaFile implements IJavaFile {
 
     @Override
     public IClassDef getMainClass() {
-        for (IClassDef def : classes) {
-            if (def.getClassName().equals(name)) {
-                return def;
-            }
-        }
-        throw new IllegalStateException("No main class in JavaFile " + name);
+        return getClassForName(name);
     }
 
     @Override

@@ -29,7 +29,34 @@ public class JavaPackage implements IPackageDef {
     }
 
     @Override
-    public Optional<IJavaFile> getJavaFile(String name) {
-        return Optional.ofNullable(javaFiles.get(name));
+    public IJavaFile getJavaFile(String name) {
+        return javaFiles.computeIfAbsent(name, newName -> new JavaFile(name));
+    }
+
+    @Override
+    public IPackageDef getSubpackage(String name) {
+        for(IPackageDef packageDef : subpackages) {
+            if(packageDef.getNamespace().equals(name)) {
+                return packageDef;
+            }
+        }
+        IPackageDef output = new JavaPackage(name);
+        subpackages.add(output);
+        return output;
+    }
+
+    @Override
+    public boolean fileExists(String name) {
+        return javaFiles.containsKey(name);
+    }
+
+    @Override
+    public boolean packageExists(String name) {
+        for(IPackageDef packageDef : subpackages) {
+            if(packageDef.getNamespace().equals(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

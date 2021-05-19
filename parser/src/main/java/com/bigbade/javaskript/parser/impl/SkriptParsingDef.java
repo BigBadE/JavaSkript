@@ -74,6 +74,6 @@ public class SkriptParsingDef implements IParsingDef {
     }
 
     public ISkriptDef buildSkriptDef() {
-        return new BuiltSkriptDef<>(keyValues, patternData);
+        return new BuiltSkriptDef(keyValues, patternData);
     }
 }

@@ -1,6 +1,7 @@
 package com.bigbade.javaskript.api.skript.addon;
 
 import com.bigbade.javaskript.api.java.defs.IPackageDef;
+import com.bigbade.javaskript.api.java.variables.IVariableDef;
 import com.bigbade.javaskript.api.skript.code.ITranslatorFactory;
 import com.bigbade.javaskript.api.skript.defs.IValueTranslator;
 import com.bigbade.javaskript.api.skript.pattern.ISkriptPattern;
@@ -35,6 +36,12 @@ public interface ISkriptFunctionDef<T> {
      * @return Def's patterns
      */
     List<ISkriptPattern> getPatterns();
+
+    /**
+     * Gets the variables of the def
+     * @return Def's variables
+     */
+    List<IVariableDef> getVariables();
 
     /**
      * Initializes the def with a TranslatorFactory, to give access to code parsing
