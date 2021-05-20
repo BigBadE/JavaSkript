@@ -12,9 +12,24 @@ public class OptionalPattern implements IPatternPart {
 
     @Override
     public ParseResult parseWord(String parsing) {
-        ParseResult result = CompiledPattern.matchesInitial(parsing, optional);
-        return new ParseResult(result.getVariables(), result.getFoundParts(),
-                result.getResult() == ParseResult.Result.FAILED ? ParseResult.Result.IGNORED : result.getResult());
+        ParseResult result = new ParseResult(ParseResult.Result.IGNORED);
+
+        ParseResult partResult = CompiledPattern.matchesInitial(parsing, optional);
+        if (partResult.getResult() == ParseResult.Result.UNDETERMINED) {
+            result = partResult;
+        } else if (partResult.getResult() == ParseResult.Result.PASSED) {
+            return partResult;
+        }
+
+        return result;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder("[");
+        for (IPatternPart choice : optional) {
+            builder.append(choice.toString());
+        }
+        return builder.append("]").toString();
+    }
 }

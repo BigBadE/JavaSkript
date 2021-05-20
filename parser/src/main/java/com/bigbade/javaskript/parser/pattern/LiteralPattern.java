@@ -18,4 +18,9 @@ public class LiteralPattern implements IPatternPart {
         }
         return new ParseResult(ParseResult.Result.FAILED);
     }
+
+    @Override
+    public String toString() {
+        return literal;
+    }
 }

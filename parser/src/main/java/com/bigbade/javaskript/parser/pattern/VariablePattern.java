@@ -6,8 +6,6 @@ import com.bigbade.javaskript.api.skript.pattern.ParseResult;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
-
 @RequiredArgsConstructor
 public class VariablePattern implements IPatternPart {
     @Getter
@@ -16,5 +14,10 @@ public class VariablePattern implements IPatternPart {
     @Override
     public ParseResult parseWord(String word) {
         throw new IllegalStateException("Cannot parse variable as word!");
+    }
+
+    @Override
+    public String toString() {
+        return "%" + type.getSimpleName() + "%";
     }
 }

@@ -18,63 +18,11 @@ public class CompiledPattern implements ISkriptPattern {
     @Getter
     private final int patternData;
 
-    private int index = 0;
+    private int index;
 
     public CompiledPattern(String pattern, int patternData) {
         this.patternData = patternData;
-        parts.addAll(parsePattern(pattern.trim(), true, 0, '\t'));
-    }
-
-    private List<IPatternPart> parsePattern(String pattern, boolean useIndex, int start, char exit) {
-        List<IPatternPart> foundParts = new ArrayList<>();
-        char current;
-        StringBuilder builder = new StringBuilder();
-        int currentIndex = useIndex ? index : start;
-        while(currentIndex < pattern.length() && (current = pattern.charAt(currentIndex)) != exit) {
-            switch (current) {
-                case '[' -> foundParts.add(new OptionalPattern(parsePattern(pattern, true, currentIndex, ']')));
-                case '(' -> {
-                    List<IPatternPart> choicePart = new ArrayList<>();
-                    currentIndex += parseChoice(pattern, currentIndex, choicePart);
-                    foundParts.add(new ChoicePattern(choicePart));
-                }
-                case '%' -> {
-                    String found = pattern.substring(currentIndex);
-                    found = found.substring(0, found.indexOf('%'));
-                    currentIndex += found.length();
-                    foundParts.add(new VariablePattern(SkriptClassType.getSkriptType(found)));
-                }
-                default -> builder.append(current);
-            }
-            currentIndex++;
-        }
-
-        foundParts.add(new LiteralPattern(builder.toString()));
-        return foundParts;
-    }
-
-    private int parseChoice(String pattern, int i, List<IPatternPart> choicePart) {
-        int skipping = 0;
-        int depth = 0;
-        for (String choice : SPLITTER_PATTERN.split(pattern.substring(i))) {
-            for (int j = 0; j < choice.length(); j++) {
-                if (choice.charAt(j) == '(') {
-                    depth++;
-                } else if (choice.charAt(j) == ')' && depth-- == 0) {
-                    skipping += j;
-                    choicePart.addAll(parsePattern(choice.substring(0, j).trim(), false, 0, '\t'));
-                    break;
-                }
-            }
-            skipping += choice.length() + 1;
-            choicePart.addAll(parsePattern(choice.trim(), false, 0, '\t'));
-        }
-        return skipping - 1;
-    }
-
-    @Override
-    public ParseResult matchesInitial(String line) {
-        return matchesInitial(line, parts);
+        parts.addAll(parsePattern(pattern.trim(), -1, '\t'));
     }
 
     public static ParseResult matchesInitial(String matching, List<IPatternPart> parts) {
@@ -82,6 +30,7 @@ public class CompiledPattern implements ISkriptPattern {
         int looped = 0;
         int variableStart = -1;
         ParseResult.ParseResultBuilder builder = new ParseResult.ParseResultBuilder();
+        checkPart:
         for (IPatternPart patternPart : parts) {
             looped++;
             if (patternPart instanceof VariablePattern) {
@@ -92,7 +41,10 @@ public class CompiledPattern implements ISkriptPattern {
             StringBuilder joined = new StringBuilder();
             boolean exiting = false;
             while (!exiting) {
-                if(index == matching.length()) {
+                if (index == matching.length()) {
+                    if (patternPart instanceof OptionalPattern) {
+                        continue checkPart;
+                    }
                     return builder.build(ParseResult.Result.UNDETERMINED);
                 }
                 joined.append(matching.charAt(index++));
@@ -103,7 +55,7 @@ public class CompiledPattern implements ISkriptPattern {
                         exiting = true;
                         break;
                     case PASSED:
-                        if(variableStart != -1) {
+                        if (variableStart != -1) {
                             builder.addParts(result.getFoundParts());
                             builder.addVariable(variableStart, index);
                             variableStart = -1;
@@ -111,14 +63,105 @@ public class CompiledPattern implements ISkriptPattern {
                         exiting = true;
                         break;
                     case FAILED:
-                        index = start + 1;
-                        exiting = true;
-                        break;
+                        return result;
                     default:
                 }
             }
         }
-        return looped == parts.size() ? builder.build(ParseResult.Result.PASSED)
+        return looped == parts.size() && (variableStart != -1 || index == matching.length()) ?
+                builder.build(ParseResult.Result.PASSED)
                 : builder.build(ParseResult.Result.FAILED);
+    }
+
+    private List<IPatternPart> parsePattern(String pattern, int start, char exit) {
+        List<IPatternPart> foundParts = new ArrayList<>();
+        char current;
+        StringBuilder builder = new StringBuilder();
+        int currentIndex = start == -1 ? index : start;
+        while (currentIndex < pattern.length() && (current = pattern.charAt(currentIndex)) != exit) {
+            currentIndex++;
+            switch (current) {
+                case '[' -> {
+                    if (!builder.isEmpty()) {
+                        foundParts.add(new LiteralPattern(builder.toString()));
+                    }
+                    builder = new StringBuilder();
+                    index++;
+                    foundParts.add(new OptionalPattern(parsePattern(pattern, -1, ']')));
+                    if (start == -1) {
+                        currentIndex = ++index;
+                    }
+                }
+                case '(' -> {
+                    if (!builder.isEmpty()) {
+                        foundParts.add(new LiteralPattern(builder.toString()));
+                    }
+                    builder = new StringBuilder();
+                    List<List<IPatternPart>> choicePart = new ArrayList<>();
+                    currentIndex += parseChoice(pattern, currentIndex, choicePart);
+                    foundParts.add(new ChoicePattern(choicePart));
+                }
+                case '%' -> {
+                    foundParts.add(new LiteralPattern(builder.toString()));
+                    builder = new StringBuilder();
+                    String found = pattern.substring(currentIndex);
+                    found = found.substring(0, found.indexOf('%'));
+                    currentIndex += found.length();
+                    foundParts.add(new VariablePattern(SkriptClassType.getSkriptType(found)));
+                }
+                default -> builder.append(current);
+            }
+
+            if (start == -1) {
+                index = currentIndex;
+            }
+        }
+
+        if (start != 0) {
+            index = currentIndex;
+            if (exit == '\t') {
+                index += builder.length();
+            }
+        }
+
+        if (!builder.isEmpty()) {
+            foundParts.add(new LiteralPattern(builder.toString()));
+        }
+        return foundParts;
+    }
+
+    private int parseChoice(String pattern, int i, List<List<IPatternPart>> choicePart) {
+        int skipping = 0;
+        int depth = 0;
+        for (String choice : SPLITTER_PATTERN.split(pattern.substring(i))) {
+            int wordIndex = 0;
+            for (char character : choice.toCharArray()) {
+                if (character == '(') {
+                    depth++;
+                } else if (character == ')' && depth-- == 0) {
+                    skipping += wordIndex + 2;
+                    choicePart.add(parsePattern(choice.substring(0, wordIndex), 0, '\t'));
+                    return skipping - 1;
+                }
+                wordIndex++;
+            }
+            skipping += choice.length() + 1;
+            choicePart.add(parsePattern(choice.trim(), 0, '\t'));
+        }
+        throw new IllegalStateException("Choice section " + pattern + " has no end!");
+    }
+
+    @Override
+    public ParseResult matchesInitial(String line) {
+        return matchesInitial(line, parts);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        for (IPatternPart patternPart : parts) {
+            builder.append(patternPart.toString());
+        }
+        return builder.toString();
     }
 }

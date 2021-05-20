@@ -8,22 +8,35 @@ import java.util.List;
 
 @RequiredArgsConstructor
 public class ChoicePattern implements IPatternPart {
-    private final List<IPatternPart> choices;
+    private final List<List<IPatternPart>> choices;
 
     @Override
     public ParseResult parseWord(String word) {
-        int undetermined = 0;
-        for (IPatternPart part : choices) {
-            ParseResult parseReturn = part.parseWord(word);
+        int failed = 0;
+        for (List<IPatternPart> parts : choices) {
+            ParseResult parseReturn = CompiledPattern.matchesInitial(word, parts);
             if (parseReturn.getResult() == ParseResult.Result.PASSED) {
                 return parseReturn;
             } else if (parseReturn.getResult() == ParseResult.Result.FAILED) {
-                undetermined++;
+                failed++;
             }
         }
-        if (undetermined > 0) {
+
+        if (failed < choices.size()) {
             return new ParseResult(ParseResult.Result.UNDETERMINED);
         }
         return new ParseResult(ParseResult.Result.FAILED);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder("(");
+        for(List<IPatternPart> part : choices) {
+            for(IPatternPart choice : part) {
+                builder.append(choice.toString());
+            }
+            builder.append("|");
+        }
+        return builder.deleteCharAt(builder.length()-1).append(")").toString();
     }
 }
