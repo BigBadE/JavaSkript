@@ -12,7 +12,7 @@ public class LiteralPattern implements IPatternPart {
 
     @Override
     public ParseResult parseWord(String word) {
-        if(literal.startsWith(word.toLowerCase())) {
+        if(literal.startsWith(word)) {
             return new ParseResult(this, (literal.length() == word.length()) ?
                     ParseResult.Result.PASSED : ParseResult.Result.UNDETERMINED);
         }

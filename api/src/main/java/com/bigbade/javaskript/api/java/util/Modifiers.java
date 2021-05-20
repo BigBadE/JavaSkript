@@ -11,17 +11,17 @@ import java.lang.reflect.Modifier;
  */
 @SuppressWarnings("unused")
 public class Modifiers {
-    private static final int CLASS_MODIFIERS = Modifier.PUBLIC | Modifier.PROTECTED | Modifier.PRIVATE |
+    public static final int CLASS_MODIFIERS = Modifier.PUBLIC | Modifier.PROTECTED | Modifier.PRIVATE |
             Modifier.ABSTRACT | Modifier.STATIC | Modifier.FINAL | Modifier.STRICT;
-    private static final int INTERFACE_MODIFIERS = Modifier.PUBLIC | Modifier.PROTECTED | Modifier.PRIVATE |
+    public static final int INTERFACE_MODIFIERS = Modifier.PUBLIC | Modifier.PROTECTED | Modifier.PRIVATE |
             Modifier.ABSTRACT | Modifier.STATIC | Modifier.STRICT;
-    private static final int CONSTRUCTOR_MODIFIERS = Modifier.PUBLIC | Modifier.PROTECTED | Modifier.PRIVATE;
-    private static final int METHOD_MODIFIERS = Modifier.PUBLIC | Modifier.PROTECTED | Modifier.PRIVATE |
+    public static final int CONSTRUCTOR_MODIFIERS = Modifier.PUBLIC | Modifier.PROTECTED | Modifier.PRIVATE;
+    public static final int METHOD_MODIFIERS = Modifier.PUBLIC | Modifier.PROTECTED | Modifier.PRIVATE |
             Modifier.ABSTRACT | Modifier.STATIC | Modifier.FINAL | Modifier.SYNCHRONIZED | Modifier.NATIVE | Modifier.STRICT;
-    private static final int FIELD_MODIFIERS = Modifier.PUBLIC | Modifier.PROTECTED | Modifier.PRIVATE |
+    public static final int FIELD_MODIFIERS = Modifier.PUBLIC | Modifier.PROTECTED | Modifier.PRIVATE |
             Modifier.STATIC | Modifier.FINAL | Modifier.TRANSIENT | Modifier.VOLATILE;
-    private static final int PARAMETER_MODIFIERS = Modifier.FINAL;
-    private static final int IMPORT_MODIFIERS = Modifier.STATIC;
+    public static final int PARAMETER_MODIFIERS = Modifier.FINAL;
+    public static final int IMPORT_MODIFIERS = Modifier.STATIC;
 
     //Final modifier mask
     @Getter

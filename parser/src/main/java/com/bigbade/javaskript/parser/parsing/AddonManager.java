@@ -9,6 +9,8 @@ import com.bigbade.javaskript.api.skript.addon.SkriptPattern;
 import com.bigbade.javaskript.api.skript.code.ISkriptEffect;
 import com.bigbade.javaskript.api.skript.code.ISkriptExpression;
 import com.bigbade.javaskript.api.skript.code.ISkriptInstruction;
+import com.bigbade.javaskript.api.skript.code.ITranslatorFactory;
+import com.bigbade.javaskript.api.skript.code.IVariableFactory;
 import com.bigbade.javaskript.api.skript.pattern.ISkriptPattern;
 import com.bigbade.javaskript.parser.api.SkriptAddonEffect;
 import com.bigbade.javaskript.parser.api.SkriptAddonExpression;
@@ -48,7 +50,9 @@ public final class AddonManager implements IAddonManager {
     private final Set<Class<? extends ISkriptStringAddon<?>>> overridingStringAddons = new HashSet<>();
     private final Set<Class<? extends ISkriptLiteralAddon<?>>> overridingLiteralAddons = new HashSet<>();
 
-    private final TranslatorFactory translatorFactory = new TranslatorFactory();
+    private final ITranslatorFactory translatorFactory = new TranslatorFactory();
+
+    private boolean setup;
 
     protected AddonManager() {
 
@@ -180,6 +184,10 @@ public final class AddonManager implements IAddonManager {
      */
     @SafeVarargs
     public final void registerMethodDef(ISkriptFunctionDef<?> addonDef, Class<ISkriptFunctionDef<?>>... overriding) {
+        if(setup) {
+            throw new IllegalStateException("Tried to register a defs after setup is complete!");
+        }
+
         if(overridingDefs.contains(addonDef.getClass())) {
             return;
         }
@@ -203,5 +211,16 @@ public final class AddonManager implements IAddonManager {
             }
         }
         overridingDefs.addAll(Arrays.asList(overriding));
+    }
+
+    public void setupDefs(IVariableFactory variableFactory) {
+        if(setup) {
+            throw new IllegalStateException("Tried to setup already-setup defs!");
+        }
+
+        for(ISkriptFunctionDef<?> def : addonDefs) {
+            def.setupVariables(variableFactory);
+        }
+        setup = false;
     }
 }

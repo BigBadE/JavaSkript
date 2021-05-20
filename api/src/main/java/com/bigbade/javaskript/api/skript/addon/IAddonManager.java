@@ -1,5 +1,7 @@
 package com.bigbade.javaskript.api.skript.addon;
 
+import com.bigbade.javaskript.api.skript.code.IVariableFactory;
+
 @SuppressWarnings({"unused", "unchecked"})
 public interface IAddonManager {
     /**
@@ -26,4 +28,20 @@ public interface IAddonManager {
      * @see SkriptPattern
      */
     void registerInstruction(Class<?> instruction, Class<?>... overriding);
+
+    /**
+     * Registers an addon definition. Addon definitions REQUIRE a SkriptPattern
+     *
+     * @param addonDef   Addon definition to register
+     * @param overriding Function defs to override
+     * @see ISkriptFunctionDef
+     * @see SkriptPattern
+     */
+    void registerMethodDef(ISkriptFunctionDef<?> addonDef, Class<ISkriptFunctionDef<?>>... overriding);
+
+    /**
+     * Sets up method defs, registering their variables.
+     * @param variableFactory Variable factory
+     */
+    void setupDefs(IVariableFactory variableFactory);
 }

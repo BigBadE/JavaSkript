@@ -28,6 +28,13 @@ public interface IClassDef {
      */
     Modifiers getModifiers();
 
+
+    /**
+     * Sets the modifiers
+     * @param modifiers New modifiers
+     */
+    void setModifiers(Modifiers modifiers);
+
     /**
      * Gets the class member from the class
      * @param memberType Type of member

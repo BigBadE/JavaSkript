@@ -7,6 +7,7 @@ import com.bigbade.javaskript.api.java.util.Modifiers;
 import com.bigbade.javaskript.api.skript.addon.SingleTranslatorDef;
 import com.bigbade.javaskript.api.skript.addon.SkriptPattern;
 import com.bigbade.javaskript.api.skript.code.ITranslatorFactory;
+import com.bigbade.javaskript.api.skript.code.IVariableFactory;
 import com.bigbade.javaskript.api.skript.defs.ICodeDef;
 import com.bigbade.javaskript.api.skript.defs.IValueTranslator;
 
@@ -14,14 +15,14 @@ import com.bigbade.javaskript.api.skript.defs.IValueTranslator;
 public class ScriptLoadDef extends SingleTranslatorDef<ICodeDef> {
     @Override
     public void operate(ICodeDef startingValue, int patternData, IPackageDef mainPackage) {
-        IMethodDef methodDef = mainPackage.getJavaFile("main").getMainClass().getClassMember(ClassMembers.METHODS, "main");
+        IMethodDef methodDef = mainPackage.getJavaFile("Main").getMainClass().getClassMember(ClassMembers.METHODS, "main");
         methodDef.setModifiers(new Modifiers(Modifiers.ModifierTypes.PUBLIC, Modifiers.ModifierTypes.STATIC));
         methodDef.addParameters(getVariables());
     }
 
     @Override
-    public void addVariables() {
-        //TODO when IVariableDef has an implementation
+    public void setupVariables(IVariableFactory factory) {
+        addVariable(factory.createParameter("args", factory.getClassType(String[].class)));
     }
 
     @Override

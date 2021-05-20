@@ -5,20 +5,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f1c47736-1d43-4511-9970-b585734a3d61" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/code/IVariableFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/impl/VariableFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/translator/src/main/java/com/bigbade/javaskript/translator/impl/JavaClassDef.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/translator/src/main/java/com/bigbade/javaskript/translator/impl/JavaVariableDef.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/java/defs/IClassDef.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/java/defs/IClassDef.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/java/defs/IMethodDef.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/java/defs/IMethodDef.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/java/defs/IPackageDef.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/java/defs/IPackageDef.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/java/defs/IClassMember.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/java/defs/IClassMember.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/java/util/Modifiers.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/java/util/Modifiers.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/java/variables/IVariableDef.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/java/variables/IVariableDef.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/addon/IAddonManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/addon/IAddonManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/addon/ISkriptFunctionDef.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/addon/ISkriptFunctionDef.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/addon/MultiTranslatorDef.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/addon/MultiTranslatorDef.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/addon/SingleTranslatorDef.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/addon/SingleTranslatorDef.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/defs/ISkriptDef.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/defs/ISkriptDef.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/java/src/main/java/com/bigbade/javaskript/java/defs/ScriptLoadDef.java" beforeDir="false" afterPath="$PROJECT_DIR$/modules/java/src/main/java/com/bigbade/javaskript/java/defs/ScriptLoadDef.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/impl/BuiltSkriptDef.java" beforeDir="false" afterPath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/impl/BuiltSkriptDef.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/impl/SkriptParsingDef.java" beforeDir="false" afterPath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/impl/SkriptParsingDef.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/java/src/main/java/com/bigbade/javaskript/java/effects/BroadcastExpression.java" beforeDir="false" afterPath="$PROJECT_DIR$/modules/java/src/main/java/com/bigbade/javaskript/java/effects/BroadcastExpression.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/parsing/AddonManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/parsing/AddonManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/pattern/CompiledPattern.java" beforeDir="false" afterPath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/pattern/CompiledPattern.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/pattern/LiteralPattern.java" beforeDir="false" afterPath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/pattern/LiteralPattern.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/translator/src/main/java/com/bigbade/javaskript/translator/impl/JavaFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/translator/src/main/java/com/bigbade/javaskript/translator/impl/JavaFile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/translator/src/main/java/com/bigbade/javaskript/translator/impl/JavaPackage.java" beforeDir="false" afterPath="$PROJECT_DIR$/translator/src/main/java/com/bigbade/javaskript/translator/impl/JavaPackage.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,8 +86,8 @@
       <list>
         <option value="Enum" />
         <option value="AnnotationType" />
-        <option value="Class" />
         <option value="Interface" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -124,21 +133,19 @@
       <recent name="com.bigbade.javaskript.api" />
     </key>
   </component>
-  <component name="RunManager" selected="JavaScript Debug.index.html">
-    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
+  <component name="RunManager" selected="JUnit.PatternTests">
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
           <option name="containerStateName" value="" />
         </value>
       </option>
-      <option name="TEST_OBJECT" value="CLASS" />
-      <properties />
-      <listeners />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="TestDocsExamples" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="PatternTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="JavaSkript.parser.integrationTest" />
       <extension name="coverage">
         <pattern>
@@ -147,8 +154,56 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="com.bigbade.javaskript.parser" />
-      <option name="MAIN_CLASS_NAME" value="com.bigbade.javaskript.parser.TestDocsExamples" />
+      <option name="MAIN_CLASS_NAME" value="com.bigbade.javaskript.parser.PatternTests" />
       <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="PatternTests.advancedPatternTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="JavaSkript.parser.integrationTest" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.bigbade.javaskript.parser.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.bigbade.javaskript.parser" />
+      <option name="MAIN_CLASS_NAME" value="com.bigbade.javaskript.parser.PatternTests" />
+      <option name="METHOD_NAME" value="advancedPatternTest" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="PatternTests.basicChoiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="JavaSkript.parser.integrationTest" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.bigbade.javaskript.parser.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.bigbade.javaskript.parser" />
+      <option name="MAIN_CLASS_NAME" value="com.bigbade.javaskript.parser.PatternTests" />
+      <option name="METHOD_NAME" value="basicChoiceTest" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="PatternTests.basicOptionalTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="JavaSkript.parser.integrationTest" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.bigbade.javaskript.parser.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.bigbade.javaskript.parser" />
+      <option name="MAIN_CLASS_NAME" value="com.bigbade.javaskript.parser.PatternTests" />
+      <option name="METHOD_NAME" value="basicOptionalTest" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -158,8 +213,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.PatternTests" />
+        <item itemvalue="JUnit.PatternTests.advancedPatternTest" />
+        <item itemvalue="JUnit.PatternTests.basicChoiceTest" />
+        <item itemvalue="JUnit.PatternTests.basicOptionalTest" />
         <item itemvalue="JavaScript Debug.index.html" />
-        <item itemvalue="JUnit.TestDocsExamples" />
       </list>
     </recent_temporary>
   </component>
@@ -192,7 +250,8 @@
       <workItem from="1621260372333" duration="349000" />
       <workItem from="1621347348852" duration="7695000" />
       <workItem from="1621371794078" duration="13567000" />
-      <workItem from="1621432796651" duration="8680000" />
+      <workItem from="1621432796651" duration="30677000" />
+      <workItem from="1621518636354" duration="9171000" />
     </task>
     <servers />
   </component>
@@ -210,5 +269,12 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="com.bigbade.javaskript.parser.pattern.LiteralPattern" memberName="literal" />
+      </pinned-members>
+    </pin-to-top-manager>
   </component>
 </project>

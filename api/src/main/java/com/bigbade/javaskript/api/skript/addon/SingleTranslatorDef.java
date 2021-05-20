@@ -27,14 +27,9 @@ public abstract class SingleTranslatorDef<T> implements ISkriptFunctionDef<T> {
 
     public abstract IValueTranslator<T> getTranslator(ITranslatorFactory factory);
 
-    public void addVariables() {
-        //Can be overridden by subclasses
-    }
-
     @Override
     public void init(List<ISkriptPattern> patterns, ITranslatorFactory factory) {
         this.patterns = patterns;
-        addVariables();
         startingTranslator = getTranslator(factory);
     }
 

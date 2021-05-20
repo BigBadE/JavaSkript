@@ -26,7 +26,10 @@ public abstract class MultiTranslatorDef implements ISkriptFunctionDef<Void> {
     @Override
     public void init(List<ISkriptPattern> patterns, ITranslatorFactory factory) {
         this.patterns = patterns;
+        addTranslators(factory);
     }
+
+    abstract void addTranslators(ITranslatorFactory factory);
 
     protected void addTranslator(String key, IValueTranslator<?> translator) {
         if (translators == null) {

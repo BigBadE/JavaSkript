@@ -22,6 +22,12 @@ public interface IVariableDef {
     Modifiers getModifiers();
 
     /**
+     * Sets the modifiers of the variable. Allows public, protected, private, static, final, transient, and volatile.
+     * @param modifiers Modifiers of the variable
+     */
+    void setModifiers(Modifiers modifiers);
+
+    /**
      * Gets the identifier of the variable, a.k.a. the name.
      * @return Identifier of the variable
      */

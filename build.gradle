@@ -8,6 +8,9 @@ allprojects {
     group 'com.bigbade'
     version '1.0-SNAPSHOT'
 
+    targetCompatibility = 1.16
+    sourceCompatibility = 1.8
+
     repositories {
         mavenCentral()
     }
@@ -17,9 +20,6 @@ subprojects {
     apply plugin: 'idea'
     apply plugin: 'java'
     apply plugin: 'io.freefair.lombok'
-
-    targetCompatibility = 1.16
-    sourceCompatibility = 1.8
 
     lombok {
         version = '1.18.20'

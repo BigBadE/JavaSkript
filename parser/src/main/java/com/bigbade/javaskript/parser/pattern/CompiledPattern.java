@@ -47,7 +47,8 @@ public class CompiledPattern implements ISkriptPattern {
                     }
                     return builder.build(ParseResult.Result.UNDETERMINED);
                 }
-                joined.append(matching.charAt(index++));
+                char character = Character.toLowerCase(matching.charAt(index++));
+                joined.append(character);
                 ParseResult result = patternPart.parseWord(joined.toString());
                 switch (result.getResult()) {
                     case IGNORED:

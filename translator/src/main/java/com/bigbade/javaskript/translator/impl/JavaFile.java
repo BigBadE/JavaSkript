@@ -36,8 +36,7 @@ public class JavaFile implements IJavaFile {
                 return classDef;
             }
         }
-        //TODO when ClassDef is written
-        return null;
+        return new JavaClassDef(name);
     }
 
     @Override

@@ -6,4 +6,7 @@ package com.bigbade.javaskript.api.java.defs;
  */
 @SuppressWarnings("unused")
 public interface IClassMember {
+    ClassMembers getType();
+
+    String getName();
 }
