@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f1c47736-1d43-4511-9970-b585734a3d61" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/code/IParsedBranchFunction.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/defs/IBranchFunctionDef.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/pattern/ILineParser.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/impl/SkriptCodeDef.java" afterDir="false" />
@@ -276,7 +277,7 @@
       <workItem from="1621778294615" duration="1189000" />
       <workItem from="1621973960723" duration="767000" />
       <workItem from="1625091717957" duration="7580000" />
-      <workItem from="1625103853398" duration="5696000" />
+      <workItem from="1625103853398" duration="6034000" />
     </task>
     <servers />
   </component>
