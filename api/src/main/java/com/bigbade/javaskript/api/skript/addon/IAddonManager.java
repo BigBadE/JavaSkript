@@ -37,7 +37,7 @@ public interface IAddonManager {
      * @see ISkriptFunctionDef
      * @see SkriptPattern
      */
-    void registerMethodDef(ISkriptFunctionDef<?> addonDef, Class<ISkriptFunctionDef<?>>... overriding);
+    void registerMethodDef(ISkriptFunctionDef addonDef, Class<ISkriptFunctionDef>... overriding);
 
     /**
      * Sets up method defs, registering their variables.

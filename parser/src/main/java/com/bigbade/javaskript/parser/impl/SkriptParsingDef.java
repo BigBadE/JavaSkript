@@ -1,10 +1,11 @@
 package com.bigbade.javaskript.parser.impl;
 
+import com.bigbade.javaskript.api.java.defs.IPackageDef;
 import com.bigbade.javaskript.api.skript.addon.ISkriptFunctionDef;
 import com.bigbade.javaskript.api.skript.code.IParsedInstruction;
 import com.bigbade.javaskript.api.skript.defs.IParsingDef;
-import com.bigbade.javaskript.api.skript.defs.ISkriptDef;
 import com.bigbade.javaskript.api.skript.defs.IValueTranslator;
+import com.bigbade.javaskript.api.skript.pattern.ILineParser;
 import com.bigbade.javaskript.parser.exceptions.SkriptParseException;
 import com.bigbade.javaskript.parser.util.StringUtil;
 import lombok.Getter;
@@ -19,19 +20,22 @@ import java.util.regex.Pattern;
 public class SkriptParsingDef implements IParsingDef {
     private static final Pattern KEY_PATTERN = Pattern.compile(":");
 
-    private final ISkriptFunctionDef<?> functionDef;
     private final int patternData;
+
+    @Getter
+    private final ISkriptFunctionDef functionDef;
 
     @Getter
     private final List<IParsedInstruction> arguments;
 
+    @Getter
     private final Map<String, Object> keyValues = new HashMap<>();
 
     private IValueTranslator<?> currentTranslator;
     private String key = null;
     private int depth;
 
-    public SkriptParsingDef(ISkriptFunctionDef<?> functionDef, List<IParsedInstruction> arguments, int patternData) {
+    public SkriptParsingDef(ISkriptFunctionDef functionDef, List<IParsedInstruction> arguments, int patternData) {
         this.functionDef = functionDef;
         this.patternData = patternData;
         this.arguments = arguments;
@@ -39,16 +43,29 @@ public class SkriptParsingDef implements IParsingDef {
     }
 
     @Override
-    public void parseLine(int lineNumber, String line) {
+    public void parseLine(ILineParser lineParser, int lineNumber, String line) {
         int foundDepth = StringUtil.getTabs(line);
         if (currentTranslator != null) {
-            if (depth == foundDepth) {
+            if (foundDepth == 0) {
                 keyValues.put(key, currentTranslator.getValue());
                 currentTranslator = null;
+            } else if (foundDepth == depth) {
+                if (line.charAt(line.length() - 1) == ':') {
+                    currentTranslator.startBranchFunction(lineParser, lineNumber, line.trim());
+                } else {
+                    currentTranslator.readLine(lineParser, lineNumber, line.trim());
+                }
             } else {
-                currentTranslator.readLine(line);
+                for (int i = foundDepth; i < depth; i++) {
+                    currentTranslator.endBranchFunction(lineParser, lineNumber);
+                }
+                currentTranslator.readLine(lineParser, lineNumber, line.trim());
             }
         }
+        findNextTranslator(lineParser, line, lineNumber, foundDepth);
+    }
+
+    private void findNextTranslator(ILineParser lineParser, String line, int lineNumber, int foundDepth) {
         String[] keyValue = KEY_PATTERN.split(line, 2);
         if (keyValue.length != 2) {
             throw new SkriptParseException(lineNumber, line, "Key/value has no value, needs to be in the format" +
@@ -65,7 +82,7 @@ public class SkriptParsingDef implements IParsingDef {
             throw new SkriptParseException(lineNumber, line, "No key with the name " + key + " found");
         }
         if(translator.readsFirstLine()) {
-            translator.readLine(keyValue[1].trim());
+            translator.readLine(lineParser, lineNumber, keyValue[1].trim());
             keyValues.put(key, translator.getValue());
             key = null;
         } else {
@@ -73,7 +90,12 @@ public class SkriptParsingDef implements IParsingDef {
         }
     }
 
-    public ISkriptDef buildSkriptDef() {
-        return new BuiltSkriptDef(keyValues, patternData);
+    @Override
+    public void finalizeParsingDef(IPackageDef packageDef) {
+        if(functionDef.getStartingTranslator() != null) {
+            functionDef.operate(keyValues.get(null), patternData, packageDef);
+        } else {
+            functionDef.operate(keyValues, patternData, packageDef);
+        }
     }
 }

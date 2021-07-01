@@ -43,13 +43,13 @@ public interface IMethodDef {
      * Sets the code of the method.
      * @param code Code block to add to the method
      */
-    void setCodeBlock(ICodeDef code);
+    void setCodeBlock(IJavaCodeDef code);
 
     /**
      * Gets the code block of the method.
      * @return The code of the method block, or nothing if the method is part of an interface
      */
-    Optional<ICodeDef> getCodeBlock();
+    Optional<IJavaCodeDef> getCodeBlock();
 
     /**
      * Adds a generic with the constraint to the method.

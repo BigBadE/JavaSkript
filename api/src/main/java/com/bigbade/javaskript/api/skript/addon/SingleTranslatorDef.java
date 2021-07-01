@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @Getter
-public abstract class SingleTranslatorDef<T> implements ISkriptFunctionDef<T> {
+public abstract class SingleTranslatorDef<T> implements ISkriptFunctionDef {
     private final List<IVariableDef> variables = new ArrayList<>();
 
     private IValueTranslator<T> startingTranslator;
@@ -40,5 +40,18 @@ public abstract class SingleTranslatorDef<T> implements ISkriptFunctionDef<T> {
     @Override
     public final void operate(Map<String, ?> yamlValues, int patternData, IPackageDef mainPackage) {
         //Not used by this implementation
+        throw new IllegalStateException("Called operate with a map on a single translator");
     }
+
+    @Override
+    public final void operate(Object value, int patternData, IPackageDef mainPackage) {
+        try {
+            //noinspection unchecked
+            operateOnDef((T) value, patternData, mainPackage);
+        } catch (ClassCastException e) {
+            throw new IllegalStateException("Translator gave a " + value.getClass() + " but expected something else!", e);
+        }
+    }
+
+    protected abstract void operateOnDef(T value, int patternData, IPackageDef mainPackage);
 }

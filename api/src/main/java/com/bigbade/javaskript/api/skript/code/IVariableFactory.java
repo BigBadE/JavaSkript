@@ -3,6 +3,7 @@ package com.bigbade.javaskript.api.skript.code;
 import com.bigbade.javaskript.api.java.util.IClassType;
 import com.bigbade.javaskript.api.java.variables.IVariableDef;
 
+@SuppressWarnings("unused")
 public interface IVariableFactory {
     IClassType getClassType(Class<?> clazz);
 

@@ -40,6 +40,18 @@ public class SkriptParser {
         skriptFile = new SkriptFile(name);
     }
 
+    public static boolean testVariables(ParseResult result, List<IParsedInstruction> variables) {
+        int variableIndex = 0;
+        for (IPatternPart part : result.getFoundParts()) {
+            if (!(part instanceof VariablePattern) || variableIndex == variables.size()
+                    || !((VariablePattern) part).getType().equals(
+                    ((ISkriptExpression) variables.get(variableIndex++).getInstruction()).getReturnType())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     @SuppressWarnings("unused")
     public SkriptFile parseSkript(File file) {
         try {
@@ -50,13 +62,12 @@ public class SkriptParser {
         return null;
     }
 
-    @SuppressWarnings("unused")
     public SkriptFile parseSkript(Reader reader) {
         try (BufferedReader bufferedReader = new BufferedReader(reader)) {
             String line;
             int lineNumber = 1;
             while ((line = bufferedReader.readLine()) != null) {
-                if(line.isEmpty() || line.charAt(0) == '#') {
+                if (line.isEmpty() || line.charAt(0) == '#') {
                     lineNumber++;
                     continue;
                 }
@@ -69,21 +80,24 @@ public class SkriptParser {
     }
 
     private void parseLine(String line, int lineNumber) {
-        if(StringUtil.getTabs(line) == 0 && line.charAt(line.length()-1) == ':') {
-            definition = parseFunction(line.substring(0, line.length()-1), lineNumber).orElseThrow(
+        if (StringUtil.getTabs(line) == 0 && line.charAt(line.length() - 1) == ':') {
+            if (definition != null) {
+                skriptFile.addSkriptDef(definition);
+            }
+            definition = parseFunction(line.substring(0, line.length() - 1), lineNumber).orElseThrow(
                     () -> new SkriptParseException(lineNumber, line, "Unknown function!"));
             return;
         }
-        if(definition != null) {
-            definition.parseLine(lineNumber, line);
+        if (definition != null) {
+            definition.parseLine(lineParser, lineNumber, line);
             return;
         }
         throw new SkriptParseException(lineNumber, line, "Statement is outside of a function!");
     }
 
     private Optional<SkriptParsingDef> parseFunction(String line, int lineNumber) {
-        for(ISkriptFunctionDef<?> addonDef : lineParser.getAddonManager().getAddonDefs()) {
-            for(ISkriptPattern pattern : addonDef.getPatterns()) {
+        for (ISkriptFunctionDef addonDef : lineParser.getAddonManager().getAddonDefs()) {
+            for (ISkriptPattern pattern : addonDef.getPatterns()) {
                 ParseResult result = pattern.matchesInitial(line);
                 if (result.getResult() != ParseResult.Result.PASSED) {
                     continue;
@@ -100,17 +114,5 @@ public class SkriptParser {
             }
         }
         return Optional.empty();
-    }
-
-    public static boolean testVariables(ParseResult result, List<IParsedInstruction> variables) {
-        int variableIndex = 0;
-        for (IPatternPart part : result.getFoundParts()) {
-            if (!(part instanceof VariablePattern) || variableIndex == variables.size()
-                    || !((VariablePattern) part).getType().equals(((ISkriptExpression) variables
-                    .get(variableIndex++).getInstruction()).getReturnType())) {
-                return false;
-            }
-        }
-        return true;
     }
 }

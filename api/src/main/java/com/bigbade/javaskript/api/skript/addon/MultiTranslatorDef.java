@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @Getter
-public abstract class MultiTranslatorDef implements ISkriptFunctionDef<Void> {
+public abstract class MultiTranslatorDef implements ISkriptFunctionDef {
     private final List<IVariableDef> variables = new ArrayList<>();
 
     private Map<String, IValueTranslator<?>> translators = new HashMap<>();
@@ -43,7 +43,8 @@ public abstract class MultiTranslatorDef implements ISkriptFunctionDef<Void> {
     }
 
     @Override
-    public void operate(Void startingValue, int patternData, IPackageDef mainPackage) {
+    public void operate(Object startingValue, int patternData, IPackageDef mainPackage) {
         //Not used by multi-translator defs.
+        throw new IllegalStateException("Called operate with a single parameter on a multi translator");
     }
 }

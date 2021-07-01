@@ -1,6 +1,6 @@
 package com.bigbade.javaskript.api.skript.defs;
 
-import com.bigbade.javaskript.api.skript.code.ISkriptInstruction;
+import com.bigbade.javaskript.api.skript.code.IParsedInstruction;
 
 import java.util.List;
 
@@ -13,11 +13,11 @@ public interface ICodeDef {
      * Gets all the Skript instructions in this block
      * @return Instructions list
      */
-    List<ISkriptInstruction> getInstructions();
+    List<IParsedInstruction> getInstructions();
 
     /**
      * Adds an instruction to this block
      * @param instruction Instruction to add
      */
-    void addInstruction(ISkriptInstruction instruction);
+    void addInstruction(IParsedInstruction instruction);
 }

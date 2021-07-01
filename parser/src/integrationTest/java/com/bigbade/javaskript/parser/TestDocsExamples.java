@@ -7,8 +7,8 @@ import java.util.HashMap;
 class TestDocsExamples {
     @Test
     void testExpressions() {
-        SkriptRunner.run("expressions",
+        new SkriptRunner().run("expressions",
                 "on script load:\n" +
-                        "    boardcast \"Expression!\"", new HashMap<>());
+                        "    boardcast \"Expression!\"");
     }
 }

@@ -8,7 +8,7 @@ import java.util.List;
  * Defines a block of code, in Java all blocks are surrounded by curly brackets.
  */
 @SuppressWarnings("unused")
-public interface ICodeDef {
+public interface IJavaCodeDef {
     /**
      * Adds the statement to the block of code.
      * @param statement Statement to add

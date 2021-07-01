@@ -5,7 +5,6 @@ import com.bigbade.javaskript.api.skript.pattern.ISkriptPattern;
 
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Represents a single Skript instruction, allows statements or expressions.

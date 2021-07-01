@@ -13,10 +13,9 @@ import java.util.Map;
 
 /**
  * A definition inside the Skript, such as event listeners.
- * @param <T> Type of the starting translator (or void if none)
  */
 @SuppressWarnings("unused")
-public interface ISkriptFunctionDef<T> {
+public interface ISkriptFunctionDef {
     /**
      * YAML-style key/value pairs, with code being an exception. Empty for none, null key for no key.
      * @return Yaml values of the def
@@ -62,7 +61,7 @@ public interface ISkriptFunctionDef<T> {
     /**
      * Access to the rest of the project, for registering the def. For example, if you want the code to run
      * in the main method (or onEnable for Bukkit), get the class "Main" from the main package, get the
-     * classes and find the one called "Main".
+     * classes and find the one called "Main". This method will only be called if there is no starting translator.
      * @param yamlValues Key/value pair specified
      * @param patternData Pattern data associated with the passed pattern
      * @param mainPackage Main package
@@ -70,10 +69,11 @@ public interface ISkriptFunctionDef<T> {
     void operate(Map<String, ?> yamlValues, int patternData, IPackageDef mainPackage);
 
     /**
-     * The same as the above method, but with a single translator instead of a map.
+     * The same as the above method, but with a single translator instead of a map. This method will only be called
+     * if there is a starting translator.
      * @param startingValue Starting value
      * @param patternData Pattern data associated with the passed pattern
      * @param mainPackage Main package
      */
-    void operate(T startingValue, int patternData, IPackageDef mainPackage);
+    void operate(Object startingValue, int patternData, IPackageDef mainPackage);
 }

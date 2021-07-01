@@ -30,7 +30,7 @@ import java.util.Set;
 @SuppressWarnings("unused")
 public final class AddonManager implements IAddonManager {
     @Getter
-    private final List<ISkriptFunctionDef<?>> addonDefs = new ArrayList<>();
+    private final List<ISkriptFunctionDef> addonDefs = new ArrayList<>();
     @Getter
     private final List<ISkriptExpression> addonExpressions = new ArrayList<>();
     @Getter
@@ -44,7 +44,7 @@ public final class AddonManager implements IAddonManager {
     @Getter
     private final List<ISkriptLiteralAddon<?>> literalAddons = new ArrayList<>();
 
-    private final Set<Class<? extends ISkriptFunctionDef<?>>> overridingDefs = new HashSet<>();
+    private final Set<Class<? extends ISkriptFunctionDef>> overridingDefs = new HashSet<>();
     private final Set<Class<?>> overridingInstructions = new HashSet<>();
     private final Set<Class<? extends ISkriptSerializerAddon<?>>> overridingSerializers = new HashSet<>();
     private final Set<Class<? extends ISkriptStringAddon<?>>> overridingStringAddons = new HashSet<>();
@@ -154,8 +154,16 @@ public final class AddonManager implements IAddonManager {
         }
 
         if(overriding.length == 0) return;
+        overrideDefs(overriding);
+    }
 
-        for(Iterator<ISkriptInstruction> iterator = addonInstructions.iterator(); iterator.hasNext();) {
+    /**
+     * Removes any overridden defs and adds it to the override list
+     * @param overriding Defs to override
+     */
+    private void overrideDefs(Class<?>[] overriding) {
+        Iterator<ISkriptInstruction> iterator = addonInstructions.iterator();
+        while(iterator.hasNext()) {
             ISkriptInstruction foundInstruction = iterator.next();
             for(Class<?> override : overriding) {
                 if(foundInstruction.getMethod().getDeclaringClass().equals(override)) {
@@ -183,7 +191,7 @@ public final class AddonManager implements IAddonManager {
      * @see SkriptPattern
      */
     @SafeVarargs
-    public final void registerMethodDef(ISkriptFunctionDef<?> addonDef, Class<ISkriptFunctionDef<?>>... overriding) {
+    public final void registerMethodDef(ISkriptFunctionDef addonDef, Class<ISkriptFunctionDef>... overriding) {
         if(setup) {
             throw new IllegalStateException("Tried to register a defs after setup is complete!");
         }
@@ -202,9 +210,10 @@ public final class AddonManager implements IAddonManager {
 
         if(overriding.length == 0) return;
 
-        for(Iterator<ISkriptFunctionDef<?>> iterator = addonDefs.iterator(); iterator.hasNext();) {
-            ISkriptFunctionDef<?> functionDef = iterator.next();
-            for(Class<ISkriptFunctionDef<?>> clazz : overriding) {
+        Iterator<ISkriptFunctionDef> iterator = addonDefs.iterator();
+        while(iterator.hasNext()) {
+            ISkriptFunctionDef functionDef = iterator.next();
+            for(Class<ISkriptFunctionDef> clazz : overriding) {
                 if(functionDef.getClass().equals(clazz)) {
                     iterator.remove();
                 }
@@ -218,7 +227,7 @@ public final class AddonManager implements IAddonManager {
             throw new IllegalStateException("Tried to setup already-setup defs!");
         }
 
-        for(ISkriptFunctionDef<?> def : addonDefs) {
+        for(ISkriptFunctionDef def : addonDefs) {
             def.setupVariables(variableFactory);
         }
         setup = false;

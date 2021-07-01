@@ -1,6 +1,6 @@
 package com.bigbade.javaskript.parser.api;
 
-import com.bigbade.javaskript.api.skript.defs.ISkriptDef;
+import com.bigbade.javaskript.api.skript.defs.IParsingDef;
 import com.bigbade.javaskript.api.skript.defs.ISkriptFile;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -14,10 +14,10 @@ public class SkriptFile implements ISkriptFile {
     private final String fileName;
 
     @Getter
-    private final List<ISkriptDef> skriptDefs = new ArrayList<>();
+    private final List<IParsingDef> skriptDefs = new ArrayList<>();
 
     @Override
-    public void addSkriptDef(ISkriptDef def) {
+    public void addSkriptDef(IParsingDef def) {
         skriptDefs.add(def);
     }
 }

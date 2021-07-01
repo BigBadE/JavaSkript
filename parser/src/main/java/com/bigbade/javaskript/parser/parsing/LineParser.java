@@ -2,6 +2,7 @@ package com.bigbade.javaskript.parser.parsing;
 
 import com.bigbade.javaskript.api.skript.code.IParsedInstruction;
 import com.bigbade.javaskript.api.skript.code.ISkriptInstruction;
+import com.bigbade.javaskript.api.skript.pattern.ILineParser;
 import com.bigbade.javaskript.api.skript.pattern.ISkriptPattern;
 import com.bigbade.javaskript.api.skript.pattern.ParseResult;
 import com.bigbade.javaskript.parser.SkriptParser;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public final class LineParser {
+public final class LineParser implements ILineParser {
     @Getter
     private final AddonManager addonManager = new AddonManager();
 
@@ -25,6 +26,10 @@ public final class LineParser {
     private static IParsedInstruction parseSkriptVariable(String variableName) {
         //TODO
         return null;
+    }
+
+    public IParsedInstruction getInstruction(String line, int lineNumber) {
+        return getInstruction(addonManager.getAddonInstructions(), line, lineNumber);
     }
 
     public <T extends ISkriptInstruction> IParsedInstruction getInstruction(List<T> instructions,

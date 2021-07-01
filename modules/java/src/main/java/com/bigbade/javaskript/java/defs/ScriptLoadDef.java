@@ -14,7 +14,7 @@ import com.bigbade.javaskript.api.skript.defs.IValueTranslator;
 @SkriptPattern(pattern="On script load")
 public class ScriptLoadDef extends SingleTranslatorDef<ICodeDef> {
     @Override
-    public void operate(ICodeDef startingValue, int patternData, IPackageDef mainPackage) {
+    public void operateOnDef(ICodeDef startingValue, int patternData, IPackageDef mainPackage) {
         IMethodDef methodDef = mainPackage.getJavaFile("Main").getMainClass().getClassMember(ClassMembers.METHODS, "main");
         methodDef.setModifiers(new Modifiers(Modifiers.ModifierTypes.PUBLIC, Modifiers.ModifierTypes.STATIC));
         methodDef.addParameters(getVariables());
