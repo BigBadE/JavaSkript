@@ -13,16 +13,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JavaFile implements IJavaFile {
     private final String name;
+
     private final List<IImportDef> imports = new ArrayList<>();
     private final List<IClassDef> classes = new ArrayList<>();
-
-    public void addImport(IImportDef importDef) {
-        imports.add(importDef);
-    }
-
-    public void addClass(IClassDef classDef) {
-        classes.add(classDef);
-    }
 
     @Override
     public IClassDef getMainClass() {
@@ -47,5 +40,13 @@ public class JavaFile implements IJavaFile {
             }
         }
         return false;
+    }
+
+    public void addImport(IImportDef importDef) {
+        imports.add(importDef);
+    }
+
+    public void addClass(IClassDef classDef) {
+        classes.add(classDef);
     }
 }
