@@ -50,8 +50,9 @@ public class SkriptParsingDef implements IParsingDef {
                 keyValues.put(key, currentTranslator.getValue());
                 currentTranslator = null;
             } else if (foundDepth == depth) {
+                line = line.trim();
                 if (line.charAt(line.length() - 1) == ':') {
-                    currentTranslator.startBranchFunction(lineParser, lineNumber, line.trim());
+                    currentTranslator.startBranchFunction(lineParser, lineNumber, line.substring(0, line.length()-1));
                 } else {
                     currentTranslator.readLine(lineParser, lineNumber, line.trim());
                 }

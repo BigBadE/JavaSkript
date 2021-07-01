@@ -1,9 +1,32 @@
 package com.bigbade.javaskript.api.skript.addon;
 
+import com.bigbade.javaskript.api.skript.code.ISkriptEffect;
+import com.bigbade.javaskript.api.skript.code.ISkriptExpression;
+import com.bigbade.javaskript.api.skript.code.ISkriptInstruction;
 import com.bigbade.javaskript.api.skript.code.IVariableFactory;
+import com.bigbade.javaskript.api.skript.defs.IBranchFunctionDef;
+
+import java.util.List;
 
 @SuppressWarnings({"unused", "unchecked"})
 public interface IAddonManager {
+
+    List<ISkriptFunctionDef> getAddonDefs();
+
+    List<ISkriptExpression> getAddonExpressions();
+
+    List<ISkriptEffect> getAddonEffects();
+
+    List<ISkriptInstruction> getAddonInstructions();
+
+    List<ISkriptSerializerAddon<?>> getAddonSerializers();
+
+    List<ISkriptStringAddon<?>> getStringAddons();
+
+    List<ISkriptLiteralAddon<?>> getLiteralAddons();
+
+    List<IBranchFunctionDef> getBranchFunctionDefs();
+
     /**
      * Registers a literal addon, allowing addons to add literal interpreters
      * @param addon Literal addon
@@ -19,6 +42,13 @@ public interface IAddonManager {
      * @see ISkriptStringAddon
      */
     void registerStringAddon(ISkriptStringAddon<?> addon, Class<? extends ISkriptStringAddon<?>>... overriding);
+
+    /**
+     * Registers a branch function, allowing changes to the control flow of a method.
+     * @param branchFunction Branch function
+     * @see ISkriptFunctionDef
+     */
+    void registerBranchFunction(IBranchFunctionDef branchFunction);
 
     /**
      * Registers an addon instruction. Addon instructions REQUIRE a SkriptPattern.

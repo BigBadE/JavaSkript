@@ -2,11 +2,13 @@ package com.bigbade.javaskript.parser.parsing;
 
 import com.bigbade.javaskript.api.skript.code.IParsedInstruction;
 import com.bigbade.javaskript.api.skript.code.ISkriptInstruction;
+import com.bigbade.javaskript.api.skript.defs.IBranchFunctionDef;
 import com.bigbade.javaskript.api.skript.pattern.ILineParser;
 import com.bigbade.javaskript.api.skript.pattern.ISkriptPattern;
 import com.bigbade.javaskript.api.skript.pattern.ParseResult;
 import com.bigbade.javaskript.parser.SkriptParser;
 import com.bigbade.javaskript.parser.exceptions.SkriptParseException;
+import com.bigbade.javaskript.parser.impl.SkriptParsedBranchInstruction;
 import com.bigbade.javaskript.parser.impl.SkriptParsedInstruction;
 import lombok.Getter;
 
@@ -32,8 +34,8 @@ public final class LineParser implements ILineParser {
         return getInstruction(addonManager.getAddonInstructions(), line, lineNumber);
     }
 
-    public <T extends ISkriptInstruction> IParsedInstruction getInstruction(List<T> instructions,
-                                                                            String line, int lineNumber) {
+    public <T extends ISkriptInstruction, E extends IParsedInstruction> E getInstruction(List<T> instructions,
+                                                                                         String line, int lineNumber) {
         for (T instruction : instructions) {
             for (ISkriptPattern pattern : instruction.getPatterns()) {
                 ParseResult parseResult = pattern.matchesInitial(line);
@@ -47,7 +49,14 @@ public final class LineParser implements ILineParser {
                     variables.add(variableInstruction);
                 }
                 if (SkriptParser.testVariables(parseResult, variables)) {
-                    return new SkriptParsedInstruction(instruction, variables, pattern.getPatternData());
+                    //Hardcoded check of generic type,
+                    if (instruction instanceof IBranchFunctionDef) {
+                        //noinspection unchecked
+                        return (E) new SkriptParsedBranchInstruction(instruction, variables, pattern.getPatternData());
+                    } else {
+                        //noinspection unchecked
+                        return (E) new SkriptParsedInstruction(instruction, variables, pattern.getPatternData());
+                    }
                 }
             }
         }

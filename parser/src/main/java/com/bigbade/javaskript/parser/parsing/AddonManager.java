@@ -11,6 +11,7 @@ import com.bigbade.javaskript.api.skript.code.ISkriptExpression;
 import com.bigbade.javaskript.api.skript.code.ISkriptInstruction;
 import com.bigbade.javaskript.api.skript.code.ITranslatorFactory;
 import com.bigbade.javaskript.api.skript.code.IVariableFactory;
+import com.bigbade.javaskript.api.skript.defs.IBranchFunctionDef;
 import com.bigbade.javaskript.api.skript.pattern.ISkriptPattern;
 import com.bigbade.javaskript.parser.api.SkriptAddonEffect;
 import com.bigbade.javaskript.parser.api.SkriptAddonExpression;
@@ -27,6 +28,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Handles registering all the classes needed for parsing, such as instructions and functions.
+ */
 @SuppressWarnings("unused")
 public final class AddonManager implements IAddonManager {
     @Getter
@@ -43,6 +47,8 @@ public final class AddonManager implements IAddonManager {
     private final List<ISkriptStringAddon<?>> stringAddons = new ArrayList<>();
     @Getter
     private final List<ISkriptLiteralAddon<?>> literalAddons = new ArrayList<>();
+    @Getter
+    private final List<IBranchFunctionDef> branchFunctionDefs = new ArrayList<>();
 
     private final Set<Class<? extends ISkriptFunctionDef>> overridingDefs = new HashSet<>();
     private final Set<Class<?>> overridingInstructions = new HashSet<>();
@@ -126,6 +132,15 @@ public final class AddonManager implements IAddonManager {
             }
         }
         overridingStringAddons.addAll(Arrays.asList(overriding));
+    }
+
+    /**
+     * Registers a branch function, allowing changes to the control flow of a method.
+     * @param branchFunction Branch function
+     * @see ISkriptFunctionDef
+     */
+    public void registerBranchFunction(IBranchFunctionDef branchFunction) {
+        branchFunctionDefs.add(branchFunction);
     }
 
     /**

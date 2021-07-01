@@ -8,6 +8,10 @@ import com.bigbade.javaskript.api.skript.code.IVariableFactory;
 import javax.annotation.Nullable;
 import java.util.List;
 
+/**
+ * An effect that causes a change in the control flow of the method.
+ * Examples are if or for loops.
+ */
 public interface IBranchFunctionDef extends ISkriptInstruction {
     /**
      * Verifies that the branch function is valid

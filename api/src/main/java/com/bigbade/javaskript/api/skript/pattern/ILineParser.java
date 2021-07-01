@@ -9,18 +9,21 @@ import java.util.List;
 public interface ILineParser {
     /**
      * Parses a line into a parsed instruction
+     *
      * @param instructions Instructions to check against
-     * @param line Line to parse
-     * @param lineNumber Line number
-     * @param <T> Type of instruction to parse
+     * @param line         Line to parse
+     * @param lineNumber   Line number
+     * @param <T>          Type of instruction to parse
+     * @param <E>          Type of output instruction
      * @return Parsed instruction
      */
-    <T extends ISkriptInstruction> IParsedInstruction getInstruction(List<T> instructions,
-                                                                     String line, int lineNumber);
+    <T extends ISkriptInstruction, E extends IParsedInstruction> E getInstruction(List<T> instructions,
+                                                                                  String line, int lineNumber);
 
     /**
      * Parses a line into a parsed instruction, using all instructions in the addon manager
-     * @param line Line to parse
+     *
+     * @param line       Line to parse
      * @param lineNumber Line number
      * @return Parsed instruction
      */
@@ -28,7 +31,8 @@ public interface ILineParser {
 
     /**
      * Parses a %variable% into an instruction to get said variable
-     * @param variable Variable to check against
+     *
+     * @param variable   Variable to check against
      * @param lineNumber Line number
      * @return Parsed instruction returning found variable
      */
@@ -36,6 +40,7 @@ public interface ILineParser {
 
     /**
      * Returns the addon manager used by the line parser
+     *
      * @return Addon manager
      */
     IAddonManager getAddonManager();
