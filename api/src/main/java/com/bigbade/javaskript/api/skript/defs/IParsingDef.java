@@ -1,5 +1,6 @@
 package com.bigbade.javaskript.api.skript.defs;
 
+import com.bigbade.javaskript.api.java.defs.IMethodDef;
 import com.bigbade.javaskript.api.java.defs.IPackageDef;
 import com.bigbade.javaskript.api.skript.addon.ISkriptFunctionDef;
 import com.bigbade.javaskript.api.skript.pattern.ILineParser;
@@ -27,11 +28,14 @@ public interface IParsingDef {
      * @param lineParser Line parser
      * @param lineNumber Line number of the code
      * @param line Line of code to parse
+     * @param depth Amount of tabs/4 spaces in front of the line
      */
-    void parseLine(ILineParser lineParser, int lineNumber, String line);
+    void parseLine(ILineParser lineParser, int lineNumber, String line, int depth);
 
     /**
-     * Finalized the parsing def
+     * Locates the method def targeted by the def given the main package.
+     * @param packageDef Main package
+     * @return Method def target
      */
-    void finalizeParsingDef(IPackageDef packageDef);
+    IMethodDef locateMethod(IPackageDef packageDef);
 }

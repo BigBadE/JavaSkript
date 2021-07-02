@@ -16,11 +16,11 @@ public interface ISkriptFile {
      * Returns all the Skript defs in the Skript file.
      * @return Skript defs in this file
      */
-    List<IParsingDef> getSkriptDefs();
+    List<IParsingDef> getParsedFunctions();
 
     /**
      * Adds a Skript def to this file.
      * @param def Skript def to add
      */
-    void addSkriptDef(IParsingDef def);
+    void addParsedFunction(IParsingDef def);
 }

@@ -3,10 +3,8 @@ package com.bigbade.javaskript.parser;
 import com.bigbade.javaskript.api.skript.addon.ISkriptFunctionDef;
 import com.bigbade.javaskript.api.skript.defs.IParsingDef;
 import com.bigbade.javaskript.parser.api.SkriptFile;
-import lombok.Builder;
 import org.junit.jupiter.api.Assertions;
 
-import javax.annotation.Nonnull;
 import java.io.StringReader;
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +34,7 @@ public class SkriptRunner {
             defClasses.put(currentDef, currentArguments);
         }
         SkriptFile file = new SkriptParser(testName).parseSkript(new StringReader(script));
-        List<IParsingDef> defs = file.getSkriptDefs();
+        List<IParsingDef> defs = file.getParsedFunctions();
         Assertions.assertEquals(defClasses.size(), defs.size());
         int i = 0;
         for(Map.Entry<Class<ISkriptFunctionDef>, Map<String, ?>> entry : defClasses.entrySet()) {

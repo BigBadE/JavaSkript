@@ -26,6 +26,7 @@ public class CompiledPattern implements ISkriptPattern {
     }
 
     public static ParseResult matchesInitial(String matching, List<IPatternPart> parts) {
+        //TODO reduce complexity and add support for comments on the line
         int index = 0;
         int looped = 0;
         int variableStart = -1;

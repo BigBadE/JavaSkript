@@ -14,10 +14,10 @@ public class SkriptFile implements ISkriptFile {
     private final String fileName;
 
     @Getter
-    private final List<IParsingDef> skriptDefs = new ArrayList<>();
+    private final List<IParsingDef> parsedFunctions = new ArrayList<>();
 
     @Override
-    public void addSkriptDef(IParsingDef def) {
-        skriptDefs.add(def);
+    public void addParsedFunction(IParsingDef def) {
+        parsedFunctions.add(def);
     }
 }

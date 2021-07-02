@@ -15,4 +15,9 @@ public class SkriptCodeDef implements ICodeDef {
     public void addInstruction(IParsedInstruction instruction) {
         instructions.add(instruction);
     }
+
+    @Override
+    public void execute() {
+        throw new IllegalStateException("Execute not overwritten by compiler, most likely due to misuse.");
+    }
 }

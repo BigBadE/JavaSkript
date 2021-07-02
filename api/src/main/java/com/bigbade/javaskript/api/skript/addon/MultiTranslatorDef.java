@@ -1,5 +1,6 @@
 package com.bigbade.javaskript.api.skript.addon;
 
+import com.bigbade.javaskript.api.java.defs.IMethodDef;
 import com.bigbade.javaskript.api.java.defs.IPackageDef;
 import com.bigbade.javaskript.api.java.variables.IVariableDef;
 import com.bigbade.javaskript.api.skript.code.ITranslatorFactory;
@@ -43,8 +44,14 @@ public abstract class MultiTranslatorDef implements ISkriptFunctionDef {
     }
 
     @Override
-    public void operate(Object startingValue, int patternData, IPackageDef mainPackage) {
+    public void operate(Object startingValue, int patternData) {
         //Not used by multi-translator defs.
         throw new IllegalStateException("Called operate with a single parameter on a multi translator");
+    }
+
+    @Override
+    public final IMethodDef locate(Object startingValue, int patternData, IPackageDef mainPackage) {
+        //Not used by multi-translator defs.
+        throw new IllegalStateException("Called locate with a single parameter on a multi translator");
     }
 }

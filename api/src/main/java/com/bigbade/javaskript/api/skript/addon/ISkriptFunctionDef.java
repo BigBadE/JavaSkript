@@ -1,5 +1,6 @@
 package com.bigbade.javaskript.api.skript.addon;
 
+import com.bigbade.javaskript.api.java.defs.IMethodDef;
 import com.bigbade.javaskript.api.java.defs.IPackageDef;
 import com.bigbade.javaskript.api.java.variables.IVariableDef;
 import com.bigbade.javaskript.api.skript.code.ITranslatorFactory;
@@ -59,21 +60,42 @@ public interface ISkriptFunctionDef {
     void init(List<ISkriptPattern> patterns, ITranslatorFactory factory);
 
     /**
-     * Access to the rest of the project, for registering the def. For example, if you want the code to run
-     * in the main method (or onEnable for Bukkit), get the class "Main" from the main package, get the
-     * classes and find the one called "Main". This method will only be called if there is no starting translator.
+     * The code shaded into the returned method. Calling the execute method on a code block is allowed here and
+     * the call will be replaced with the code in the block.
+     *
      * @param yamlValues Key/value pair specified
      * @param patternData Pattern data associated with the passed pattern
-     * @param mainPackage Main package
      */
-    void operate(Map<String, ?> yamlValues, int patternData, IPackageDef mainPackage);
+    void operate(Map<String, ?> yamlValues, int patternData);
+
+    /**
+     * Access to the rest of the project, for registering the def. For example, if you want the code to run
+     * in the main method (or onEnable for Bukkit), get the class "Main" from the main package, get the
+     * classes and return a method called "Main". This method will only be called if there is no starting translator.
+     *
+     * @param yamlValues Key/value pair specified
+     * @param patternData Pattern data associated with the passed pattern
+     * @param mainPackage Main package of the program
+     * @return Method to shade into
+     */
+    IMethodDef locate(Map<String, ?> yamlValues, int patternData, IPackageDef mainPackage);
 
     /**
      * The same as the above method, but with a single translator instead of a map. This method will only be called
      * if there is a starting translator.
      * @param startingValue Starting value
      * @param patternData Pattern data associated with the passed pattern
-     * @param mainPackage Main package
      */
-    void operate(Object startingValue, int patternData, IPackageDef mainPackage);
+    void operate(Object startingValue, int patternData);
+
+    /**
+     * The same as the above method, but with a single translator instead of a map. This method will only be called
+     * if there is a starting translator.
+     *
+     * @param startingValue Starting value specified
+     * @param patternData Pattern data associated with the passed pattern
+     * @param mainPackage Main package of the program
+     * @return Method to shade into
+     */
+    IMethodDef locate(Object startingValue, int patternData, IPackageDef mainPackage);
 }

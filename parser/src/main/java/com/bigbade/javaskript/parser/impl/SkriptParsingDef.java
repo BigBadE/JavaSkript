@@ -1,5 +1,6 @@
 package com.bigbade.javaskript.parser.impl;
 
+import com.bigbade.javaskript.api.java.defs.IMethodDef;
 import com.bigbade.javaskript.api.java.defs.IPackageDef;
 import com.bigbade.javaskript.api.skript.addon.ISkriptFunctionDef;
 import com.bigbade.javaskript.api.skript.code.IParsedInstruction;
@@ -7,7 +8,6 @@ import com.bigbade.javaskript.api.skript.defs.IParsingDef;
 import com.bigbade.javaskript.api.skript.defs.IValueTranslator;
 import com.bigbade.javaskript.api.skript.pattern.ILineParser;
 import com.bigbade.javaskript.parser.exceptions.SkriptParseException;
-import com.bigbade.javaskript.parser.util.StringUtil;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -43,14 +43,12 @@ public class SkriptParsingDef implements IParsingDef {
     }
 
     @Override
-    public void parseLine(ILineParser lineParser, int lineNumber, String line) {
-        int foundDepth = StringUtil.getTabs(line);
+    public void parseLine(ILineParser lineParser, int lineNumber, String line, int foundDepth) {
         if (currentTranslator != null) {
             if (foundDepth == 0) {
                 keyValues.put(key, currentTranslator.getValue());
                 currentTranslator = null;
             } else if (foundDepth == depth) {
-                line = line.trim();
                 if (line.charAt(line.length() - 1) == ':') {
                     currentTranslator.startBranchFunction(lineParser, lineNumber, line.substring(0, line.length()-1));
                 } else {
@@ -60,10 +58,19 @@ public class SkriptParsingDef implements IParsingDef {
                 for (int i = foundDepth; i < depth; i++) {
                     currentTranslator.endBranchFunction(lineParser, lineNumber);
                 }
-                currentTranslator.readLine(lineParser, lineNumber, line.trim());
+                currentTranslator.readLine(lineParser, lineNumber, line);
             }
         }
         findNextTranslator(lineParser, line, lineNumber, foundDepth);
+    }
+
+    @Override
+    public IMethodDef locateMethod(IPackageDef packageDef) {
+        if(functionDef.getStartingTranslator() != null) {
+            return functionDef.locate(keyValues.get(null), patternData, packageDef);
+        } else {
+            return functionDef.locate(keyValues, patternData, packageDef);
+        }
     }
 
     private void findNextTranslator(ILineParser lineParser, String line, int lineNumber, int foundDepth) {
@@ -88,15 +95,6 @@ public class SkriptParsingDef implements IParsingDef {
             key = null;
         } else {
             currentTranslator = translator;
-        }
-    }
-
-    @Override
-    public void finalizeParsingDef(IPackageDef packageDef) {
-        if(functionDef.getStartingTranslator() != null) {
-            functionDef.operate(keyValues.get(null), patternData, packageDef);
-        } else {
-            functionDef.operate(keyValues, patternData, packageDef);
         }
     }
 }

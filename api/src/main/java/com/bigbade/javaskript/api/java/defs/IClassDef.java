@@ -2,6 +2,7 @@ package com.bigbade.javaskript.api.java.defs;
 
 import com.bigbade.javaskript.api.java.util.Modifiers;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -28,6 +29,11 @@ public interface IClassDef {
      */
     Modifiers getModifiers();
 
+    /**
+     * Gets the Java file the class is in
+     * @return The Java file
+     */
+    IJavaFile getJavaFile();
 
     /**
      * Sets the modifiers
@@ -36,11 +42,12 @@ public interface IClassDef {
     void setModifiers(Modifiers modifiers);
 
     /**
-     * Gets the class member from the class
+     * Gets the class member from the class. Returns null if one isn't found
      * @param memberType Type of member
      * @param <T> Member type
      * @return Members of that type contained by the class
      */
+    @Nullable
     <T extends IClassMember> List<T> getMembersOfType(ClassMembers memberType);
 
     /**

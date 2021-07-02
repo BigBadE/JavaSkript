@@ -5,14 +5,18 @@ import com.bigbade.javaskript.api.java.defs.IPackageDef;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 @RequiredArgsConstructor
 public class JavaPackage implements IPackageDef {
+    private static final Pattern PACKAGE_REGEX = Pattern.compile("\\.");
+
     @Getter
     private final String namespace;
     @Getter
@@ -29,8 +33,13 @@ public class JavaPackage implements IPackageDef {
     }
 
     @Override
+    public String getFolderPath() {
+        return PACKAGE_REGEX.matcher(namespace).replaceAll(File.separator);
+    }
+
+    @Override
     public IJavaFile getJavaFile(String name) {
-        return javaFiles.computeIfAbsent(name, newName -> new JavaFile(name));
+        return javaFiles.computeIfAbsent(name, newName -> new JavaFile(this, name));
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.bigbade.javaskript.api.skript.addon;
 
+import com.bigbade.javaskript.api.skript.code.IBranchFunction;
 import com.bigbade.javaskript.api.skript.code.ISkriptEffect;
 import com.bigbade.javaskript.api.skript.code.ISkriptExpression;
 import com.bigbade.javaskript.api.skript.code.ISkriptInstruction;
@@ -10,7 +11,6 @@ import java.util.List;
 
 @SuppressWarnings({"unused", "unchecked"})
 public interface IAddonManager {
-
     List<ISkriptFunctionDef> getAddonDefs();
 
     List<ISkriptExpression> getAddonExpressions();
@@ -25,7 +25,7 @@ public interface IAddonManager {
 
     List<ISkriptLiteralAddon<?>> getLiteralAddons();
 
-    List<IBranchFunctionDef> getBranchFunctionDefs();
+    List<IBranchFunction> getBranchFunctionDefs();
 
     /**
      * Registers a literal addon, allowing addons to add literal interpreters
@@ -57,7 +57,7 @@ public interface IAddonManager {
      * @param overriding Instructions to override
      * @see SkriptPattern
      */
-    void registerInstruction(Class<?> instruction, Class<?>... overriding);
+    void registerInstruction(Class<? extends ISkriptInstruction> instruction, Class<? extends ISkriptInstruction>... overriding);
 
     /**
      * Registers an addon definition. Addon definitions REQUIRE a SkriptPattern

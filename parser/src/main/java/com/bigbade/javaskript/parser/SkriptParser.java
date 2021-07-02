@@ -27,19 +27,27 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
+/**
+ *
+ */
 public class SkriptParser {
     private static final Logger LOGGER = LoggerFactory.getLogger(SkriptParser.class);
     private final LineParser lineParser = new LineParser();
     private final SkriptFile skriptFile;
 
-    private IParsingDef definition = null;
+    private IParsingDef function = null;
 
     public SkriptParser(String name) {
         skriptFile = new SkriptFile(name);
     }
 
+    /**
+     * Compares a parse result against passed variables
+     * @param result Parse result
+     * @param variables Variables to compare against
+     * @return Whether the variables match the ones required in the parse result
+     */
     public static boolean testVariables(ParseResult result, List<IParsedInstruction> variables) {
         int variableIndex = 0;
         for (IPatternPart part : result.getFoundParts()) {
@@ -52,6 +60,11 @@ public class SkriptParser {
         return true;
     }
 
+    /**
+     * Parses a skript from a file
+     * @param file File to parse
+     * @return Skript file
+     */
     @SuppressWarnings("unused")
     public SkriptFile parseSkript(File file) {
         try {
@@ -62,6 +75,11 @@ public class SkriptParser {
         return null;
     }
 
+    /**
+     * Parses a skript from a reader into a skript file
+     * @param reader Reader to parse from
+     * @return Skript file
+     */
     public SkriptFile parseSkript(Reader reader) {
         try (BufferedReader bufferedReader = new BufferedReader(reader)) {
             String line;
@@ -79,23 +97,38 @@ public class SkriptParser {
         return skriptFile;
     }
 
+    /**
+     * Parses a line and adds it into the skript file
+     * @param line Line to parse
+     * @param lineNumber Line number
+     * @throw SkriptParseException if there is code without a function
+     */
     private void parseLine(String line, int lineNumber) {
-        if (StringUtil.getTabs(line) == 0 && line.charAt(line.length() - 1) == ':') {
-            if (definition != null) {
-                skriptFile.addSkriptDef(definition);
+        String trimmed = line.trim();
+        if(trimmed.charAt(0) == '#') return;
+        int depth = StringUtil.getTabs(line);
+        if (depth == 0 && trimmed.charAt(trimmed.length() - 1) == ':') {
+            if (function != null) {
+                skriptFile.addParsedFunction(function);
             }
-            definition = parseFunction(line.substring(0, line.length() - 1), lineNumber).orElseThrow(
-                    () -> new SkriptParseException(lineNumber, line, "Unknown function!"));
+            function = parseFunction(trimmed.substring(0, trimmed.length() - 1), lineNumber);
             return;
         }
-        if (definition != null) {
-            definition.parseLine(lineParser, lineNumber, line);
+        if (function != null) {
+            function.parseLine(lineParser, lineNumber, trimmed, depth);
             return;
         }
-        throw new SkriptParseException(lineNumber, line, "Statement is outside of a function!");
+        throw new SkriptParseException(lineNumber, trimmed, "Statement is outside of a function!");
     }
 
-    private Optional<SkriptParsingDef> parseFunction(String line, int lineNumber) {
+    /**
+     * Parses a function line into a parsed def
+     * @param line Line with the function
+     * @param lineNumber Line number
+     * @return Function found
+     * @throws SkriptParseException if no function is found
+     */
+    private SkriptParsingDef parseFunction(String line, int lineNumber) {
         for (ISkriptFunctionDef addonDef : lineParser.getAddonManager().getAddonDefs()) {
             for (ISkriptPattern pattern : addonDef.getPatterns()) {
                 ParseResult result = pattern.matchesInitial(line);
@@ -109,10 +142,10 @@ public class SkriptParser {
                     variables.add(variableInstruction);
                 }
                 if (testVariables(result, variables)) {
-                    return Optional.of(new SkriptParsingDef(addonDef, variables, pattern.getPatternData()));
+                    return new SkriptParsingDef(addonDef, variables, pattern.getPatternData());
                 }
             }
         }
-        return Optional.empty();
+        throw new SkriptParseException(lineNumber, line, "Unknown function!");
     }
 }

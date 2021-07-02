@@ -20,4 +20,11 @@ public interface ICodeDef {
      * @param instruction Instruction to add
      */
     void addInstruction(IParsedInstruction instruction);
+
+    /**
+     * !! only allowed to be called in methods with javadocs marking so. Any other calls will error !!
+     *
+     * A method replaced by the compiler with the instructions in the code block.
+     */
+    void execute();
 }

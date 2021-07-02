@@ -33,6 +33,11 @@ public interface IMethodDef {
     Modifiers getModifiers();
 
     /**
+     * Returns the class of the method
+     */
+    IClassDef getJavaClass();
+
+    /**
      * Sets the modifiers of the constructor. Allows public, protected, private, abstract, static, final,
      * synchronized, native, and strict.
      * @param modifiers Modifiers of the constructor

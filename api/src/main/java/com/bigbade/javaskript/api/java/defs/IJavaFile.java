@@ -20,6 +20,18 @@ public interface IJavaFile {
     List<IClassDef> getClasses();
 
     /**
+     * Gets the package the file is in
+     * @return Package of the file.
+     */
+    IPackageDef getPackageDef();
+
+    /**
+     * Gets the path to the file, relative to the root of the jar
+     * @return Path to the file
+     */
+    String getFilePath();
+
+    /**
      * Gets or creates a class with the given name
      * @param name Name of the class
      * @return Class with that name

@@ -6,6 +6,7 @@ import com.bigbade.javaskript.api.skript.addon.ISkriptLiteralAddon;
 import com.bigbade.javaskript.api.skript.addon.ISkriptSerializerAddon;
 import com.bigbade.javaskript.api.skript.addon.ISkriptStringAddon;
 import com.bigbade.javaskript.api.skript.addon.SkriptPattern;
+import com.bigbade.javaskript.api.skript.code.IBranchFunction;
 import com.bigbade.javaskript.api.skript.code.ISkriptEffect;
 import com.bigbade.javaskript.api.skript.code.ISkriptExpression;
 import com.bigbade.javaskript.api.skript.code.ISkriptInstruction;
@@ -16,6 +17,7 @@ import com.bigbade.javaskript.api.skript.pattern.ISkriptPattern;
 import com.bigbade.javaskript.parser.api.SkriptAddonEffect;
 import com.bigbade.javaskript.parser.api.SkriptAddonExpression;
 import com.bigbade.javaskript.parser.api.SkriptAddonInstruction;
+import com.bigbade.javaskript.parser.impl.SkriptBranchInstruction;
 import com.bigbade.javaskript.parser.pattern.CompiledPattern;
 import lombok.Getter;
 
@@ -48,7 +50,7 @@ public final class AddonManager implements IAddonManager {
     @Getter
     private final List<ISkriptLiteralAddon<?>> literalAddons = new ArrayList<>();
     @Getter
-    private final List<IBranchFunctionDef> branchFunctionDefs = new ArrayList<>();
+    private final List<IBranchFunction> branchFunctionDefs = new ArrayList<>();
 
     private final Set<Class<? extends ISkriptFunctionDef>> overridingDefs = new HashSet<>();
     private final Set<Class<?>> overridingInstructions = new HashSet<>();
@@ -88,20 +90,22 @@ public final class AddonManager implements IAddonManager {
 
     /**
      * Registers a literal addon, allowing addons to add literal interpreters
-     * @param addon Literal addon
+     *
+     * @param addon      Literal addon
      * @param overriding Literal addons to override
      * @see ISkriptLiteralAddon
      */
     @SafeVarargs
-    public final void registerLiteralAddon(ISkriptLiteralAddon<?> addon, Class<? extends ISkriptLiteralAddon<?>>... overriding) {
-        if(overridingLiteralAddons.contains(addon.getClass())) {
+    public final void registerLiteralAddon(ISkriptLiteralAddon<?> addon,
+                                           Class<? extends ISkriptLiteralAddon<?>>... overriding) {
+        if (overridingLiteralAddons.contains(addon.getClass())) {
             return;
         }
         literalAddons.add(addon);
-        if(overriding.length == 0) return;
-        for(Iterator<ISkriptLiteralAddon<?>> iterator = literalAddons.iterator(); iterator.hasNext();) {
+        if (overriding.length == 0) return;
+        for (Iterator<ISkriptLiteralAddon<?>> iterator = literalAddons.iterator(); iterator.hasNext(); ) {
             ISkriptLiteralAddon<?> testingAddon = iterator.next();
-            for(Class<?> overridden : overriding) {
+            for (Class<?> overridden : overriding) {
                 if (testingAddon.getClass().equals(overridden)) {
                     iterator.remove();
                 }
@@ -112,20 +116,21 @@ public final class AddonManager implements IAddonManager {
 
     /**
      * Registers a String addon, allowing addons to add custom features to strings (like sting interpolation)
-     * @param addon String addon
+     *
+     * @param addon      String addon
      * @param overriding String addons to override
      * @see ISkriptStringAddon
      */
     @SafeVarargs
     public final void registerStringAddon(ISkriptStringAddon<?> addon, Class<? extends ISkriptStringAddon<?>>... overriding) {
-        if(overridingStringAddons.contains(addon.getClass())) {
+        if (overridingStringAddons.contains(addon.getClass())) {
             return;
         }
         stringAddons.add(addon);
-        if(overriding.length == 0) return;
-        for(Iterator<ISkriptStringAddon<?>> iterator = stringAddons.iterator(); iterator.hasNext();) {
+        if (overriding.length == 0) return;
+        for (Iterator<ISkriptStringAddon<?>> iterator = stringAddons.iterator(); iterator.hasNext(); ) {
             ISkriptStringAddon<?> testingAddon = iterator.next();
-            for(Class<?> overridden : overriding) {
+            for (Class<?> overridden : overriding) {
                 if (testingAddon.getClass().equals(overridden)) {
                     iterator.remove();
                 }
@@ -136,22 +141,29 @@ public final class AddonManager implements IAddonManager {
 
     /**
      * Registers a branch function, allowing changes to the control flow of a method.
+     * Branch functions REQUIRE a SkriptPattern and must return the amount of times the code is executed.
+     *
      * @param branchFunction Branch function
      * @see ISkriptFunctionDef
      */
     public void registerBranchFunction(IBranchFunctionDef branchFunction) {
-        branchFunctionDefs.add(branchFunction);
+        for (Method target : getStatementMethods(branchFunction.getClass())) {
+            branchFunctionDefs.add(new SkriptBranchInstruction(branchFunction,
+                    target, target.getAnnotationsByType(SkriptPattern.class)));
+        }
     }
 
     /**
      * Registers an addon instruction. Addon instructions REQUIRE a SkriptPattern.
      *
      * @param instruction Instruction to register
-     * @param overriding Instructions to override
+     * @param overriding  Instructions to override
      * @see SkriptPattern
      */
-    public void registerInstruction(Class<?> instruction, Class<?>... overriding) {
-        if(overridingInstructions.contains(instruction)) {
+    @SafeVarargs
+    public final void registerInstruction(Class<? extends ISkriptInstruction> instruction,
+                                          Class<? extends ISkriptInstruction>... overriding) {
+        if (overridingInstructions.contains(instruction)) {
             return;
         }
         for (Method target : getStatementMethods(instruction)) {
@@ -168,24 +180,25 @@ public final class AddonManager implements IAddonManager {
             addonInstructions.add(addonInstruction);
         }
 
-        if(overriding.length == 0) return;
+        if (overriding.length == 0) return;
         overrideDefs(overriding);
     }
 
     /**
      * Removes any overridden defs and adds it to the override list
+     *
      * @param overriding Defs to override
      */
     private void overrideDefs(Class<?>[] overriding) {
         Iterator<ISkriptInstruction> iterator = addonInstructions.iterator();
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             ISkriptInstruction foundInstruction = iterator.next();
-            for(Class<?> override : overriding) {
-                if(foundInstruction.getMethod().getDeclaringClass().equals(override)) {
+            for (Class<?> override : overriding) {
+                if (foundInstruction.getMethod().getDeclaringClass().equals(override)) {
                     iterator.remove();
-                    if(foundInstruction instanceof ISkriptEffect) {
+                    if (foundInstruction instanceof ISkriptEffect) {
                         addonEffects.remove(foundInstruction);
-                    } else if(foundInstruction instanceof ISkriptExpression) {
+                    } else if (foundInstruction instanceof ISkriptExpression) {
                         addonExpressions.remove(foundInstruction);
                     } else {
                         throw new IllegalStateException("Unknown ISkriptInstruction subclass " + foundInstruction.getClass());
@@ -207,11 +220,11 @@ public final class AddonManager implements IAddonManager {
      */
     @SafeVarargs
     public final void registerMethodDef(ISkriptFunctionDef addonDef, Class<ISkriptFunctionDef>... overriding) {
-        if(setup) {
+        if (setup) {
             throw new IllegalStateException("Tried to register a defs after setup is complete!");
         }
 
-        if(overridingDefs.contains(addonDef.getClass())) {
+        if (overridingDefs.contains(addonDef.getClass())) {
             return;
         }
         SkriptPattern[] skriptPatterns = addonDef.getClass().getAnnotationsByType(SkriptPattern.class);
@@ -223,13 +236,13 @@ public final class AddonManager implements IAddonManager {
         addonDef.init(patterns, translatorFactory);
         addonDefs.add(addonDef);
 
-        if(overriding.length == 0) return;
+        if (overriding.length == 0) return;
 
         Iterator<ISkriptFunctionDef> iterator = addonDefs.iterator();
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             ISkriptFunctionDef functionDef = iterator.next();
-            for(Class<ISkriptFunctionDef> clazz : overriding) {
-                if(functionDef.getClass().equals(clazz)) {
+            for (Class<ISkriptFunctionDef> clazz : overriding) {
+                if (functionDef.getClass().equals(clazz)) {
                     iterator.remove();
                 }
             }
@@ -238,11 +251,11 @@ public final class AddonManager implements IAddonManager {
     }
 
     public void setupDefs(IVariableFactory variableFactory) {
-        if(setup) {
+        if (setup) {
             throw new IllegalStateException("Tried to setup already-setup defs!");
         }
 
-        for(ISkriptFunctionDef def : addonDefs) {
+        for (ISkriptFunctionDef def : addonDefs) {
             def.setupVariables(variableFactory);
         }
         setup = false;
