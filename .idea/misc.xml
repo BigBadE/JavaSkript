@@ -6,7 +6,7 @@
   </component>
   <component name="EntryPointsManager">
     <list size="1">
-      <item index="0" class="java.lang.String" itemvalue="com.bigbade.javaskript.api.skript.addon.SkriptPattern" />
+      <item index="0" class="java.lang.String" itemvalue="com.bigbade.javaskript.api.skript.annotations.SkriptPattern" />
     </list>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />

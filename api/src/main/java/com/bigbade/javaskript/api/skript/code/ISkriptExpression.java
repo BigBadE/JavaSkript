@@ -2,6 +2,8 @@ package com.bigbade.javaskript.api.skript.code;
 
 import com.bigbade.javaskript.api.java.util.IClassType;
 
+import javax.annotation.Nullable;
+
 /**
  * Represents a basic Skript expression
  */
@@ -12,4 +14,11 @@ public interface ISkriptExpression extends ISkriptInstruction {
      * @return Return type
      */
     IClassType getReturnType();
+
+    /**
+     * If the expression can be pre-computed (like math), just compile the value.
+     * @return Pre-computed value, if any
+     */
+    @Nullable
+    Object getValue();
 }

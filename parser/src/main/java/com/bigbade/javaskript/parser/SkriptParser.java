@@ -4,6 +4,7 @@ import com.bigbade.javaskript.api.skript.addon.ISkriptFunctionDef;
 import com.bigbade.javaskript.api.skript.code.IParsedInstruction;
 import com.bigbade.javaskript.api.skript.code.ISkriptExpression;
 import com.bigbade.javaskript.api.skript.defs.IParsingDef;
+import com.bigbade.javaskript.api.skript.parser.ISkriptParser;
 import com.bigbade.javaskript.api.skript.pattern.IPatternPart;
 import com.bigbade.javaskript.api.skript.pattern.ISkriptPattern;
 import com.bigbade.javaskript.api.skript.pattern.ParseResult;
@@ -13,6 +14,7 @@ import com.bigbade.javaskript.parser.impl.SkriptParsingDef;
 import com.bigbade.javaskript.parser.parsing.LineParser;
 import com.bigbade.javaskript.parser.pattern.VariablePattern;
 import com.bigbade.javaskript.parser.util.StringUtil;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,19 +30,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- *
- */
-public class SkriptParser {
+public class SkriptParser implements ISkriptParser {
     private static final Logger LOGGER = LoggerFactory.getLogger(SkriptParser.class);
+    @Getter
     private final LineParser lineParser = new LineParser();
-    private final SkriptFile skriptFile;
 
     private IParsingDef function = null;
-
-    public SkriptParser(String name) {
-        skriptFile = new SkriptFile(name);
-    }
 
     /**
      * Compares a parse result against passed variables
@@ -68,7 +63,8 @@ public class SkriptParser {
     @SuppressWarnings("unused")
     public SkriptFile parseSkript(File file) {
         try {
-            return parseSkript(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
+            return parseSkript(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8),
+                    file.getName().substring(0, file.getName().length()-3));
         } catch (FileNotFoundException e) {
             LOGGER.error("Error parsing Skript file", e);
         }
@@ -80,7 +76,8 @@ public class SkriptParser {
      * @param reader Reader to parse from
      * @return Skript file
      */
-    public SkriptFile parseSkript(Reader reader) {
+    public SkriptFile parseSkript(Reader reader, String name) {
+        SkriptFile skriptFile = new SkriptFile(name);
         try (BufferedReader bufferedReader = new BufferedReader(reader)) {
             String line;
             int lineNumber = 1;
@@ -89,7 +86,7 @@ public class SkriptParser {
                     lineNumber++;
                     continue;
                 }
-                parseLine(line, lineNumber++);
+                parseLine(skriptFile, line, lineNumber++);
             }
         } catch (IOException e) {
             LOGGER.error("Error parsing Skript file", e);
@@ -101,9 +98,9 @@ public class SkriptParser {
      * Parses a line and adds it into the skript file
      * @param line Line to parse
      * @param lineNumber Line number
-     * @throw SkriptParseException if there is code without a function
+     * @throws SkriptParseException if there is code without a function
      */
-    private void parseLine(String line, int lineNumber) {
+    private void parseLine(SkriptFile skriptFile, String line, int lineNumber) {
         String trimmed = line.trim();
         if(trimmed.charAt(0) == '#') return;
         int depth = StringUtil.getTabs(line);
@@ -135,9 +132,14 @@ public class SkriptParser {
                 if (result.getResult() != ParseResult.Result.PASSED) {
                     continue;
                 }
+                int i = 0;
+                IPatternPart part;
                 List<IParsedInstruction> variables = new ArrayList<>();
                 for (Map.Entry<Integer, Integer> variableEntry : result.getVariables().entrySet()) {
-                    IParsedInstruction variableInstruction = lineParser.parseVariable(
+                    do {
+                        part = result.getFoundParts().get(i++);
+                    } while (!(part instanceof VariablePattern));
+                    IParsedInstruction variableInstruction = lineParser.parseVariable(part,
                             line.substring(variableEntry.getKey(), variableEntry.getValue()), lineNumber);
                     variables.add(variableInstruction);
                 }

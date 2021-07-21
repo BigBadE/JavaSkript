@@ -1,11 +1,12 @@
 package com.bigbade.javaskript.parser.parsing;
 
+import com.bigbade.javaskript.api.skript.annotations.FunctionPattern;
 import com.bigbade.javaskript.api.skript.addon.IAddonManager;
 import com.bigbade.javaskript.api.skript.addon.ISkriptFunctionDef;
 import com.bigbade.javaskript.api.skript.addon.ISkriptLiteralAddon;
 import com.bigbade.javaskript.api.skript.addon.ISkriptSerializerAddon;
 import com.bigbade.javaskript.api.skript.addon.ISkriptStringAddon;
-import com.bigbade.javaskript.api.skript.addon.SkriptPattern;
+import com.bigbade.javaskript.api.skript.annotations.SkriptPattern;
 import com.bigbade.javaskript.api.skript.code.IBranchFunction;
 import com.bigbade.javaskript.api.skript.code.ISkriptEffect;
 import com.bigbade.javaskript.api.skript.code.ISkriptExpression;
@@ -25,6 +26,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -35,36 +37,35 @@ import java.util.Set;
  */
 @SuppressWarnings("unused")
 public final class AddonManager implements IAddonManager {
+    //All lists here are syncronized to prevent any problems with async registration.
     @Getter
-    private final List<ISkriptFunctionDef> addonDefs = new ArrayList<>();
+    private final List<ISkriptFunctionDef> addonDefs = Collections.synchronizedList(new ArrayList<>());
     @Getter
-    private final List<ISkriptExpression> addonExpressions = new ArrayList<>();
+    private final List<ISkriptExpression> addonExpressions = Collections.synchronizedList(new ArrayList<>());
     @Getter
-    private final List<ISkriptEffect> addonEffects = new ArrayList<>();
+    private final List<ISkriptEffect> addonEffects = Collections.synchronizedList(new ArrayList<>());
     @Getter
-    private final List<ISkriptInstruction> addonInstructions = new ArrayList<>();
+    private final List<ISkriptInstruction> addonInstructions = Collections.synchronizedList(new ArrayList<>());
     @Getter
-    private final List<ISkriptSerializerAddon<?>> addonSerializers = new ArrayList<>();
+    private final List<ISkriptSerializerAddon<?>> addonSerializers = Collections.synchronizedList(new ArrayList<>());
     @Getter
-    private final List<ISkriptStringAddon<?>> stringAddons = new ArrayList<>();
+    private final List<ISkriptStringAddon<?>> stringAddons = Collections.synchronizedList(new ArrayList<>());
     @Getter
-    private final List<ISkriptLiteralAddon<?>> literalAddons = new ArrayList<>();
+    private final List<ISkriptLiteralAddon<?>> literalAddons = Collections.synchronizedList(new ArrayList<>());
     @Getter
-    private final List<IBranchFunction> branchFunctionDefs = new ArrayList<>();
+    private final List<IBranchFunction> branchFunctionDefs = Collections.synchronizedList(new ArrayList<>());
 
-    private final Set<Class<? extends ISkriptFunctionDef>> overridingDefs = new HashSet<>();
-    private final Set<Class<?>> overridingInstructions = new HashSet<>();
-    private final Set<Class<? extends ISkriptSerializerAddon<?>>> overridingSerializers = new HashSet<>();
-    private final Set<Class<? extends ISkriptStringAddon<?>>> overridingStringAddons = new HashSet<>();
-    private final Set<Class<? extends ISkriptLiteralAddon<?>>> overridingLiteralAddons = new HashSet<>();
+    private final Set<Class<? extends ISkriptFunctionDef>> overridingDefs = Collections.synchronizedSet(new HashSet<>());
+    private final Set<Class<?>> overridingInstructions = Collections.synchronizedSet(new HashSet<>());
+    private final Set<Class<? extends ISkriptSerializerAddon<?>>> overridingSerializers = Collections.synchronizedSet(new HashSet<>());
+    private final Set<Class<? extends ISkriptStringAddon<?>>> overridingStringAddons = Collections.synchronizedSet(new HashSet<>());
+    private final Set<Class<? extends ISkriptLiteralAddon<?>>> overridingLiteralAddons = Collections.synchronizedSet(new HashSet<>());
 
     private final ITranslatorFactory translatorFactory = new TranslatorFactory();
 
     private boolean setup;
 
-    protected AddonManager() {
-
-    }
+    protected AddonManager() { }
 
     /**
      * Gets the methods annotated with SkriptPattern
@@ -219,7 +220,7 @@ public final class AddonManager implements IAddonManager {
      * @see SkriptPattern
      */
     @SafeVarargs
-    public final void registerMethodDef(ISkriptFunctionDef addonDef, Class<ISkriptFunctionDef>... overriding) {
+    public final void registerFunctionDef(ISkriptFunctionDef addonDef, Class<ISkriptFunctionDef>... overriding) {
         if (setup) {
             throw new IllegalStateException("Tried to register a defs after setup is complete!");
         }
@@ -227,10 +228,10 @@ public final class AddonManager implements IAddonManager {
         if (overridingDefs.contains(addonDef.getClass())) {
             return;
         }
-        SkriptPattern[] skriptPatterns = addonDef.getClass().getAnnotationsByType(SkriptPattern.class);
+        FunctionPattern[] skriptPatterns = addonDef.getClass().getAnnotationsByType(FunctionPattern.class);
 
         List<ISkriptPattern> patterns = new ArrayList<>();
-        for (SkriptPattern pattern : skriptPatterns) {
+        for (FunctionPattern pattern : skriptPatterns) {
             patterns.add(new CompiledPattern(pattern.pattern(), pattern.patternData()));
         }
         addonDef.init(patterns, translatorFactory);

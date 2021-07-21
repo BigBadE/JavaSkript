@@ -1,6 +1,6 @@
 package com.bigbade.javaskript.java.expressions;
 
-import com.bigbade.javaskript.api.skript.addon.SkriptPattern;
+import com.bigbade.javaskript.api.skript.annotations.SkriptPattern;
 
 public class ConcatStringExpression {
     @SkriptPattern(pattern="%string%[ ]+[ }%string%")

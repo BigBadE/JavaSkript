@@ -35,4 +35,9 @@ public final class SkriptClassType implements IClassType {
         simpleName = split[split.length-1];
         return simpleName;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof IClassType && getInternalName().equals(((IClassType) obj).getInternalName());
+    }
 }

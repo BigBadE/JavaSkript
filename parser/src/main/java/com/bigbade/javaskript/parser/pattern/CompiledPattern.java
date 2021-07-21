@@ -76,6 +76,7 @@ public class CompiledPattern implements ISkriptPattern {
     }
 
     private List<IPatternPart> parsePattern(String pattern, int start, char exit) {
+        //TODO reduce complexity
         List<IPatternPart> foundParts = new ArrayList<>();
         char current;
         StringBuilder builder = new StringBuilder();

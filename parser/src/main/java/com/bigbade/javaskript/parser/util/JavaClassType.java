@@ -41,4 +41,9 @@ public class JavaClassType implements IClassType {
         internalName = "L" + getQualifiedName() + ";";
         return internalName;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof IClassType && getInternalName().equals(((IClassType) obj).getInternalName());
+    }
 }

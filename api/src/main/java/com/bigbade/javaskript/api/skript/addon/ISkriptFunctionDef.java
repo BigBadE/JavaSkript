@@ -3,6 +3,7 @@ package com.bigbade.javaskript.api.skript.addon;
 import com.bigbade.javaskript.api.java.defs.IMethodDef;
 import com.bigbade.javaskript.api.java.defs.IPackageDef;
 import com.bigbade.javaskript.api.java.variables.IVariableDef;
+import com.bigbade.javaskript.api.skript.annotations.SkriptPattern;
 import com.bigbade.javaskript.api.skript.code.ITranslatorFactory;
 import com.bigbade.javaskript.api.skript.code.IVariableFactory;
 import com.bigbade.javaskript.api.skript.defs.IValueTranslator;

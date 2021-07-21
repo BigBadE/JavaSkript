@@ -1,7 +1,7 @@
 package com.bigbade.javaskript.parser.api;
 
 import com.bigbade.javaskript.api.java.util.IClassType;
-import com.bigbade.javaskript.api.skript.addon.SkriptPattern;
+import com.bigbade.javaskript.api.skript.annotations.SkriptPattern;
 import com.bigbade.javaskript.api.skript.code.ISkriptInstruction;
 import com.bigbade.javaskript.api.skript.pattern.ISkriptPattern;
 import com.bigbade.javaskript.parser.pattern.CompiledPattern;

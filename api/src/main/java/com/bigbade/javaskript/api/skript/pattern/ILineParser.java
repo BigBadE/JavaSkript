@@ -32,11 +32,12 @@ public interface ILineParser {
     /**
      * Parses a %variable% into an instruction to get said variable
      *
-     * @param variable   Variable to check against
-     * @param lineNumber Line number
+     * @param patternPart Pattern part requiring the variable
+     * @param variable    Variable to check against
+     * @param lineNumber  Line number
      * @return Parsed instruction returning found variable
      */
-    IParsedInstruction parseVariable(String variable, int lineNumber);
+    IParsedInstruction parseVariable(IPatternPart patternPart, String variable, int lineNumber);
 
     /**
      * Returns the addon manager used by the line parser

@@ -1,5 +1,7 @@
 package com.bigbade.javaskript.api.skript.addon;
 
+import com.bigbade.javaskript.api.java.util.IClassType;
+
 /**
  * Handles additional literals, such as strings or numbers.
  */
@@ -17,4 +19,11 @@ public interface ISkriptLiteralAddon<T> {
      * @return Parsed value of the literal
      */
     T getValue(String input);
+
+    /**
+     * Gets the class type of the literal.
+     * Should match T
+     * @return Type of the literal
+     */
+    IClassType getClassType();
 }

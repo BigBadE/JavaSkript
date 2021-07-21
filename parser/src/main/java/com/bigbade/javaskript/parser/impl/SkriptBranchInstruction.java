@@ -1,6 +1,6 @@
 package com.bigbade.javaskript.parser.impl;
 
-import com.bigbade.javaskript.api.skript.addon.SkriptPattern;
+import com.bigbade.javaskript.api.skript.annotations.SkriptPattern;
 import com.bigbade.javaskript.api.skript.code.IBranchFunction;
 import com.bigbade.javaskript.api.skript.defs.IBranchFunctionDef;
 import com.bigbade.javaskript.parser.api.SkriptAddonInstruction;

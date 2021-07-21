@@ -1,5 +1,7 @@
 package com.bigbade.javaskript.api.skript.addon;
 
+import com.bigbade.javaskript.api.skript.annotations.FunctionPattern;
+import com.bigbade.javaskript.api.skript.annotations.SkriptPattern;
 import com.bigbade.javaskript.api.skript.code.IBranchFunction;
 import com.bigbade.javaskript.api.skript.code.ISkriptEffect;
 import com.bigbade.javaskript.api.skript.code.ISkriptExpression;
@@ -60,17 +62,18 @@ public interface IAddonManager {
     void registerInstruction(Class<? extends ISkriptInstruction> instruction, Class<? extends ISkriptInstruction>... overriding);
 
     /**
-     * Registers an addon definition. Addon definitions REQUIRE a SkriptPattern
+     * Registers a function definition. Function definitions REQUIRE a FunctionPattern
      *
-     * @param addonDef   Addon definition to register
+     * @param addonDef   Function definition to register
      * @param overriding Function defs to override
      * @see ISkriptFunctionDef
-     * @see SkriptPattern
+     * @see FunctionPattern
      */
-    void registerMethodDef(ISkriptFunctionDef addonDef, Class<ISkriptFunctionDef>... overriding);
+    void registerFunctionDef(ISkriptFunctionDef addonDef, Class<ISkriptFunctionDef>... overriding);
 
     /**
      * Sets up method defs, registering their variables.
+     *
      * @param variableFactory Variable factory
      */
     void setupDefs(IVariableFactory variableFactory);
