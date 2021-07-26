@@ -16,8 +16,7 @@ import java.lang.annotation.Target;
  */
 @Repeatable(SkriptPattern.SkriptPatterns.class)
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.TYPE})
-@SupportedSourceVersion(SourceVersion.RELEASE_16)
+@Target(ElementType.METHOD)
 public @interface SkriptPattern {
     /**
      * Pattern of this method

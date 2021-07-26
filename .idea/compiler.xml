@@ -30,6 +30,6 @@
         <module name="JavaSkript.main" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="16" />
+    <bytecodeTargetLevel target="1.8" />
   </component>
 </project>

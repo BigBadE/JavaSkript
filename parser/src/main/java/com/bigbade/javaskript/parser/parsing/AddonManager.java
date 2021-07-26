@@ -82,10 +82,6 @@ public final class AddonManager implements IAddonManager {
             }
         }
 
-        if (methods.isEmpty()) {
-            throw new IllegalStateException(clazz.getSimpleName() + " has no public method annotated by @CompiledPattern");
-        }
-
         return methods;
     }
 
@@ -154,6 +150,17 @@ public final class AddonManager implements IAddonManager {
         }
     }
 
+
+    /**
+     * Registers an addon instruction. Addon instructions REQUIRE a SkriptPattern.
+     *
+     * @param instruction Instruction to register
+     * @see SkriptPattern
+     */
+    public final void registerInstruction(Class<?> instruction) {
+       registerInstruction(instruction, Collections.emptyList());
+    }
+
     /**
      * Registers an addon instruction. Addon instructions REQUIRE a SkriptPattern.
      *
@@ -161,9 +168,8 @@ public final class AddonManager implements IAddonManager {
      * @param overriding  Instructions to override
      * @see SkriptPattern
      */
-    @SafeVarargs
-    public final void registerInstruction(Class<? extends ISkriptInstruction> instruction,
-                                          Class<? extends ISkriptInstruction>... overriding) {
+    public final void registerInstruction(Class<?> instruction,
+                                          List<Class<?>> overriding) {
         if (overridingInstructions.contains(instruction)) {
             return;
         }
@@ -181,7 +187,7 @@ public final class AddonManager implements IAddonManager {
             addonInstructions.add(addonInstruction);
         }
 
-        if (overriding.length == 0) return;
+        if (overriding.size() == 0) return;
         overrideDefs(overriding);
     }
 
@@ -190,7 +196,7 @@ public final class AddonManager implements IAddonManager {
      *
      * @param overriding Defs to override
      */
-    private void overrideDefs(Class<?>[] overriding) {
+    private void overrideDefs(List<Class<?>> overriding) {
         Iterator<ISkriptInstruction> iterator = addonInstructions.iterator();
         while (iterator.hasNext()) {
             ISkriptInstruction foundInstruction = iterator.next();
@@ -208,7 +214,18 @@ public final class AddonManager implements IAddonManager {
             }
         }
 
-        overridingInstructions.addAll(Arrays.asList(overriding));
+        overridingInstructions.addAll(overriding);
+    }
+
+    /**
+     * Registers an addon definition. Addon definitions REQUIRE a SkriptPattern
+     *
+     * @param addonDef   Addon definition to register
+     * @see ISkriptFunctionDef
+     * @see SkriptPattern
+     */
+    public final void registerFunctionDef(ISkriptFunctionDef addonDef) {
+        registerFunctionDef(addonDef, Collections.emptyList());
     }
 
     /**
@@ -219,8 +236,7 @@ public final class AddonManager implements IAddonManager {
      * @see ISkriptFunctionDef
      * @see SkriptPattern
      */
-    @SafeVarargs
-    public final void registerFunctionDef(ISkriptFunctionDef addonDef, Class<ISkriptFunctionDef>... overriding) {
+    public final void registerFunctionDef(ISkriptFunctionDef addonDef, List<Class<ISkriptFunctionDef>> overriding) {
         if (setup) {
             throw new IllegalStateException("Tried to register a defs after setup is complete!");
         }
@@ -237,7 +253,7 @@ public final class AddonManager implements IAddonManager {
         addonDef.init(patterns, translatorFactory);
         addonDefs.add(addonDef);
 
-        if (overriding.length == 0) return;
+        if (overriding.size() == 0) return;
 
         Iterator<ISkriptFunctionDef> iterator = addonDefs.iterator();
         while (iterator.hasNext()) {
@@ -248,7 +264,7 @@ public final class AddonManager implements IAddonManager {
                 }
             }
         }
-        overridingDefs.addAll(Arrays.asList(overriding));
+        overridingDefs.addAll(overriding);
     }
 
     public void setupDefs(IVariableFactory variableFactory) {

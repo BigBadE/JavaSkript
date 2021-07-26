@@ -20,8 +20,7 @@ class TestDocsExamples {
                     if (instructions.size() != 1 ||
                             !(instructions.get(0).getInstruction() instanceof BroadcastExpression)) return false;
                     List<IParsedInstruction> args = instructions.get(0).getParsedArguments();
-                    if (args.size() != 1 || args.get(0).getInstruction() instanceof LiteralExpression) return false;
-                    return true;
+                    return args.size() == 1 && !(args.get(0).getInstruction() instanceof LiteralExpression);
                 })
                 .run("expressions",
                         "on script load:\n" +

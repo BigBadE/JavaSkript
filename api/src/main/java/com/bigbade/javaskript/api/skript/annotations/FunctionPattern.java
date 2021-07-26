@@ -15,7 +15,6 @@ import java.lang.annotation.Target;
 @Repeatable(FunctionPattern.FunctionPatterns.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-@SupportedSourceVersion(SourceVersion.RELEASE_16)
 public @interface FunctionPattern {
     /**
      * Pattern of this method

@@ -7,6 +7,9 @@ import com.bigbade.javaskript.parser.SkriptParser;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -62,7 +65,7 @@ public class JavaSkript {
         List<File> dirs = new ArrayList<>();
         while (resources.hasMoreElements()) {
             URL resource = resources.nextElement();
-            dirs.add(new File(resource.getFile()));
+            dirs.add(new File(URLDecoder.decode(resource.getFile(), StandardCharsets.UTF_8)));
         }
         for (File directory : dirs) {
             findClasses(classLoader, directory, "com.bigbade.javaskript.java");

@@ -60,6 +60,7 @@ public class SkriptParsingDef implements IParsingDef {
                 }
                 currentTranslator.readLine(lineParser, lineNumber, line);
             }
+            return;
         }
         findNextTranslator(lineParser, line, lineNumber, foundDepth);
     }
@@ -74,10 +75,11 @@ public class SkriptParsingDef implements IParsingDef {
     }
 
     private void findNextTranslator(ILineParser lineParser, String line, int lineNumber, int foundDepth) {
+        if(line.isEmpty()) return;
         String[] keyValue = KEY_PATTERN.split(line, 2);
         if (keyValue.length != 2) {
-            throw new SkriptParseException(lineNumber, line, "Key/value has no value, needs to be in the format" +
-                    "\"key: value\"");
+            throw new SkriptParseException(lineNumber, line, "Key/value pair is incorrectly formatted, " +
+                    "needs to be in the format \"key: value\". Refer to the docs to see the allowed keys");
         }
         depth = foundDepth;
         key = keyValue[0].trim();

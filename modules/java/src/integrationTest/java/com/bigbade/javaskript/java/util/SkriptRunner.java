@@ -19,6 +19,8 @@ import java.util.concurrent.Executors;
 import java.util.function.Predicate;
 
 public class SkriptRunner {
+    private static SkriptParser parser;
+
     private final Map<Class<? extends ISkriptFunctionDef>, Map<String, Predicate<Object>>> defClasses = new HashMap<>();
     private Class<? extends ISkriptFunctionDef> currentDef;
     private Map<String, Predicate<Object>> currentArguments;
@@ -38,17 +40,19 @@ public class SkriptRunner {
     }
 
     public void run(String testName, String script) {
-        SkriptParser parser = new SkriptParser();
-        List<URL> urls = new ArrayList<>();
-        AddonClassLoader addonClassLoader = new AddonClassLoader(urls, JavaSkript.class.getClassLoader(),
-                parser.getLineParser().getAddonManager());
+        if(parser == null) {
+            parser = new SkriptParser();
+            List<URL> urls = new ArrayList<>();
+            AddonClassLoader addonClassLoader = new AddonClassLoader(urls, JavaSkript.class.getClassLoader(),
+                    parser.getLineParser().getAddonManager());
 
-        //Class loaders and the parser are both thread-safe, so the jars should be loaded async.
-        ExecutorService executor = Executors.newCachedThreadPool();
-        JavaSkript.loadSkriptClasses(addonClassLoader, executor);
+            //Class loaders and the parser are both thread-safe, so the jars should be loaded async.
+            ExecutorService executor = Executors.newCachedThreadPool();
+            JavaSkript.loadSkriptClasses(addonClassLoader, executor);
 
-        if(currentDef != null) {
-            defClasses.put(currentDef, currentArguments);
+            if (currentDef != null) {
+                defClasses.put(currentDef, currentArguments);
+            }
         }
 
         SkriptFile file = parser.parseSkript(new StringReader(script), testName);
