@@ -57,7 +57,7 @@ public class ParseResult {
 
         public void addPart(IPatternPart part) { parts.add(part); }
 
-        public void addParts(List<IPatternPart> parts) { parts.addAll(parts); }
+        public void addParts(List<IPatternPart> parts) { this.parts.addAll(parts); }
 
         public ParseResult build(Result result) {
             return new ParseResult(variables, parts, result);

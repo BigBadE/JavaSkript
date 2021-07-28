@@ -1,4 +1,6 @@
 dependencies {
     implementation project(':api')
     implementation project(':parser')
+
+    implementation 'org.slf4j:slf4j-simple:1.8.0-beta4'
 }

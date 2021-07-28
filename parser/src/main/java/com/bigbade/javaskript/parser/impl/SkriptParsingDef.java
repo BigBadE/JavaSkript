@@ -24,13 +24,12 @@ public class SkriptParsingDef implements IParsingDef {
 
     @Getter
     private final ISkriptFunctionDef functionDef;
-
     @Getter
     private final List<IParsedInstruction> arguments;
-
     @Getter
     private final Map<String, Object> keyValues = new HashMap<>();
 
+    @Getter
     private IValueTranslator<?> currentTranslator;
     private String key = null;
     private int depth;

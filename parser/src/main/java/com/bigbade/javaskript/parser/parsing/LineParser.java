@@ -1,6 +1,7 @@
 package com.bigbade.javaskript.parser.parsing;
 
 import com.bigbade.javaskript.api.skript.addon.ISkriptLiteralAddon;
+import com.bigbade.javaskript.api.skript.addon.ISkriptStringAddon;
 import com.bigbade.javaskript.api.skript.code.IParsedInstruction;
 import com.bigbade.javaskript.api.skript.code.ISkriptInstruction;
 import com.bigbade.javaskript.api.skript.defs.IBranchFunctionDef;
@@ -10,10 +11,12 @@ import com.bigbade.javaskript.api.skript.pattern.ISkriptPattern;
 import com.bigbade.javaskript.api.skript.pattern.ParseResult;
 import com.bigbade.javaskript.parser.SkriptParser;
 import com.bigbade.javaskript.parser.builtin.LiteralExpression;
+import com.bigbade.javaskript.parser.builtin.StringConcatenationExpression;
 import com.bigbade.javaskript.parser.exceptions.SkriptParseException;
 import com.bigbade.javaskript.parser.impl.SkriptParsedBranchInstruction;
 import com.bigbade.javaskript.parser.impl.SkriptParsedInstruction;
 import com.bigbade.javaskript.parser.pattern.VariablePattern;
+import com.bigbade.javaskript.parser.util.JavaClassType;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -25,9 +28,33 @@ public final class LineParser implements ILineParser {
     @Getter
     private final AddonManager addonManager = new AddonManager();
 
-    public static IParsedInstruction parseString(String string, int lineNumber) {
-        //TODO figure out how to implement this
-        return null;
+    public IParsedInstruction parseString(String string, int lineNumber) {
+        List<IParsedInstruction> concatenating = new ArrayList<>();
+        for (int i = 0; i < string.length(); i++) {
+            char character = string.charAt(i);
+            for (ISkriptStringAddon<?> addon : addonManager.getStringAddons()) {
+                if (addon.matches(character)) {
+                    if (i > 0) {
+                        concatenating.add(getLiteralInstruction(string.substring(0, i)));
+                    }
+                }
+                Object output = addon.parse(this, lineNumber, string.substring(i));
+                concatenating.add(output instanceof IParsedInstruction ? (IParsedInstruction) output :
+                        getLiteralInstruction(output));
+                string = string.substring(addon.finishedLength());
+                i = 0;
+            }
+        }
+        if (string.length() > 0) {
+            concatenating.add(getLiteralInstruction(string));
+        }
+        return new SkriptParsedInstruction(new StringConcatenationExpression(), concatenating, 0);
+    }
+
+    private IParsedInstruction getLiteralInstruction(Object literal) {
+        return new SkriptParsedInstruction(
+                new LiteralExpression<>(new JavaClassType(literal.getClass()), literal),
+                Collections.emptyList(), 0);
     }
 
     private static IParsedInstruction parseSkriptVariable(String variableName) {
@@ -79,11 +106,10 @@ public final class LineParser implements ILineParser {
         } else if (variable.charAt(0) == '{' && variable.charAt(variable.length() - 1) == '}') {
             return parseSkriptVariable(variable.substring(1, variable.length() - 1));
         } else {
-            for(ISkriptLiteralAddon<?> literalAddon : addonManager.getLiteralAddons()) {
-                if(literalAddon.getClassType().equals(((VariablePattern) part).getType()) &&
+            for (ISkriptLiteralAddon<?> literalAddon : addonManager.getLiteralAddons()) {
+                if (literalAddon.getClassType().equals(((VariablePattern) part).getType()) &&
                         literalAddon.matches(variable)) {
-                    return new SkriptParsedInstruction(new LiteralExpression<>(literalAddon.getClassType(),
-                            literalAddon.getValue(variable)), Collections.emptyList(), 0);
+                    return getLiteralInstruction(literalAddon.getValue(variable));
                 }
             }
             return getInstruction(addonManager.getAddonExpressions(), variable, lineNumber);

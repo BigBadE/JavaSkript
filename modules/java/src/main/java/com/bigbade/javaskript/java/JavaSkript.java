@@ -3,6 +3,8 @@ package com.bigbade.javaskript.java;
 import com.bigbade.javaskript.api.skript.parser.ISkriptParser;
 import com.bigbade.javaskript.java.loader.AddonClassLoader;
 import com.bigbade.javaskript.parser.SkriptParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,11 +15,11 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class JavaSkript {
+    public static final Logger LOGGER = LoggerFactory.getLogger(JavaSkript.class);
+
     public static void main(String[] args) {
         ISkriptParser parser = new SkriptParser();
         List<URL> urls = new ArrayList<>();
@@ -30,28 +32,24 @@ public class JavaSkript {
     }
 
     public static void loadSkriptClasses(ClassLoader classLoader, ExecutorService executor) {
-        executor.submit(() -> {
-            try {
-                loadClasses(classLoader);
-            } catch (ClassNotFoundException | IOException e) {
-                e.printStackTrace();
-            }
-        });
-
-        executor.shutdown();
         try {
-            if(!executor.awaitTermination(2, TimeUnit.MINUTES)) {
-                System.out.println("Loading classes took over two minutes, shutting down!");
-                System.exit(-1);
-            }
-
+            executor.submit(() -> {
+                try {
+                    loadClasses(classLoader);
+                } catch (ClassNotFoundException | IOException e) {
+                    LOGGER.error("Error loading Skript", e);
+                }
+            }).get(2, TimeUnit.MINUTES);
+            executor.shutdown();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
+        } catch (ExecutionException | TimeoutException e) {
+            LOGGER.error("Error loading Skript", e);
         }
     }
 
     /**
-     * Loads all classes in the
+     * Loads all classes in the jar
      * @param classLoader Class loader to load with
      * @throws ClassNotFoundException If the class can't be loaded
      * @throws IOException If there is a problem reading the jar

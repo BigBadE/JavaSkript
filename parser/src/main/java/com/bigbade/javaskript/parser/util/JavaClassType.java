@@ -42,8 +42,9 @@ public class JavaClassType implements IClassType {
         return internalName;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        return obj instanceof IClassType && getInternalName().equals(((IClassType) obj).getInternalName());
+    public boolean isOfType(IClassType other) {
+        if(!(other instanceof JavaClassType javaClassType)) throw new IllegalArgumentException("Unknown class type " + other);
+        return (clazz == null && javaClassType.clazz == null) ||
+                (clazz != null && javaClassType.clazz != null && clazz.isAssignableFrom(javaClassType.clazz));
     }
 }

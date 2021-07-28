@@ -3,13 +3,14 @@ package com.bigbade.javaskript.parser.util;
 public final class StringUtil {
     private StringUtil() {}
 
-    public static int getTabs(String line) {
+    public static int getTabs(FilePointer filePointer) {
         float count = 0;
-        int index = -1;
-        while (++index < line.length()) {
-            if (line.charAt(index) == '\t') {
+        char character;
+        while (true) {
+            character = filePointer.getCharBuffer()[filePointer.bufferLocation++];
+            if (character == '\t') {
                 count++;
-            } else if (line.charAt(index) == ' ') {
+            } else if (character == ' ') {
                 count += .25;
             } else {
                 break;

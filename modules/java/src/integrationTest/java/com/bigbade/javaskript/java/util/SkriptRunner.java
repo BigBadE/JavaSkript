@@ -63,7 +63,13 @@ public class SkriptRunner {
             IParsingDef def = defs.get(i++);
             Assertions.assertEquals(entry.getKey(), def.getFunctionDef().getClass());
             for(Map.Entry<String, Predicate<Object>> keyValue : entry.getValue().entrySet()) {
-                Assertions.assertTrue(keyValue.getValue().test(def.getKeyValues().get(keyValue.getKey())));
+                if(keyValue.getKey() == null) {
+                    //Handle single translator defs
+                    Assertions.assertTrue(keyValue.getValue().test(def.getCurrentTranslator()));
+                } else {
+                    //Multi-translator defs
+                    Assertions.assertTrue(keyValue.getValue().test(def.getKeyValues().get(keyValue.getKey())));
+                }
             }
             def.getFunctionDef().getTranslators();
         }

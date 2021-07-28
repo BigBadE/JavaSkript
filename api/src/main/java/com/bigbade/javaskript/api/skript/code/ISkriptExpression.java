@@ -20,5 +20,7 @@ public interface ISkriptExpression extends ISkriptInstruction {
      * @return Pre-computed value, if any
      */
     @Nullable
-    Object getValue();
+    default Object getValue() {
+        return null;
+    }
 }

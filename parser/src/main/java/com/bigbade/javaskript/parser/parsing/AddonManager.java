@@ -174,17 +174,17 @@ public final class AddonManager implements IAddonManager {
             return;
         }
         for (Method target : getStatementMethods(instruction)) {
-            SkriptAddonInstruction addonInstruction;
             if (target.getReturnType() != Void.TYPE) {
-                addonInstruction = new SkriptAddonExpression(target,
+                SkriptAddonExpression addonInstruction = new SkriptAddonExpression(target,
                         target.getAnnotationsByType(SkriptPattern.class));
-                addonExpressions.add((SkriptAddonExpression) addonInstruction);
+                addonExpressions.add(addonInstruction);
+                addonInstructions.add(addonInstruction);
             } else {
-                addonInstruction = new SkriptAddonEffect(target,
+                SkriptAddonEffect addonInstruction = new SkriptAddonEffect(target,
                         target.getAnnotationsByType(SkriptPattern.class));
-                addonEffects.add((SkriptAddonEffect) addonInstruction);
+                addonEffects.add(addonInstruction);
+                addonInstructions.add(addonInstruction);
             }
-            addonInstructions.add(addonInstruction);
         }
 
         if (overriding.size() == 0) return;

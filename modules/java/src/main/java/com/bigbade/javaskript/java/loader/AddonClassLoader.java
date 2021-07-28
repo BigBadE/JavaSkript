@@ -5,6 +5,7 @@ import com.bigbade.javaskript.api.skript.addon.ISkriptFunctionDef;
 import com.bigbade.javaskript.api.skript.annotations.SkriptPattern;
 import com.bigbade.javaskript.api.skript.code.ISkriptInstruction;
 import com.bigbade.javaskript.api.skript.defs.IBranchFunctionDef;
+import com.bigbade.javaskript.java.JavaSkript;
 import com.bigbade.javaskript.parser.api.SkriptAddonEffect;
 import com.bigbade.javaskript.parser.api.SkriptAddonExpression;
 
@@ -33,7 +34,7 @@ public class AddonClassLoader extends URLClassLoader {
             } catch (InstantiationException | IllegalAccessException |
                     InvocationTargetException | NoSuchMethodException e) {
                 //TODO setup a logging system
-                System.out.println("Failed to automatically register branch function " + clazz.getName());
+                JavaSkript.LOGGER.warn("Failed to automatically register branch function " + clazz.getName());
             }
         }
         if(ISkriptFunctionDef.class.isAssignableFrom(clazz)) {
@@ -43,7 +44,7 @@ public class AddonClassLoader extends URLClassLoader {
             } catch (InstantiationException | IllegalAccessException |
                     InvocationTargetException | NoSuchMethodException e) {
                 //TODO setup a logging system
-                System.out.println("Failed to automatically register branch function " + clazz.getName());
+                JavaSkript.LOGGER.warn("Failed to automatically register branch function " + clazz.getName());
             }
         }
         return clazz;

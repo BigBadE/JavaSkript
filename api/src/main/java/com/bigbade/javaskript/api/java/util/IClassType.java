@@ -22,4 +22,6 @@ public interface IClassType {
      * Returns the internal name used by Java. Do not use unless you know what you are doing!
      */
     String getInternalName();
+
+    boolean isOfType(IClassType other);
 }

@@ -3,7 +3,7 @@ package com.bigbade.javaskript.parser.pattern;
 import com.bigbade.javaskript.api.skript.pattern.IPatternPart;
 import com.bigbade.javaskript.api.skript.pattern.ISkriptPattern;
 import com.bigbade.javaskript.api.skript.pattern.ParseResult;
-import com.bigbade.javaskript.parser.util.SkriptClassType;
+import com.bigbade.javaskript.parser.util.SkriptTypeUtils;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -30,12 +30,14 @@ public class CompiledPattern implements ISkriptPattern {
         int index = 0;
         int looped = 0;
         int variableStart = -1;
+        IPatternPart variablePart = null;
         ParseResult.ParseResultBuilder builder = new ParseResult.ParseResultBuilder();
         checkPart:
         for (IPatternPart patternPart : parts) {
             looped++;
             if (patternPart instanceof VariablePattern) {
                 variableStart = index;
+                variablePart = patternPart;
                 continue;
             }
             int start = index;
@@ -58,6 +60,7 @@ public class CompiledPattern implements ISkriptPattern {
                         break;
                     case PASSED:
                         if (variableStart != -1) {
+                            builder.addPart(variablePart);
                             builder.addParts(result.getFoundParts());
                             builder.addVariable(variableStart, index);
                             variableStart = -1;
@@ -69,6 +72,10 @@ public class CompiledPattern implements ISkriptPattern {
                     default:
                 }
             }
+        }
+        if(variableStart >= 0) {
+            builder.addPart(variablePart);
+            builder.addVariable(variableStart, matching.length());
         }
         return looped == parts.size() && (variableStart != -1 || index == matching.length()) ?
                 builder.build(ParseResult.Result.PASSED)
@@ -107,10 +114,13 @@ public class CompiledPattern implements ISkriptPattern {
                 case '%' -> {
                     foundParts.add(new LiteralPattern(builder.toString()));
                     builder = new StringBuilder();
-                    String found = pattern.substring(currentIndex);
-                    found = found.substring(0, found.indexOf('%'));
-                    currentIndex += found.length();
-                    foundParts.add(new VariablePattern(SkriptClassType.getSkriptType(found)));
+                    int end = pattern.indexOf('%', currentIndex);
+                    if(end == -1) {
+                        throw new IllegalArgumentException("Pattern has opening % but no closing!");
+                    }
+                    String found = pattern.substring(currentIndex, end);
+                    currentIndex += found.length() + 1;
+                    foundParts.add(new VariablePattern(SkriptTypeUtils.getSkriptType(found)));
                 }
                 default -> builder.append(current);
             }
