@@ -24,6 +24,11 @@ public interface IParsingDef {
     Map<String, Object> getKeyValues();
 
     /**
+     * Gets the current translator of the def, this is only useful for single translator defs
+     */
+    IValueTranslator<?> getCurrentTranslator();
+
+    /**
      * Parses a line of code into the Skript definition.
      * @param lineParser Line parser
      * @param lineNumber Line number of the code

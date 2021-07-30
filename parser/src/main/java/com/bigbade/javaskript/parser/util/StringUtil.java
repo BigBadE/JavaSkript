@@ -3,19 +3,19 @@ package com.bigbade.javaskript.parser.util;
 public final class StringUtil {
     private StringUtil() {}
 
-    public static int getTabs(String line) {
-        int count = 0;
-        int index = 0;
-        while (index < line.length()) {
-            if (line.charAt(index++) == '\t') {
+    public static int getTabs(FilePointer filePointer) {
+        float count = 0;
+        char character;
+        while (true) {
+            character = filePointer.getCharBuffer()[filePointer.bufferLocation++];
+            if (character == '\t') {
                 count++;
-            } else if (line.regionMatches(index, "    ", 0, 4)) {
-                index += 4;
-                count++;
+            } else if (character == ' ') {
+                count += .25;
             } else {
                 break;
             }
         }
-        return count;
+        return (int) count;
     }
 }

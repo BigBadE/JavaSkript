@@ -5,13 +5,14 @@ import com.bigbade.javaskript.api.java.defs.IMethodDef;
 import com.bigbade.javaskript.api.java.defs.IPackageDef;
 import com.bigbade.javaskript.api.java.util.Modifiers;
 import com.bigbade.javaskript.api.skript.addon.SingleTranslatorDef;
+import com.bigbade.javaskript.api.skript.annotations.FunctionPattern;
 import com.bigbade.javaskript.api.skript.annotations.SkriptPattern;
 import com.bigbade.javaskript.api.skript.code.ITranslatorFactory;
 import com.bigbade.javaskript.api.skript.code.IVariableFactory;
 import com.bigbade.javaskript.api.skript.defs.ICodeDef;
 import com.bigbade.javaskript.api.skript.defs.IValueTranslator;
 
-@SkriptPattern(pattern = "On script load")
+@FunctionPattern(pattern = "on script load")
 public class ScriptLoadDef extends SingleTranslatorDef<ICodeDef> {
     @Override
     public void operateOnDef(ICodeDef startingValue, int patternData) {

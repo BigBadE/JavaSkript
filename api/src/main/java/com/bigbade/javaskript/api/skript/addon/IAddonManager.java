@@ -52,6 +52,15 @@ public interface IAddonManager {
      */
     void registerBranchFunction(IBranchFunctionDef branchFunction);
 
+
+    /**
+     * Registers an addon instruction. Addon instructions REQUIRE a SkriptPattern.
+     *
+     * @param instruction Instruction to register
+     * @see SkriptPattern
+     */
+    void registerInstruction(Class<?> instruction);
+
     /**
      * Registers an addon instruction. Addon instructions REQUIRE a SkriptPattern.
      *
@@ -59,7 +68,16 @@ public interface IAddonManager {
      * @param overriding Instructions to override
      * @see SkriptPattern
      */
-    void registerInstruction(Class<? extends ISkriptInstruction> instruction, Class<? extends ISkriptInstruction>... overriding);
+    void registerInstruction(Class<?> instruction, List<Class<?>> overriding);
+
+    /**
+     * Registers a function definition. Function definitions REQUIRE a FunctionPattern
+     *
+     * @param addonDef Function definition to register
+     * @see ISkriptFunctionDef
+     * @see FunctionPattern
+     */
+    void registerFunctionDef(ISkriptFunctionDef addonDef);
 
     /**
      * Registers a function definition. Function definitions REQUIRE a FunctionPattern
@@ -69,7 +87,7 @@ public interface IAddonManager {
      * @see ISkriptFunctionDef
      * @see FunctionPattern
      */
-    void registerFunctionDef(ISkriptFunctionDef addonDef, Class<ISkriptFunctionDef>... overriding);
+    void registerFunctionDef(ISkriptFunctionDef addonDef, List<Class<ISkriptFunctionDef>> overriding);
 
     /**
      * Sets up method defs, registering their variables.

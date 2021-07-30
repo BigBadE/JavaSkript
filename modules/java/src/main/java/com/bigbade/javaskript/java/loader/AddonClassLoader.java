@@ -1,7 +1,16 @@
 package com.bigbade.javaskript.java.loader;
 
 import com.bigbade.javaskript.api.skript.addon.IAddonManager;
+import com.bigbade.javaskript.api.skript.addon.ISkriptFunctionDef;
+import com.bigbade.javaskript.api.skript.annotations.SkriptPattern;
+import com.bigbade.javaskript.api.skript.code.ISkriptInstruction;
+import com.bigbade.javaskript.api.skript.defs.IBranchFunctionDef;
+import com.bigbade.javaskript.java.JavaSkript;
+import com.bigbade.javaskript.parser.api.SkriptAddonEffect;
+import com.bigbade.javaskript.parser.api.SkriptAddonExpression;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.List;
@@ -17,7 +26,27 @@ public class AddonClassLoader extends URLClassLoader {
     @Override
     public Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
         Class<?> clazz = super.loadClass(name, resolve);
-        //TODO register types
+        addonManager.registerInstruction(clazz);
+        if(IBranchFunctionDef.class.isAssignableFrom(clazz)) {
+            try {
+                //Try to register any branch functions if we can
+                addonManager.registerBranchFunction((IBranchFunctionDef) clazz.getConstructor().newInstance());
+            } catch (InstantiationException | IllegalAccessException |
+                    InvocationTargetException | NoSuchMethodException e) {
+                //TODO setup a logging system
+                JavaSkript.LOGGER.warn("Failed to automatically register branch function " + clazz.getName());
+            }
+        }
+        if(ISkriptFunctionDef.class.isAssignableFrom(clazz)) {
+            try {
+                //Try to register any branch functions if we can
+                addonManager.registerFunctionDef((ISkriptFunctionDef) clazz.getConstructor().newInstance());
+            } catch (InstantiationException | IllegalAccessException |
+                    InvocationTargetException | NoSuchMethodException e) {
+                //TODO setup a logging system
+                JavaSkript.LOGGER.warn("Failed to automatically register branch function " + clazz.getName());
+            }
+        }
         return clazz;
     }
 }
