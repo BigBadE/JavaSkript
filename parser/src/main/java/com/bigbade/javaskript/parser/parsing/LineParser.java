@@ -97,7 +97,7 @@ public final class LineParser implements ILineParser {
                 }
             }
         }
-        throw new SkriptParseException(lineNumber, line, "Unknown instruction");
+        throw new SkriptParseException(lineNumber, line, "Unknown instruction!");
     }
 
     public IParsedInstruction parseVariable(IPatternPart part, String variable, int lineNumber) {

@@ -21,7 +21,8 @@ class TestDocsExamples {
                             !(instructions.get(0).getInstruction().getMethod().getDeclaringClass()
                                     .equals(BroadcastExpression.class))) return false;
                     List<IParsedInstruction> args = instructions.get(0).getParsedArguments();
-                    return args.size() == 1 && !(args.get(0).getInstruction() instanceof LiteralExpression);
+                    if (args.size() != 1 || args.get(0).getInstruction() instanceof LiteralExpression) return false;
+                    return true;
                 })
                 .run("expressions",
                         "on script load:\n" +

@@ -61,15 +61,8 @@ public interface ISkriptFunctionDef {
     void init(List<ISkriptPattern> patterns, ITranslatorFactory factory);
 
     /**
-     * The code shaded into the returned method. Follows the following rules:
-     *
-     * - yamlvalues will be replaced with the actual values at runtime
-     * - patternData will be replaced with the actual pattern data
-     * - ICodeDef#execute will be replaced with the instructions in the ICodeDef
-     * - Referenced fields/methods/classes will be automatically shaded in. They must
-     * be purely functional (no references to instance methods), anything that depends on
-     * the state of the program will break (Basically, static utils/constants only).
-     * The only reference to the state of the program should be the input passed to the method.
+     * The code shaded into the returned method. Calling the execute method on a code block is allowed here and
+     * the call will be replaced with the code in the block.
      *
      * @param yamlValues Key/value pair specified
      * @param patternData Pattern data associated with the passed pattern

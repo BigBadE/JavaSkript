@@ -165,6 +165,6 @@ public class SkriptParser implements ISkriptParser {
                 }
             }
         }
-        throw new SkriptParseException(lineNumber, line, "Unknown function");
+        throw new SkriptParseException(lineNumber, line, "Unknown function!");
     }
 }

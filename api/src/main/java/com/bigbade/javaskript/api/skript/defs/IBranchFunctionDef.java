@@ -10,11 +10,6 @@ import java.util.List;
 /**
  * An effect that causes a change in the control flow of the method.
  * Examples are if or for loops.
- *
- * Requires a SkriptPattern. The method takes in the ICodeDef to execute,
- * calling ICodeDef#execute will be replaced by the instructions
- * @see com.bigbade.javaskript.api.skript.annotations.SkriptPattern
- * @see ICodeDef
  */
 public interface IBranchFunctionDef {
     /**
