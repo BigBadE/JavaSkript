@@ -1,3 +1,4 @@
+
 package com.bigbade.javaskript.parser;
 
 import com.bigbade.javaskript.api.skript.addon.ISkriptFunctionDef;
@@ -13,7 +14,6 @@ import com.bigbade.javaskript.parser.exceptions.SkriptParseException;
 import com.bigbade.javaskript.parser.impl.SkriptParsingDef;
 import com.bigbade.javaskript.parser.parsing.LineParser;
 import com.bigbade.javaskript.parser.pattern.VariablePattern;
-import com.bigbade.javaskript.parser.util.FilePointer;
 import com.bigbade.javaskript.parser.util.StringUtil;
 import lombok.Getter;
 import org.slf4j.Logger;
@@ -53,7 +53,7 @@ public class SkriptParser implements ISkriptParser {
                 return false;
             }
         }
-        return variableIndex == variables.size();
+        return true;
     }
 
     /**
@@ -79,70 +79,57 @@ public class SkriptParser implements ISkriptParser {
      */
     public SkriptFile parseSkript(Reader reader, String name) {
         SkriptFile skriptFile = new SkriptFile(name);
-        FilePointer pointer = new FilePointer(new char[8192]);
-        try {
-            while (reader.read(pointer.getCharBuffer()) == 8192) {
-                readBuffer(pointer);
-                System.arraycopy(pointer.getCharBuffer(), pointer.getLineStart(),
-                        pointer.getCharBuffer(), 0, 8192-pointer.getLineStart());
+        try (BufferedReader bufferedReader = new BufferedReader(reader)) {
+            String line;
+            int lineNumber = 1;
+            while ((line = bufferedReader.readLine()) != null) {
+                if (line.isEmpty() || line.charAt(0) == '#') {
+                    lineNumber++;
+                    continue;
+                }
+                parseLine(skriptFile, line, lineNumber++);
             }
-
-            //Add the tailing function
             if (function != null) {
                 skriptFile.addParsedFunction(function);
             }
         } catch (IOException e) {
-            LOGGER.error("Error reading Skript", e);
+            LOGGER.error("Error parsing Skript file", e);
         }
         return skriptFile;
     }
 
     /**
-     * Reads all the lines from the character buffer, starting from start and terminating at the end
-     * @param filePointer Pointer to the mutable file data
-     */
-    private void readBuffer(FilePointer filePointer) {
-        char[] buffer = filePointer.getCharBuffer();
-        while (filePointer.getLineStart() != buffer.length) {
-            if(filePointer.getLineStart() == 0 && buffer[filePointer.bufferLocation] == '#') {
-                //Ignore the line
-                while(buffer[++filePointer.bufferLocation] != '\n');
-                continue;
-            }
-            parseLine(filePointer);
-            filePointer.setLineStart(filePointer.bufferLocation);
-        }
-    }
-
-    /**
      * Parses a line and adds it into the skript file
-     * @param filePointer File pointer
+     * @param line Line to parse
+     * @param lineNumber Line number
      * @throws SkriptParseException if there is code without a function
      */
-    private void parseLine(FilePointer filePointer) {
-        int depth = StringUtil.getTabs(filePointer);
-        //Must be a function
-        if (depth == 0) {
+    private void parseLine(SkriptFile skriptFile, String line, int lineNumber) {
+        String trimmed = line.trim();
+        if(trimmed.charAt(0) == '#') return;
+        int depth = StringUtil.getTabs(line);
+        if (depth == 0 && trimmed.charAt(trimmed.length() - 1) == ':') {
             if (function != null) {
-                filePointer.getFile().addParsedFunction(function);
+                skriptFile.addParsedFunction(function);
             }
-            function = parseFunction(filePointer);
+            function = parseFunction(trimmed.substring(0, trimmed.length() - 1), lineNumber);
             return;
         }
         if (function != null) {
             function.parseLine(lineParser, lineNumber, trimmed, depth);
             return;
         }
-        throw new SkriptParseException(filePointer, "Statement is outside of a function!");
+        throw new SkriptParseException(lineNumber, trimmed, "Statement is outside of a function!");
     }
 
     /**
      * Parses a function line into a parsed def
-     * @param filePointer File pointer
+     * @param line Line with the function
+     * @param lineNumber Line number
      * @return Function found
      * @throws SkriptParseException if no function is found
      */
-    private SkriptParsingDef parseFunction(FilePointer filePointer) {
+    private SkriptParsingDef parseFunction(String line, int lineNumber) {
         for (ISkriptFunctionDef addonDef : lineParser.getAddonManager().getAddonDefs()) {
             for (ISkriptPattern pattern : addonDef.getPatterns()) {
                 ParseResult result = pattern.matchesInitial(line);
@@ -165,6 +152,6 @@ public class SkriptParser implements ISkriptParser {
                 }
             }
         }
-        throw new SkriptParseException(lineNumber, line, "Unknown function!");
+        throw new SkriptParseException(lineNumber, line, "Unknown function");
     }
 }

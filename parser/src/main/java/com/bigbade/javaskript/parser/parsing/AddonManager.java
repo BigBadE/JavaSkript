@@ -82,10 +82,6 @@ public final class AddonManager implements IAddonManager {
             }
         }
 
-        if (methods.isEmpty()) {
-            throw new IllegalStateException(clazz.getSimpleName() + " has no public method annotated by @CompiledPattern");
-        }
-
         return methods;
     }
 
@@ -162,8 +158,8 @@ public final class AddonManager implements IAddonManager {
      * @see SkriptPattern
      */
     @SafeVarargs
-    public final void registerInstruction(Class<? extends ISkriptInstruction> instruction,
-                                          Class<? extends ISkriptInstruction>... overriding) {
+    public final void registerInstruction(Class<?> instruction,
+                                          Class<?>... overriding) {
         if (overridingInstructions.contains(instruction)) {
             return;
         }

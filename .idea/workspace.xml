@@ -5,27 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f1c47736-1d43-4511-9970-b585734a3d61" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/annotations/ShadedMethod.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lombok.config" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/java/util/IClassType.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/java/util/IClassType.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/addon/IAddonManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/addon/IAddonManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/addon/ISkriptFunctionDef.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/addon/ISkriptFunctionDef.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/annotations/FunctionPattern.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/annotations/FunctionPattern.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/annotations/SkriptPattern.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/annotations/SkriptPattern.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/defs/IBranchFunctionDef.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com/bigbade/javaskript/api/skript/defs/IBranchFunctionDef.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/java/src/integrationTest/java/com/bigbade/javaskript/java/TestDocsExamples.java" beforeDir="false" afterPath="$PROJECT_DIR$/modules/java/src/integrationTest/java/com/bigbade/javaskript/java/TestDocsExamples.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/java/src/integrationTest/java/com/bigbade/javaskript/java/util/SkriptRunner.java" beforeDir="false" afterPath="$PROJECT_DIR$/modules/java/src/integrationTest/java/com/bigbade/javaskript/java/util/SkriptRunner.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/java/src/main/java/com/bigbade/javaskript/java/JavaSkript.java" beforeDir="false" afterPath="$PROJECT_DIR$/modules/java/src/main/java/com/bigbade/javaskript/java/JavaSkript.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/java/src/main/java/com/bigbade/javaskript/java/defs/ScriptLoadDef.java" beforeDir="false" afterPath="$PROJECT_DIR$/modules/java/src/main/java/com/bigbade/javaskript/java/defs/ScriptLoadDef.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/java/src/main/java/com/bigbade/javaskript/java/loader/AddonClassLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/modules/java/src/main/java/com/bigbade/javaskript/java/loader/AddonClassLoader.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/SkriptParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/SkriptParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/exceptions/SkriptParseException.java" beforeDir="false" afterPath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/exceptions/SkriptParseException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/impl/SkriptParsingDef.java" beforeDir="false" afterPath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/impl/SkriptParsingDef.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/parsing/AddonManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/parsing/AddonManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/parsing/LineParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/parsing/LineParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/util/StringUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/parser/src/main/java/com/bigbade/javaskript/parser/util/StringUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/parser/src/test/java/com/bigbade/javaskript/parser/StringUtilTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/parser/src/test/java/com/bigbade/javaskript/parser/StringUtilTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -125,7 +119,8 @@
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
-    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+    <property name="restartRequiresConfirmation" value="false" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.project.gradle" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -141,7 +136,28 @@
       <recent name="com.bigbade.javaskript.api" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.TestDocsExamples">
+  <component name="RunManager" selected="Gradle.TestDocsExamples">
+    <configuration name="TestDocsExamples" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="--tests &quot;com.bigbade.javaskript.java.TestDocsExamples&quot;" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":java:integrationTest" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
     <configuration name="PatternTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="JavaSkript.parser.integrationTest" />
       <extension name="coverage">
@@ -189,22 +205,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="PatternTests.basicOptionalTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="JavaSkript.parser.integrationTest" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="javaskript.java.util.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="javaskript.parser" />
-      <option name="MAIN_CLASS_NAME" value="javaskript.parser.PatternTests" />
-      <option name="METHOD_NAME" value="basicOptionalTest" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="TestDocsExamples" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="JavaSkript.java.integrationTest" />
       <extension name="coverage">
@@ -220,13 +220,22 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration default="true" type="Remote">
+      <option name="USE_SOCKET_TRANSPORT" value="true" />
+      <option name="SERVER_MODE" value="false" />
+      <option name="SHMEM_ADDRESS" value="javadebug" />
+      <option name="HOST" value="localhost" />
+      <option name="PORT" value="5005" />
+      <option name="AUTO_RESTART" value="false" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.TestDocsExamples" />
         <item itemvalue="JUnit.TestDocsExamples" />
         <item itemvalue="JUnit.PatternTests" />
         <item itemvalue="JUnit.PatternTests.advancedPatternTest" />
         <item itemvalue="JUnit.PatternTests.basicChoiceTest" />
-        <item itemvalue="JUnit.PatternTests.basicOptionalTest" />
       </list>
     </recent_temporary>
   </component>
@@ -274,7 +283,7 @@
       <workItem from="1626737921855" duration="3281000" />
       <workItem from="1626792712542" duration="5360000" />
       <workItem from="1627656738033" duration="554000" />
-      <workItem from="1627658536480" duration="4009000" />
+      <workItem from="1627658536480" duration="6357000" />
     </task>
     <servers />
   </component>

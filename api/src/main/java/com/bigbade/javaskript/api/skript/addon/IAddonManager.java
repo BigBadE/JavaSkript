@@ -59,7 +59,7 @@ public interface IAddonManager {
      * @param overriding Instructions to override
      * @see SkriptPattern
      */
-    void registerInstruction(Class<? extends ISkriptInstruction> instruction, Class<? extends ISkriptInstruction>... overriding);
+    void registerInstruction(Class<?> instruction, Class<?>... overriding);
 
     /**
      * Registers a function definition. Function definitions REQUIRE a FunctionPattern

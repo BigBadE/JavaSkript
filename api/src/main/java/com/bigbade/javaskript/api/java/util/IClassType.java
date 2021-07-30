@@ -23,5 +23,10 @@ public interface IClassType {
      */
     String getInternalName();
 
+    /**
+     * Returns if the other class type is the same type
+     * @param other Other class type
+     * @return If the types match
+     */
     boolean isOfType(IClassType other);
 }

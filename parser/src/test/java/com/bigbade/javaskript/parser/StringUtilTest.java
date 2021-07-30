@@ -18,6 +18,6 @@ class StringUtilTest {
     }
 
     private static void testFilePointer(int expected, String string) {
-        Assertions.assertEquals(expected, StringUtil.getTabs(new FilePointer(null, string.toCharArray())));
+        Assertions.assertEquals(expected, StringUtil.getTabs(string));
     }
 }
