@@ -1,20 +1,5 @@
 # Intellij
-.idea/workspace.xml
-.idea/dictionaries
-.idea/misc.xml
-.idea/libraries
-.idea/compiler.xml
-.idea/kotlinc.xml
-.idea/modules.xml
-.idea/sonarlint
-.idea/jarRepositories.xml
-.idea/gradle.xml
-.idea/dataSources.local.xml
-.idea/dataSources.xml
-.idea/markdown-navigator.xml
-.idea/markdown-navigator-enh.xml
-.idea/sqldialects.xml
-.idea/uiDesigner.xml
+.idea/
 *.iml
 *.ipr
 *.iws
