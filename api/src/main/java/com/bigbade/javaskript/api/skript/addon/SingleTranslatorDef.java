@@ -10,6 +10,7 @@ import lombok.Getter;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -20,10 +21,9 @@ public abstract class SingleTranslatorDef<T> implements ISkriptFunctionDef {
     private IValueTranslator<T> startingTranslator;
     private List<ISkriptPattern> patterns;
 
-    @Nullable
     @Override
     public Map<String, IValueTranslator<?>> getTranslators() {
-        return null;
+        return Collections.emptyMap();
     }
 
     public abstract IValueTranslator<T> getTranslator(ITranslatorFactory factory);
@@ -36,6 +36,16 @@ public abstract class SingleTranslatorDef<T> implements ISkriptFunctionDef {
 
     protected void addVariable(IVariableDef variableDef) {
         variables.add(variableDef);
+    }
+
+    @Override
+    public <E> E getVariable(String identifier) {
+        throw new IllegalStateException("This should never be called, read the javadocs!");
+    }
+
+    @Override
+    public void execute(String key) {
+        throw new IllegalStateException("This should never be called, read the javadocs!");
     }
 
     @Override

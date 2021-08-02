@@ -99,7 +99,7 @@ public class SkriptParser implements ISkriptParser {
     }
 
     /**
-     * Parses a line and adds it into the skript file
+     * Parses a line and adds it into the Skript file
      * @param line Line to parse
      * @param lineNumber Line number
      * @throws SkriptParseException if there is code without a function
@@ -108,7 +108,7 @@ public class SkriptParser implements ISkriptParser {
         String trimmed = line.trim();
         if(trimmed.charAt(0) == '#') return;
         int depth = StringUtil.getTabs(line);
-        if (depth == 0 && trimmed.charAt(trimmed.length() - 1) == ':') {
+        if (depth == 0) {
             if (function != null) {
                 skriptFile.addParsedFunction(function);
             }

@@ -15,7 +15,8 @@ import com.bigbade.javaskript.api.skript.defs.IValueTranslator;
 public class ScriptLoadDef extends SingleTranslatorDef<ICodeDef> {
     @Override
     public void operateOnDef(ICodeDef startingValue, int patternData) {
-        //Not used
+        execute("test");
+        startingValue.execute();
     }
 
     @Override

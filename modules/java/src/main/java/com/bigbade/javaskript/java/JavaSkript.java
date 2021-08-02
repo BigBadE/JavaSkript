@@ -26,6 +26,9 @@ public class JavaSkript {
         //Class loaders and the parser are both thread-safe, so the jars should be loaded async.
         ExecutorService executor = Executors.newCachedThreadPool();
         loadSkriptClasses(addonClassLoader, executor);
+
+        //TODO load skripts
+        //TODO parse and translate skripts
     }
 
     public static void loadSkriptClasses(ClassLoader classLoader, ExecutorService executor) {

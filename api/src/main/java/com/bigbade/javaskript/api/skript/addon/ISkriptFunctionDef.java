@@ -22,7 +22,6 @@ public interface ISkriptFunctionDef {
      * YAML-style key/value pairs, with code being an exception. Empty for none, null key for no key.
      * @return Yaml values of the def
      */
-    @Nullable
     Map<String, IValueTranslator<?>> getTranslators();
 
     /**
@@ -52,6 +51,34 @@ public interface ISkriptFunctionDef {
     void setupVariables(IVariableFactory factory);
 
     /**
+     * Gets the value of the variable with the given name. Will only work in the operation method
+     * The identifier MUST BE DECLARED IN THE ARGS due to how the translator figures out which variable you want.
+     *
+     * Example:
+     * getVariable("event");
+     * Incorrect:
+     * String variable = "event";
+     * getVariable(key);
+     * @param identifier Name of the variable
+     * @throws IllegalStateException If this method is called, when it should just be used as a placeholder
+     */
+    <T> T getVariable(String identifier);
+
+    /**
+     * Executes the code translator def with the given key. Single translators can use a null key.
+     * The key MUST BE DECLARED IN THE ARGS due to how the translator figures out which translator you want to execute.
+     *
+     * Example:
+     * execute("mykey");
+     * Incorrect:
+     * String key = "mykey";
+     * execute(key);
+     * @param key Key of the translator to execute
+     * @throws IllegalStateException If this method is called, when it should just be used as a placeholder
+     */
+    void execute(@Nullable String key);
+
+    /**
      * Initializes the def with a TranslatorFactory, to give access to code parsing
      * @param patterns Patterns fetched from the SkriptPattern annotation
      * @param factory Translator factory
@@ -64,6 +91,7 @@ public interface ISkriptFunctionDef {
      * The code shaded into the returned method. Calling the execute method on a code block is allowed here and
      * the call will be replaced with the code in the block.
      *
+     * The variables in the variable list
      * @param yamlValues Key/value pair specified
      * @param patternData Pattern data associated with the passed pattern
      */

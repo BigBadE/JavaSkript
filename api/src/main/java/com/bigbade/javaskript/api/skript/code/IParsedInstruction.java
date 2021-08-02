@@ -23,5 +23,4 @@ public interface IParsedInstruction {
      * @return Pattern data
      */
     Object getPatternData();
-
 }

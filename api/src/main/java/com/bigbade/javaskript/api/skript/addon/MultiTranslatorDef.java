@@ -44,6 +44,16 @@ public abstract class MultiTranslatorDef implements ISkriptFunctionDef {
     }
 
     @Override
+    public <E> E getVariable(String identifier) {
+        throw new IllegalStateException("This should never be called, read the javadocs!");
+    }
+
+    @Override
+    public void execute(String key) {
+        throw new IllegalStateException("This should never be called, read the javadocs!");
+    }
+
+    @Override
     public void operate(Object startingValue, int patternData) {
         //Not used by multi-translator defs.
         throw new IllegalStateException("Called operate with a single parameter on a multi translator");
